@@ -1,0 +1,166 @@
+ require(['jquery', 'YSDEntityManagement', 'YSDForms', 'YSDMemoryDataSource',
+          'YSDSelectSelector','jquery.validate','jquery.formparams','json2'], 
+          function($, EntityManagement, YSDForms, MemoryDataSource, SelectSelector) {
+
+ 
+  function OrderHook() {
+ 	   
+    this.statusDescription = {
+       'pending_confirmation' : '<%= t.booking_status.pending_confirmation%>',
+       'confirmed' : '<%= t.booking_status.confirmed%>',
+       'cancelled' : '<%= t.booking_status.cancelled%>'
+    }
+     
+    this.paymentStatusDescription = {
+       'none' : '<%= t.booking_payment_status.none%>',
+       'deposit' : '<%= t.booking_payment_status.deposit%>',
+       'total' : '<%= t.booking_payment_status.total%>',
+       'refunded': '<%= t.booking_payment_status.refunded%>'
+    }
+
+    this.chargeStatusDescription = {
+       'pending': '<%= t.charge_status.pending %>',
+       'processing': '<%= t.charge_status.processing %>',
+       'done': '<%= t.charge_status.done %>',
+       'denied': '<%= t.charge_status.denied %>',
+       'refunded': '<%= t.charge_status.refunded%>'
+    };
+
+    this.statusClass = function(entity) {
+      var className = null;
+      switch (entity.status) {
+        case 'pending_confirmation' :
+          className = 'pending-status';
+          break;
+        case 'confirmed':
+          className = 'confirmed-status';
+          break;
+        case 'cancelled':
+          className = 'error-status';
+          break;          
+      }
+      return className;
+    }
+
+    this.paymentStatusClass = function(entity) {
+      var className = null;
+      switch (entity.payment_status) {
+        case 'none' :
+          className = 'pending-status';
+          break;
+        case 'deposit':
+          className = 'doing-status';
+          break;
+        case 'total':
+          className = 'done-status';
+          break;
+        case 'refunded':
+          className = 'error-status';
+          break;          
+      }
+      return className; 
+    }
+
+    this.chargeStatusClass = function(entity) {
+      var className = null;
+      switch (entity.status) {
+        case 'pending' :
+          className = 'pending-status';
+          break;
+        case 'processing':
+          className = 'doing-status';
+          break; 
+        case 'done':
+          className = 'done-status';
+          break;
+        case 'denied':
+          className = 'error-status';
+          break;
+        case 'refunded':
+          className = 'error-status';
+          break;          
+      }
+      return className;
+    }  
+
+
+    this.entityKey = function(entity) {
+      return entity.id;
+    }
+
+    this.onEdit = function(entity) {
+      this.configForm(entity);
+    };
+  
+    this.onNew = function() {
+  	  this.configForm(null);
+    }
+    
+    this.configForm = function(entity) {
+
+      this.configValidation();
+    
+      $('form[name="add_order_item"]').validate({
+
+        submitHandler: function(form) {
+
+           var data = $(form).formParams(false);
+           var json_request = JSON.stringify(data);
+
+           $.ajax({
+               type: 'POST',
+               data : json_request,
+               url : '/api/order/order-item',
+               success: function(data, textStatus, jqXHR) {
+                 orderManager.model.synchronizeCurrentEntity(data);
+                 orderManager.model.change_state('entity_updated_successfully');
+                 alert('Añadida linea');
+               },
+               error: function(data, textStatus, jqXHR) {
+                 alert('Error updating resource');
+               }
+           });
+
+           return false;
+        }
+
+      });
+
+    }
+    
+    this.configValidation = function() {
+           	 
+       	 $('#order_management_form').validate({
+       	  	
+            submitHandler: function(form) 
+            {
+               return false;
+            },
+                 	        	   
+       	    rules : { // rules
+       	    },
+       	    
+       	    messages : { // messages
+       	    }
+       	    
+       	  }
+       	 );
+    	
+    	
+    }
+  	
+  };
+  
+  var urls = { 
+  	           query_url  : '/api/orders',
+    	         create_url : '/api/order',
+  	           update_url : '/api/order',
+  	           delete_url : '/api/order',
+  	           get_url    : '/api/order'
+  	         };
+  
+  var orderHook = new OrderHook();
+  var orderManager = new EntityManagement(urls, 'order', 
+      <%= order_page_size %>, orderHook, {prefix: '/admin/order',hold_form_after_action:true});
+ 
+ });

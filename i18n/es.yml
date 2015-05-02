@@ -1,0 +1,27 @@
+order_management:
+  title: Pedidos
+  description: Gestión de pedidos
+  table: 
+    id: Id 
+    creation_date: Fecha de recepción
+    customer: Cliente
+    status: Estado 
+    payment_status: Estado del pago
+  form:
+    id: Número de pedido 
+    creation_date: Fecha de creación
+    status: Estado 
+    payment_status: Estado del pago
+    customer_title: Cliente
+    customer_name: Nombre
+    customer_phone: Teléfono
+    customer_email: Email
+    customer_language: Idioma
+    anotations: Notas
+    order_item:
+      item: Producto
+      quantity: Cantidad
+      unit_cost: Coste unitario
+      cost: Coste total
+      annotation: Notas
+      add: Añadir

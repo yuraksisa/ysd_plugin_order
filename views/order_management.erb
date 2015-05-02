@@ -1,0 +1,274 @@
+<%= include('entity-management') %>
+
+<!-- Renders the element description -->
+
+<script type="text/tmpl" id="elements_title">
+  <h2 class="entity-title"><%=t.order_management.title%></h2>
+</script>
+
+<script type="text/tmpl" id="elements_description">
+    <%= t.order_management.description %>
+</script>
+
+<!-- Renders the elements container -->
+<script type="text/tmpl" id="elements_container_template">
+
+  <table id="elements_table" class="table">
+     <thead class="table-header">
+       <tr>
+        <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.id %></th>
+         <th class="table-header-title" scope="col" style="width:15%"><%= t.order_management.table.creation_date %></th>
+         <th class="table-header-title" scope="col" style="width:35%"><%= t.order_management.table.customer %></th>
+         <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.status %></th>
+         <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.payment_status %></th>  
+       </tr>
+     </thead>
+     <tbody id="elements_tbody" class="table-tbody">             
+     </tbody>
+  </table>
+
+</script>
+
+<!-- Renders one element in the elements list view -->
+        
+<script type="text/tmpl" id="elements_list_template">
+
+    <tr class="table-row" rel="<%%= index %>" id="element_row_<%%=index%>">
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.id %></td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= self.formatDate(entity.creation_date) %></td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.customer_name %> <%%=entity.customer_surname%></td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.status %></td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.payment_status %></td>      
+    </tr>
+
+</script>
+
+<!-- Renders one element in the element view (full detailed) -->
+
+<script type="text/tmpl" id="element_template">
+
+
+</script>
+
+<!-- Renders the form to edit an element -->
+
+<script type="text/tmpl" id="element_template_form">
+     
+    <%% if (!entity) { %>         
+    <form name="element" id="order_management_form">
+    <%% } %>   
+
+      <%% if (entity) { %> 
+      <div class="container_12">
+        <div class="element-detail guiblock overflow">
+          <div class="grid_6">
+            <div class="element_template">
+              <div class="entity-field">
+                <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.id %></span>
+                <span class="entity-fieldvalue"><%%= entity.id %></span>
+              </div>
+            </div>  
+            <div class="element_template">
+              <div class="entity-field">
+                <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.creation_date %></span>
+                <span class="entity-fieldvalue">
+                  <%%= self.formatDate(entity.creation_date,'dd.MM.yyyy')%> 
+                  <span><%%= self.formatDate(entity.creation_date,'HH:mm')%></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="grid_6">
+            <div class="element_template">
+              <div class="entity-field">
+                <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.status %></span>
+                <span class="entity-fieldvalue">
+                  <span class="<%%=self.model.entityHooks[0].statusClass(entity)%> element-status">
+                    <%%= self.model.entityHooks[0].statusDescription[entity.status] %>
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="element_template">
+               <div class="entity-field">
+                 <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.payment_status %></span>
+                 <span class="entity-fieldvalue">
+                    <span class="<%%=self.model.entityHooks[0].paymentStatusClass(entity)%> element-status">
+                      <%%= self.model.entityHooks[0].paymentStatusDescription[entity.payment_status] %>
+                    </span>
+                 </span>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%% } %>
+
+      <div class="container_12">
+        
+        <%% if (entity) { %>
+        <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+        <%% } %>
+
+        <div class="grid_6">
+          <div class="all-space bottom-margin" style="border:1px solid #EEE">
+            <%% if (entity) { %>
+            <form name="customer">
+            <%% } %>
+              <div class="more_contrast_text top-margin bottom-margin" style="text-decoration:underline; margin-left:5px"><%= t.order_management.form.customer_title %>
+              </div> 
+              <%% if (entity) { %>
+                <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+              <%% } %>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_name %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="40" size="12" name="customer_name" id="customer_name"
+                      <%% if (entity) { %>value="<%%=entity.customer_name%>"<%% } %>/>
+                    <input type="text" maxlength="40" size="13" name="customer_surname" id="customer_surname"
+                      <%% if (entity) { %>value="<%%=entity.customer_surname%>"<%% } %>/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_phone %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="15" size="12" name="customer_phone" id="customer_phone"
+                      <%% if (entity) { %>value="<%%=entity.customer_phone%>"<%% } %>/>
+                    <input type="text" maxlength="15" size="13" name="customer_mobile_phone" id="customer_mobile_phone"
+                      <%% if (entity) { %>value="<%%=entity.customer_mobile_phone%>"<%% } %>/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_email %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="40" size="26" name="customer_email" id="customer_email"
+                      <%% if (entity) { %>value="<%%=entity.customer_email%>"<%% } %> style="width:100%"/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template" style="display:none">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_language %></span>
+                  <span class="entity-fieldvalue"><%% if (entity) { %><%%= entity.customer_language %><%%}%></span>
+                </div>
+              </div>
+              <%% if (entity) {%>
+              <div class="navigation-bar bottom-margin">
+                <div class="navigation-bar-crud-buttons right-float">
+                  <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+                </div>
+              </div>             
+              <%% } %>   
+            <%% if (entity) { %>         
+            </form>    
+          <%% } %>
+          </div>
+        </div>
+
+
+        <div class="grid_6">
+           <div class="all-space left-margin bottom-margin" style="border:1px solid #EEE">
+             <%% if (entity) { %>
+             <form name="anotations" class="all-space">
+             <%% } %>
+               <%% if (entity) { %>
+                 <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+               <%% } %>         
+               <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.anotations %></div>
+               <div class="formrow">
+                 <textarea name="notes" rows="6" class="fieldcontrol"><%% if (entity) { %><%%= entity.notes %><%%}%></textarea>
+               </div>
+               <%% if (entity) {%>
+               <div class="navigation-bar bottom-margin">
+                 <div class="navigation-bar-crud-buttons right-float">
+                   <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+                 </div>
+               </div>             
+               <%% } %>
+             <%% if (entity) { %>  
+             </form>             
+             <%% } %>  
+           </div>     
+
+        </div>
+
+      </div>
+
+      <%% if (entity) { %>
+
+      <div class="container_12">
+        <form name="add_order_item">
+          <table class="table">
+            <thead class="table-header">
+              <tr>
+                <th class="table-cell left_text" scope="col" style="width:30%"><%=t.order_management.form.order_item.item%></th>                         
+                <th class="table-cell left_text" scope="col" style="width:7em"><%=t.order_management.form.order_item.quantity%></th>                            
+                <th class="table-cell left_text" scope="col" style="width:7em"><%=t.order_management.form.order_item.unit_cost%></th>                            
+                <th class="table-cell left_text" scope="col" style="width:5em"><%=t.order_management.form.order_item.cost%></th>     
+                <th class="table-cell left_text" scope="col" style="width:25%"><%=t.order_management.form.order_item.annotation%></th>   
+                <th class="table-cell left_text" scope="col" style="width:15%"></th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <%% for (var lineIdx=0; lineIdx < entity.order_items.length; lineIdx++) { %>
+              <tr>
+                <td class="table-cell left_text"><%%=entity.order_items[lineIdx].item_id%> - <%%= entity.order_items[lineIdx].item_description %></td>
+                <td class="table-cell right_text"><span class="right-margin"><%%= entity.order_items[lineIdx].quantity %></span></td>
+                <td class="table-cell right_text"><span class="right-margin"><%%= new Number(entity.order_items[lineIdx].item_unit_cost).toFixed(2) %></span></td>
+                <td class="table-cell right_text"><span class="right-margin"><%%= new Number(entity.order_items[lineIdx].item_cost).toFixed(2) %></span></td>   
+                <td class="table-cell"><%%=entity.order_items[lineIdx].notes%></td>
+                <td class="table-cell"></td>             
+              </tr>
+              <%% } %>
+
+              <tr>
+                <input type="hidden" name="order_id" value="<%%=entity.id%>"/>
+                <td class="all-space">
+                  <input type="text" name="item_id" class="fieldcontrol" size="5"/>
+                  <input type="text" name="item_description" class="fieldcontrol" size="25"/>
+                </td>
+                <td class="all-space">
+                  <input type="text" name="quantity" size="10"/>
+                </td>
+                <td class="all-space">
+                  <input type="text" name="item_unit_cost" size="10"/>
+                </td>
+                <td class="all-space">
+                  <input type="text" name="item_cost" size="10"/>
+                </td>
+                <td>
+                  <textarea name="notes" rows="1" style="width:90%; padding: 10px; position:relative; top:-0.5em"></textarea>
+                </td>
+                <td>
+                   <input type="submit" class="left-margin action-button entity-management-button" value="<%=t.order_management.form.order_item.add%>"/>                
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+
+
+      <%% } %>
+
+
+      <%% if (!entity) { %>        
+      <div class="bottom-navigation-bar navigation-bar">
+          <div class="navigation-bar-crud-buttons">
+              <input type="submit" class="create-entity-button action-button entity-management-button" value="<%=t.entitymanagement.create%>"/>
+          </div>
+      </div>
+      <%% } %>
+     
+    <%% if (!entity) { %>
+    </form>
+    <%% } %>
+
+</script>

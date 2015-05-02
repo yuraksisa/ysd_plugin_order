@@ -1,0 +1,9 @@
+order_management:
+  title: Orders
+  description: Orders management
+  table: 
+    id: Id 
+    creation_date: Creation date
+    customer: Customer
+    status: Status
+    payment_status: Payment status

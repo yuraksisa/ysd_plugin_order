@@ -1,0 +1,9 @@
+order_management:
+  title: Comandes
+  description: Gestió de comandes
+  table: 
+    id: Id 
+    creation_date: Data de recepció
+    customer: Client
+    status: Estat 
+    payment_status: Estat del pagament
