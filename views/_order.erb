@@ -1,0 +1,18 @@
+      <% if order.expired? %>
+      <h2><%=t.order.expired%></h2>      
+      <% else %>
+      <h2><%=t.order.title("#{t[:order][:state][order.status.to_sym]}".downcase)%></h2>
+      <% end %>
+
+      <div class="order-message">
+        <%= message %>
+      </div>
+
+      <div class="bottom-margin">
+        <p><%=t.order.id(order.id)%></p>
+      </div>
+
+      <%= partial(:order_summary, :locals => {:order => order}) %>
+
+
+      

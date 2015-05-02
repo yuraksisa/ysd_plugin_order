@@ -99,6 +99,7 @@
     this.configForm = function(entity) {
 
       this.configValidation();
+      this.configTabs();
     
       $('form[name="add_order_item"]').validate({
 
@@ -128,6 +129,29 @@
 
     }
     
+    this.configTabs = function() {
+
+      $("#content > div").hide(); // Initially hide all content
+      $("#content_tabs li:first").attr("id","current"); // Activate first tab
+      $("#content > div:first").fadeIn(); // Show first tab content
+      $('#content_tabs a').click(function(e) {
+        e.preventDefault();
+        if ($(this).attr("name") == 'preview') {
+          ($('#home_frame')[0]).contentWindow.location.reload();
+        }
+        if ($(this).closest("li").attr("id") == "current"){ //detection for current tab
+         return;       
+        }
+        else{             
+          $("#content > div").hide(); //Hide all content
+          $("#content_tabs li").attr("id",""); //Reset id's
+          $(this).parent().attr("id","current"); // Activate this
+          $('#' + $(this).attr('name')).fadeIn(); // Show content for current tab
+        }
+      });
+      
+    }
+
     this.configValidation = function() {
            	 
        	 $('#order_management_form').validate({

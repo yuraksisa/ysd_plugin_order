@@ -1,0 +1,44 @@
+         <div class="left-margin highlight_block">
+           <div>
+             <div class="top-space bottom-space bottom-margin bottom-separator">
+               <div class="centered_text">
+                  <span class="uppercase_text less_contrast_text"><%=t.order.total.upcase%></span>
+               </div>
+               <div class="centered_text">
+                  <span class="more_contrast_text"><%= "%.2f" % order.total_cost%> €</span>
+               </div>
+             </div>  
+             <% if order.status == :confirmed %>
+             <div class="bottom-space bottom-margin bottom-separator">              
+               <div class="centered_text">
+                  <span class="uppercase_text less_contrast_text"><%=t.order.paid.upcase%></span>
+               </div>
+               <div class="centered_text">
+                  <span class="more_contrast_text"><%= "%.2f" % order.total_paid%> €</span>
+               </div>              
+             </div>
+             <% end %>
+             <% if order.total_pending > 0 %>
+             <div class="bottom-space bottom-margin bottom-separator">              
+               <div class="centered_text">
+                  <span class="uppercase_text less_contrast_text"><%=t.order.pending.upcase%></span>
+               </div>
+               <div class="centered_text">
+                  <span class="more_contrast_text"><%= "%.2f" % order.total_pending%> €</span>
+               </div>              
+             </div>             
+             <% end %>
+           </div>
+           <div class="item_properties_attributes smaller_text">
+             <% order.order_items.each do |order_item| %>
+             <div class="item_properties_attribute bottom-margin">
+               <span class="item_properties_attribute_name left_text">
+                 <%= order_item.item_description %> X <%= order_item.quantity %>
+               </span>
+               <span class="item_properties_attribute_value right_text">
+                 <%= "%.2f" % order_item.item_cost %> €
+               </span>
+             </div>
+             <% end %>
+           </div>
+         </div>

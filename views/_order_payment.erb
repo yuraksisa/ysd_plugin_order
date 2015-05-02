@@ -1,0 +1,97 @@
+<% if order.can_pay? %>
+   <form name="form-payment" id="form-payment" action="/p/order/pay" method="POST">
+   	  <input type="hidden" name="id" value="<%=order.id%>"/>
+      <h3 class="guiblock-title"><%=t.order.payment.label%></h3>
+      <div class="formrow">          
+        <input type="hidden" name="payment" value="total"/>
+        <p><%= t.order.payment.description("%.2f €" % order.total_cost)%></p>
+      </div>
+      <div class="formrow">
+        <div id="payment_methods">
+          <h4 class="top-margin bottom-margin"><%=t.order.payment_method%></h4>
+          <div id="payment_methods_selector"></div>
+        </div>
+      </div>
+      <div class="formrow-botonera top-separator top-margin top-space">
+        <input type="submit" value="Pagar"/>
+      </div>
+   </form>
+
+<script type="text/javascript">
+
+require (['jquery','YSDListSelector', 'YSDRemoteDataSource', 'jquery.validate',
+	      'jquery.ui'],
+ 	     function($, ListSelector, RemoteDataSource) {
+
+   paymentView = {
+       
+       init: function() {
+
+          this.configurePaymentMethods();
+          this.configureValidations();
+
+       },
+
+       configurePaymentMethods: function() {
+          
+          var paymentMethodsDS = new RemoteDataSource('/paymethods/online', 
+          	{id:'id', description: function(data){
+          	  var img = (data.icon && data.icon.length > 0)?'<img src="'+ data.icon + '"/>':'';	
+          	  img += '<span class="highlighted_text">' + 
+          	    data.title +'</span><div class="lighter_text">' + data.description + '</div>';
+          	  return img;} 
+          	});
+          
+          var paymentMethods = new ListSelector('payment_methods_selector',
+          	'payment_method_id', paymentMethodsDS, null, false);
+
+       },
+
+       configureValidations: function() {
+
+        $('#form-payment').validate({
+
+          invalidHandler : function (form, validator) {
+      
+            $('<div title="<%=t.new_order.form_errors.title%>"><%=t.new_order.form_errors.description%></div>').dialog( { height: 260, modal: true,     	 
+       	        buttons: {
+       	            Ok: function() {
+				   	  $( this ).dialog( "close" );
+       	            }
+       	        } 
+       	      });
+      
+          },
+  
+          rules : {
+        	'payment_method_id' : {
+        		required: true
+        	}
+          },
+
+          messages : {
+        	'payment_method_id': {
+        		required: '<%=t.new_order.payment_method.required%>'
+        	}
+          },
+
+       	  errorPlacement : function(error, element) {
+       	    	
+       	  	if (element.attr('name') === 'payment_method_id') {
+       	   	  error.insertAfter('#payment_methods');
+       	   	}          
+          
+          }
+
+        });
+       }
+
+   };
+
+   paymentView.init();
+ 
+});
+
+</script>
+
+<% end %>

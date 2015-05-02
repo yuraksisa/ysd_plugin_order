@@ -110,22 +110,24 @@ module Sinatra
           request.body.rewind
           data_request = JSON.parse(URI.unescape(request.body.read))
           data_request.symbolize_keys!
-    
-          p "Adding order item #{data_request.inspect}"
 
           if order = ::Yito::Model::Order::Order.get(data_request[:order_id])
-            order_item = ::Yito::Model::Order::OrderItem.new 
-            order_item.item_id = data_request[:item_id]
-            order_item.item_description = data_request[:item_description]
-            order_item.quantity = data_request[:quantity]
-            order_item.item_unit_cost = data_request[:item_unit_cost]
-            order_item.item_cost = data_request[:item_cost]
-            order_item.notes = data_request[:notes]
-            order_item.order = order
-            order_item.save
-            order.total_cost += order_item.item_cost 
-            order.save
-            order.reload
+            ::Yito::Model::Order::OrderItem.transaction do 
+              order_item = ::Yito::Model::Order::OrderItem.new 
+              order_item.item_id = data_request[:item_id]
+              order_item.item_description = data_request[:item_description]
+              order_item.quantity = data_request[:quantity]
+              order_item.item_unit_cost = data_request[:item_unit_cost]
+              order_item.item_cost = data_request[:item_cost]
+              order_item.notes = data_request[:notes]
+              order_item.order = order
+              order_item.save
+              order.total_cost += order_item.item_cost
+              order.total_pending += order_item.item_cost 
+              order.save
+              transaction.commit 
+              order.reload
+            end
             content_type :json 
             order.to_json 
           else

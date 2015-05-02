@@ -228,6 +228,16 @@
               <%% } %>
 
               <tr>
+                 <td class="table-cell" colspan="3"></td>
+                 <td class="table-cell right_text">
+                   <span class="more_contrast_text right-margin">
+                      <%%=new Number(entity.total_cost).toFixed(2)%>
+                   </span>
+                 </td>
+                 <td class="table-cell" colspan="2"></td>
+              </tr>
+
+              <tr>
                 <input type="hidden" name="order_id" value="<%%=entity.id%>"/>
                 <td class="all-space">
                   <input type="text" name="item_id" class="fieldcontrol" size="5"/>
@@ -248,8 +258,10 @@
                 <td>
                    <input type="submit" class="left-margin action-button entity-management-button" value="<%=t.order_management.form.order_item.add%>"/>                
                 </td>
-
               </tr>
+
+
+
             </tbody>
           </table>
         </form>
@@ -257,6 +269,55 @@
 
 
       <%% } %>
+
+      <%% if (entity) { %>
+               <%% if (entity.charges.length > 0) { %>
+                     <table class="table bottom-margin-line bottom-separator">
+                        <thead class="table-header">
+                          <tr>
+                            <th class="table-cell" scope="col" style="width:20%"><%=t.order_management.form.charge_date%></th>
+                            <th class="table-cell" scope="col" style="width:20%"><%=t.order_management.form.charge_payment_method%></th>                            
+                            <th class="table-cell" scope="col" style="width:30%"><%=t.order_management.form.charge_amount%></th>
+                            <th class="table-cell" scope="col" style="width:30%"><%=t.order_management.form.charge_status%></th>        
+                          </tr>
+                        </thead>
+                        <tbody class="table-tbody">
+                          <%% for (var chargeIdx=entity.charges.length-1; chargeIdx >=0 ; chargeIdx--) { %>
+                            <tr class="table-row">
+                               <td class="table-cell centered_text"><%%=self.formatDate(entity.charges[chargeIdx].date, 'dd.MM.yyyy HH:mm')%></td>
+                               <td class="table-cell centered_text"><%%=entity.charges[chargeIdx].payment_method_id%></td>
+                               <td class="table-cell centered_text"><%%= new Number(entity.charges[chargeIdx].amount).toFixed(2) %></td>
+                               <td class="table-cell centered_text"><span class="element-status <%%=self.model.entityHooks[0].chargeStatusClass(entity.charges[chargeIdx])%>"><%%= self.model.entityHooks[0].chargeStatusDescription[entity.charges[chargeIdx].status] %></span></td>
+                            </tr>
+                          <%% } %>
+                        </tbody>
+                     </table>        
+                <%% } else { %>
+                  <p><%=t.order_management.form.no_charges%></p>
+                <%% } %>  
+      <%% } %>        
+
+      <%% if (entity) { %>
+
+
+     <ul id="content_tabs" class="no-border no-background"class="no-border no-background">  
+          <li class="no-border no-background top-space" style="border:none; backgrond:none">
+              <a name="other_tab" href="#other_tab"><%=t.order_management.form.other_tab%></a>
+          </li>          
+      </ul>
+
+
+      <div id="content">
+         <div id="other_tab"  class="top-margin-1line">
+            <div class="element_template">
+              <div class="entity-field">
+               <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.free_access_id %></span>
+               <span class="entity-fieldvalue"><a href="/p/myorder/<%%=entity.free_access_id%>" target="_blank">/p/myorder/<%%=entity.free_access_id%></a></span>
+              </div>
+            </div>
+        </div>
+      </div>
+      <%% } %>  
 
 
       <%% if (!entity) { %>        

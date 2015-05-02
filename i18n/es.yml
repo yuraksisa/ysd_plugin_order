@@ -1,3 +1,19 @@
+order:
+  total: Total
+  paid: Pagado
+  pending: Pendiente
+  expired: Caducada
+  title: Pedido %1
+  id: Su número de pedido es <strong>%1</strong>. <span class="less_contrast_text smaller_text">Use su número de pedido en todas las comunicaciones.</span>
+  summary: Detalle de su pedido  
+  state:
+    pending_confirmation: Pendiente de confirmación
+    confirmed: Confirmada
+    cancelled: Cancelada  
+  payment:
+    label: Pago
+    description: Puede realizar el pago del importe de la reserva, <strong>%1</strong>
+  payment_method: Formas de pago
 order_management:
   title: Pedidos
   description: Gestión de pedidos
@@ -18,6 +34,13 @@ order_management:
     customer_email: Email
     customer_language: Idioma
     anotations: Notas
+    no_charges: No se han recibido pagos
+    charge_date: Fecha 
+    charge_payment_method: Forma de pago 
+    charge_amount: Importe 
+    charge_status: Estado
+    other_tab: Otros datos
+    free_access_id: Enlace gestión
     order_item:
       item: Producto
       quantity: Cantidad

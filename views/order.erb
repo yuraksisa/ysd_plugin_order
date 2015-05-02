@@ -1,0 +1,15 @@
+ <div class="container_12">
+   <div class="grid_8">
+   	 <div class="highlight_block top-margin">
+       <%= partial(:order, :locals => {:order => order, :message => ""}) %>  
+     </div>
+   </div>
+   <div class="grid_4 top-margin">
+     <%= partial(:order_price, :locals => {:order => order}) %>  
+   </div>
+ </div>
+ <div class="container_12">
+   <div class="grid_12">
+   	  <%= partial(:order_payment, :locals => {:order => order}) %>
+   </div>
+ </div>

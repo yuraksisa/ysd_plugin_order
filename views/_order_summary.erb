@@ -1,0 +1,16 @@
+      <h3 class="guiblock-title"><%=t.order.summary%></h3>
+      <div class="left-space left-margin">
+          <div class="clearfix top-margin">
+            <div class="smaller_text less_contrast_text bottom-separator bottom-margin">Cliente</div>
+            <div class="item_properties_attributes smaller_text">
+              <div class="item_properties_attribute bottom-margin">
+                <span class="item_properties_attribute_name left_text">
+                  <span data-icon="&#xe00c;"></span><span class="left-margin"><%= order.customer_name %> <%= order.customer_surname%></span>
+                </span>
+                <span class="item_properties_attribute_value left_text">
+                  <div><%= order.customer_email %></div>
+                </span>
+              </div>
+            </div>
+          </div>
+      </div>
