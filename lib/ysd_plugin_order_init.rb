@@ -12,5 +12,7 @@ Plugins::SinatraAppPlugin.register :order do
    sinatra_extension Sinatra::YitoExtension::Order
    sinatra_extension Sinatra::YitoExtension::OrderManagement
    sinatra_extension Sinatra::YitoExtension::OrderManagementRESTApi   
+   sinatra_extension Sinatra::YitoExtension::InformationRequestManagement
+   sinatra_extension Sinatra::YitoExtension::InformationRequestManagementRESTApi  
 
 end

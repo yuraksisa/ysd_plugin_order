@@ -7,3 +7,22 @@ order_management:
     customer: Client
     status: Estat 
     payment_status: Estat del pagament
+information_request_management:
+  title: Solicitut d\'informació
+  description: Gestió de les solicituts d\'informació
+  table: 
+    id: Id 
+    creation_date: Data de recepció
+    customer: Client
+    source: Canal
+    annotations: Anotacions
+  form:
+    id: Id 
+    creation_date: Data de recepció
+    customer_title: Client
+    customer_name: Nom
+    customer_phone: Telèfon
+    customer_email: Email
+    customer_language: Idioma
+    source: Canal
+    anotations: Anotacions

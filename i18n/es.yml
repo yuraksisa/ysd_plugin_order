@@ -48,3 +48,22 @@ order_management:
       cost: Coste total
       annotation: Notas
       add: Añadir
+information_request_management:
+  title: Solicitud información
+  description: Gestión de solicitudes de información
+  table: 
+    id: Id 
+    creation_date: Fecha de recepción
+    customer: Cliente
+    source: Canal
+    annotations: Notas
+  form:
+    id: Id 
+    creation_date: Fecha de creación
+    customer_title: Cliente
+    customer_name: Nombre
+    customer_phone: Teléfono
+    customer_email: Email
+    customer_language: Idioma
+    source: Canal
+    anotations: Notas

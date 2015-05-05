@@ -1,0 +1,63 @@
+ require(['jquery', 'YSDEntityManagement', 'YSDForms', 'YSDMemoryDataSource',
+          'YSDSelectSelector','jquery.validate','jquery.formparams','json2'], 
+          function($, EntityManagement, YSDForms, MemoryDataSource, SelectSelector) {
+
+ 
+  function InformationRequestHook() {
+ 	   
+
+    this.entityKey = function(entity) {
+      return entity.id;
+    }
+
+    this.onEdit = function(entity) {
+      this.configForm(entity);
+    };
+  
+    this.onNew = function() {
+  	  this.configForm(null);
+    }
+    
+    this.configForm = function(entity) {
+
+      this.configValidation();
+
+    }
+    
+
+    this.configValidation = function() {
+           	 
+       	 $('#information_request_management_form').validate({
+       	  	
+            submitHandler: function(form) 
+            {
+               return false;
+            },
+                 	        	   
+       	    rules : { // rules
+       	    },
+       	    
+       	    messages : { // messages
+       	    }
+       	    
+       	  }
+       	 );
+    	
+    	
+    }
+  	
+  };
+  
+  var urls = { 
+  	           query_url  : '/api/information-requests',
+    	         create_url : '/api/information-request',
+  	           update_url : '/api/information-request',
+  	           delete_url : '/api/information-request',
+  	           get_url    : '/api/information-request'
+  	         };
+  
+  var informationRequestHook = new InformationRequestHook();
+  var informationRequestManager = new EntityManagement(urls, 'information_request', 
+      <%= information_request_page_size %>, informationRequestHook, {prefix: '/admin/order'});
+ 
+ });

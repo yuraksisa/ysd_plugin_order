@@ -1,0 +1,168 @@
+<%= include('entity-management') %>
+
+<!-- Renders the element description -->
+
+<script type="text/tmpl" id="elements_title">
+  <h2 class="entity-title"><%=t.information_request_management.title%></h2>
+</script>
+
+<script type="text/tmpl" id="elements_description">
+    <%= t.information_request_management.description %>
+</script>
+
+<!-- Renders the elements container -->
+<script type="text/tmpl" id="elements_container_template">
+
+  <table id="elements_table" class="table">
+     <thead class="table-header">
+       <tr>
+        <th class="table-header-title" scope="col" style="width:10%"><%= t.information_request_management.table.id %></th>
+         <th class="table-header-title" scope="col" style="width:15%"><%= t.information_request_management.table.creation_date %></th>
+         <th class="table-header-title" scope="col" style="width:25%"><%= t.information_request_management.table.customer %></th>
+         <th class="table-header-title" scope="col" style="width:15%"><%= t.information_request_management.table.source %></th>         
+         <th class="table-header-title" scope="col" style="width:35%"><%= t.information_request_management.table.annotations %></th>
+       </tr>
+     </thead>
+     <tbody id="elements_tbody" class="table-tbody">             
+     </tbody>
+  </table>
+
+</script>
+
+<!-- Renders one element in the elements list view -->
+        
+<script type="text/tmpl" id="elements_list_template">
+
+    <tr class="table-row" rel="<%%= index %>" id="element_row_<%%=index%>">
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.id %></td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= self.formatDate(entity.creation_date) %></td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.customer_name %> <%%=entity.customer_surname%></td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>">
+         <%%= entity.source %>
+      </td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>">
+         <%%= entity.notes %>
+      </td>
+    </tr>
+
+</script>
+
+<!-- Renders one element in the element view (full detailed) -->
+
+<script type="text/tmpl" id="element_template">
+
+
+</script>
+
+<!-- Renders the form to edit an element -->
+
+<script type="text/tmpl" id="element_template_form">
+           
+    <form name="element" id="information_request_management_form">
+  
+      <%% if (entity) { %>
+        <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+
+      <div class="container_12">
+        <div class="element-detail guiblock overflow">
+          <div class="grid_6">
+            <div class="element_template">
+              <div class="entity-field">
+                <span class="entity-fieldlabel less_contrast_text"><%= t.information_request_management.form.id %></span>
+                <span class="entity-fieldvalue"><%%= entity.id %></span>
+              </div>
+            </div>  
+            <div class="element_template">
+              <div class="entity-field">
+                <span class="entity-fieldlabel less_contrast_text"><%= t.information_request_management.form.creation_date %></span>
+                <span class="entity-fieldvalue">
+                  <%%= self.formatDate(entity.creation_date,'dd.MM.yyyy')%> 
+                  <span><%%= self.formatDate(entity.creation_date,'HH:mm')%></span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%% } %>
+
+
+      <div class="container_12">
+        <div class="grid_6">
+          <div class="all-space bottom-margin" style="border:1px solid #EEE">
+             <div class="more_contrast_text top-margin bottom-margin" style="text-decoration:underline; margin-left:5px"><%= t.information_request_management.form.customer_title %>
+             </div> 
+             <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.information_request_management.form.customer_name %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="40" size="12" name="customer_name" id="customer_name"
+                      <%% if (entity) { %>value="<%%=entity.customer_name%>"<%% } %>/>
+                    <input type="text" maxlength="40" size="13" name="customer_surname" id="customer_surname"
+                      <%% if (entity) { %>value="<%%=entity.customer_surname%>"<%% } %>/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.information_request_management.form.customer_phone %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="15" size="12" name="customer_phone" id="customer_phone"
+                      <%% if (entity) { %>value="<%%=entity.customer_phone%>"<%% } %>/>
+                    <input type="text" maxlength="15" size="13" name="customer_mobile_phone" id="customer_mobile_phone"
+                      <%% if (entity) { %>value="<%%=entity.customer_mobile_phone%>"<%% } %>/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.information_request_management.form.customer_email %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="40" size="26" name="customer_email" id="customer_email"
+                      <%% if (entity) { %>value="<%%=entity.customer_email%>"<%% } %> style="width:100%"/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.information_request_management.form.source %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="50" size="26" name="source" id="source"
+                      <%% if (entity) { %>value="<%%=entity.source%>"<%% } %> style="width:100%"/>
+                  </span>
+                </div>
+              </div>              
+              <div class="element_template" style="display:none">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.information_request_management.form.customer_language %></span>
+                  <span class="entity-fieldvalue"><%% if (entity) { %><%%= entity.customer_language %><%%}%></span>
+                </div>
+              </div>
+          </div>
+        </div>
+
+
+        <div class="grid_6">
+           <div class="all-space left-margin bottom-margin" style="border:1px solid #EEE">       
+               <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.anotations %></div>
+               <div class="formrow">
+                 <textarea name="notes" rows="6" class="fieldcontrol"><%% if (entity) { %><%%= entity.notes %><%%}%></textarea>
+               </div>               
+           </div>     
+        </div>
+
+      </div>
+
+      <div class="bottom-navigation-bar navigation-bar">
+          <div class="navigation-bar-crud-buttons">
+                <%% if (entity) { %>
+                  <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+                <%% } 
+                   else { %>
+                  <input type="submit" class="create-entity-button action-button entity-management-button" value="<%=t.entitymanagement.create%>"/>
+                <%% } %>
+          </div>
+      </div>
+    </form>
+
+</script>

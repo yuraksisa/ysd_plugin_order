@@ -7,3 +7,22 @@ order_management:
     customer: Customer
     status: Status
     payment_status: Payment status
+information_request_management:
+  title: Information requests
+  description: Information requests management
+  table: 
+    id: Id 
+    creation_date: Creation date
+    customer: Customer
+    source: Source
+    annotations: Notes
+  form:
+    id: Id 
+    creation_date: Creation date
+    customer_title: Customer
+    customer_name: Name
+    customer_phone: Phone number
+    customer_email: Email
+    customer_language: Language
+    source: Source
+    anotations: Notes
