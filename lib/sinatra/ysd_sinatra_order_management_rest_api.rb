@@ -112,7 +112,7 @@ module Sinatra
           data_request.symbolize_keys!
 
           if order = ::Yito::Model::Order::Order.get(data_request[:order_id])
-            ::Yito::Model::Order::OrderItem.transaction do 
+            ::Yito::Model::Order::OrderItem.transaction do |transaction|
               order_item = ::Yito::Model::Order::OrderItem.new 
               order_item.item_id = data_request[:item_id]
               order_item.item_description = data_request[:item_description]

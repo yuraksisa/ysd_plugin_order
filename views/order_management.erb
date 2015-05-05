@@ -37,8 +37,17 @@
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.id %></td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= self.formatDate(entity.creation_date) %></td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.customer_name %> <%%=entity.customer_surname%></td>
-      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.status %></td>
-      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.payment_status %></td>      
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>">
+        <span class="smaller_text <%%=self.model.entityHooks[0].statusClass(entity)%> element-status">
+          <%%= self.model.entityHooks[0].statusDescription[entity.status] %>
+        </span>      
+      </td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>">
+         <%% if (entity.payment_status == 'none') { %><span class="element-status pending-status smaller_text">p</span> <%% } %>   
+         <%% if (entity.payment_status == 'deposit') { %><span class="element-status doing-status smaller_text">d</span> <%% } %>      
+         <%% if (entity.payment_status == 'total') { %><span class="element-status done-status smaller_text">t</span> <%%}%>
+         <%% if (entity.payment_status == 'refunded') { %><span class="element-status error-status smaller_text">c</span> <%%}%>        
+      </td>      
     </tr>
 
 </script>
@@ -207,9 +216,9 @@
             <thead class="table-header">
               <tr>
                 <th class="table-cell left_text" scope="col" style="width:30%"><%=t.order_management.form.order_item.item%></th>                         
-                <th class="table-cell left_text" scope="col" style="width:7em"><%=t.order_management.form.order_item.quantity%></th>                            
-                <th class="table-cell left_text" scope="col" style="width:7em"><%=t.order_management.form.order_item.unit_cost%></th>                            
-                <th class="table-cell left_text" scope="col" style="width:5em"><%=t.order_management.form.order_item.cost%></th>     
+                <th class="table-cell right_text" scope="col" style="width:7em"><%=t.order_management.form.order_item.quantity%></th>                            
+                <th class="table-cell right_text" scope="col" style="width:7em"><%=t.order_management.form.order_item.unit_cost%></th>                            
+                <th class="table-cell right_text" scope="col" style="width:5em"><%=t.order_management.form.order_item.cost%></th>     
                 <th class="table-cell left_text" scope="col" style="width:25%"><%=t.order_management.form.order_item.annotation%></th>   
                 <th class="table-cell left_text" scope="col" style="width:15%"></th>
               </tr>
@@ -228,7 +237,8 @@
               <%% } %>
 
               <tr>
-                 <td class="table-cell" colspan="3"></td>
+                 <td class="table-cell"><span class="more_contrast_text">TOTAL</span></td>
+                 <td class="table-cell" colspan="2"></td>
                  <td class="table-cell right_text">
                    <span class="more_contrast_text right-margin">
                       <%%=new Number(entity.total_cost).toFixed(2)%>
@@ -236,6 +246,28 @@
                  </td>
                  <td class="table-cell" colspan="2"></td>
               </tr>
+
+              <tr>
+                 <td class="table-cell"><span class="more_contrast_text">PAGADO</span></td>
+                 <td class="table-cell" colspan="2"></td>
+                 <td class="table-cell right_text">
+                   <span class="more_contrast_text right-margin">
+                      <%%=new Number(entity.total_paid).toFixed(2)%>
+                   </span>
+                 </td>
+                 <td class="table-cell" colspan="2"></td>
+              </tr>
+
+              <tr>
+                 <td class="table-cell"><span class="more_contrast_text">PENDIENTE</span></td>
+                 <td class="table-cell" colspan="2"></td>
+                 <td class="table-cell right_text">
+                   <span class="more_contrast_text right-margin">
+                      <%%=new Number(entity.total_pending).toFixed(2)%>
+                   </span>
+                 </td>
+                 <td class="table-cell" colspan="2"></td>
+              </tr>              
 
               <tr>
                 <input type="hidden" name="order_id" value="<%%=entity.id%>"/>

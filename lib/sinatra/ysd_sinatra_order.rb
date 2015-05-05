@@ -41,7 +41,59 @@ module Sinatra
             status 404
           end 
 
-        end        
+        end
+
+        #
+        # It returns from the payment gateway when the payment has been done
+        # 
+        # Notifies to the user that the reservation has finished
+        #   
+        app.get '/p/order/payment-gateway-return/ok' do
+
+          if session[:charge_id]
+            order = ::Yito::Model::Order::Order.order_from_charge(session[:charge_id])
+            locals = {}
+            locals.store(:order, order)
+            load_page(:order_finished, :locals => locals)
+          else
+            logger.error "Back from payment gateway NOT charge in session"
+            status 404
+          end
+        end
+
+        #
+        # It returns from the payment gateway when the user returns or cancel
+        #
+        # Shows the reservation information
+        #
+        app.get '/p/order/payment-gateway-return/cancel' do
+
+          if session[:charge_id]
+             order = ::Yito::Model::Order::Order.order_from_charge(session[:charge_id])
+             locals = {:order => order}
+             load_page :order, :locals => locals
+          else
+             logger.error "Back from payment gateway NOT charge in session"
+             status 404
+          end
+        end
+
+        #
+        # It returns from the payment gateway when the payment has been denied
+        #
+        # Shows the reservation payment denied
+        #
+        app.get '/p/order/payment-gateway-return/nok' do
+          if session[:charge_id]
+            order = ::Yito::Model::Order::Order.order_from_charge(session[:charge_id])
+            locals = {}
+            locals.store(:order, order)
+            load_page(:order_denied, :locals => locals)
+          else
+            logger.error "Back from payment gateway NOT charge in session"
+            status 404
+          end
+        end                
 
       end
     end
