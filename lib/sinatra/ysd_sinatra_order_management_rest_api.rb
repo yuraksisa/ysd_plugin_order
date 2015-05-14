@@ -11,7 +11,7 @@ module Sinatra
         #
         ["/api/orders","/api/orders/page/:page"].each do |path|
           
-          app.post path do
+          app.post path, :allowed_usergroups => ['order_manager','staff']  do
 
             page = params[:page].to_i || 1
             limit = 12
@@ -30,7 +30,7 @@ module Sinatra
         #
         # Get orders
         #
-        app.get "/api/orders" do
+        app.get "/api/orders", :allowed_usergroups => ['order_manager','staff']  do
 
           data = ::Yito::Model::Order::Order.all
 
@@ -43,7 +43,7 @@ module Sinatra
         #
         # Get an order
         #
-        app.get "/api/order/:id" do
+        app.get "/api/order/:id", :allowed_usergroups => ['order_manager','staff']  do
         
           data = ::Yito::Model::Order::Order.get(params[:id].to_i)
           
@@ -56,7 +56,7 @@ module Sinatra
         #
         # Create a new order
         #
-        app.post "/api/order" do
+        app.post "/api/order", :allowed_usergroups => ['order_manager','staff']  do
         
           data_request = body_as_json(::Yito::Model::Order::Order)
           data = ::Yito::Model::Order::Order.create(data_request)
@@ -70,7 +70,7 @@ module Sinatra
         #
         # Updates a order
         #
-        app.put "/api/order" do
+        app.put "/api/order", :allowed_usergroups => ['order_manager','staff']  do
           
           data_request = body_as_json(::Yito::Model::Order::Order)
                               
@@ -87,7 +87,7 @@ module Sinatra
         #
         # Deletes anorder 
         #
-        app.delete "/api/order" do
+        app.delete "/api/order", :allowed_usergroups => ['order_manager','staff']  do
         
           data_request = body_as_json(::Yito::Model::Order::Order)
           
@@ -105,7 +105,7 @@ module Sinatra
         #
         # Add an order item
         #
-        app.post '/api/order/order-item' do 
+        app.post '/api/order/order-item', :allowed_usergroups => ['order_manager','staff']  do 
 
           request.body.rewind
           data_request = JSON.parse(URI.unescape(request.body.read))
@@ -135,6 +135,41 @@ module Sinatra
           end
 
         end
+
+        #
+        # Allow order total payment
+        #
+        app.post '/api/order/allow-payment/:order_id', 
+          :allowed_usergroups => ['order_manager', 'staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:order_id].to_i)
+            order.force_allow_payment = true
+            order.save
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+
+        end
+
+        #
+        # Allow order deposit payment
+        #
+        app.post '/api/order/allow-deposit-payment/:order_id', 
+          :allowed_usergroups => ['order_manager', 'staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:order_id].to_i)
+            order.force_allow_deposit_payment = true
+            order.save
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+
+        end
+
 
       end
     end

@@ -1,3 +1,30 @@
+order:
+  total: Total
+  paid: Paid
+  pending: Pending
+  expired: Expired
+  title: Order number %1
+  id: Your order number is <strong>%1</strong>. <span class="smaller_text less_contrast_text">Use the order number in all your communications.</span> 
+  summary: Order detail  
+  state:
+    pending_confirmation: Pending of confirmation
+    confirmed: Confirmed
+    cancelled: Canceled
+  payment_method: Payment methods
+  payment_type:
+    total:
+      label: Total
+    deposit:
+      label: Deposit 
+  payment:
+    label: Payment
+    description:  You can pay of the order, <strong>%1</strong>
+  deposit_payment:
+    label: Deposit payment
+    description: You can pay the deposit of the order, <strong>%1</strong>  
+  pending_payment: 
+    label: 2nd charge
+    description: You can make the payment of the pending amount, <strong>%1</strong>
 order_management:
   title: Orders
   description: Orders management

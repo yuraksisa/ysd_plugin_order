@@ -8,6 +8,11 @@ module Sinatra
           'views')))
         app.settings.translations = Array(app.settings.translations).push(File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'i18n')))      
 
+        app.set :ordercharge_gateway_return_ok, '/p/order/payment-gateway-return/ok'
+        app.set :ordercharge_gateway_return_cancel, '/p/order/payment-gateway-return/cancel'
+        app.set :ordercharge_gateway_return_nok, '/p/order/payment-gateway-return/nok'
+
+
         #
         # Shows an order: To be managed by the customer
         #   
@@ -51,7 +56,7 @@ module Sinatra
         app.get '/p/order/payment-gateway-return/ok' do
 
           if session[:charge_id]
-            order = ::Yito::Model::Order::Order.order_from_charge(session[:charge_id])
+            order = ::Yito::Model::Order::OrderCharge.order_from_charge(session[:charge_id])
             locals = {}
             locals.store(:order, order)
             load_page(:order_finished, :locals => locals)
@@ -69,7 +74,7 @@ module Sinatra
         app.get '/p/order/payment-gateway-return/cancel' do
 
           if session[:charge_id]
-             order = ::Yito::Model::Order::Order.order_from_charge(session[:charge_id])
+             order = ::Yito::Model::Order::OrderCharge.order_from_charge(session[:charge_id])
              locals = {:order => order}
              load_page :order, :locals => locals
           else
@@ -85,7 +90,7 @@ module Sinatra
         #
         app.get '/p/order/payment-gateway-return/nok' do
           if session[:charge_id]
-            order = ::Yito::Model::Order::Order.order_from_charge(session[:charge_id])
+            order = ::Yito::Model::Order::OrderCharge.order_from_charge(session[:charge_id])
             locals = {}
             locals.store(:order, order)
             load_page(:order_denied, :locals => locals)

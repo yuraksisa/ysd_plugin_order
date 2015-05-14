@@ -248,6 +248,21 @@
               </tr>
 
               <tr>
+                 <form name="deposit" class="all-space">
+                 <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+                 <td class="table-cell"><span class="more_contrast_text">DEPÓSITO</span></td>
+                 <td class="table-cell" colspan="2"></td>
+                 <td class="table-cell right_text">
+                   <input type="text" name="reservation_amount" size="10" maxlength="10" value="<%%=new Number(entity.reservation_amount).toFixed(2)%>" class="right_text"/>
+                   </span>
+                 </td>
+                 <td class="table-cell" colspan="2">
+                   <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+                 </td>
+                 </form>
+              </tr> 
+
+              <tr>
                  <td class="table-cell"><span class="more_contrast_text">PAGADO</span></td>
                  <td class="table-cell" colspan="2"></td>
                  <td class="table-cell right_text">
@@ -329,6 +344,68 @@
                 <%% } %>  
       <%% } %>        
 
+
+      <%% if (entity) { %>
+
+                <div class="top-separator bottom-separator bottom-margin bottom-space-1line top-margin top-space overflow">
+
+                     <div class="more_contrast_text top-margin bottom-margin" style="text-decoration:underline; margin-left:5px"><%= t.order_management.form.payment_title %>
+                     </div> 
+
+                     <%% if (entity.is_expired) { %>
+                     <div class="grid_4">
+                        <span class="error-status"><%=t.order_management.form.expired%></span>
+                     </div> 
+                     <%% } else {%>
+                     <div class="grid_4">
+                        <span><%=t.order_management.form.payment_allowed%></span>
+                     </div> 
+                     <%% } %>    
+                
+                     <div class="grid_4">
+                         <%% if (entity.status != 'cancelled') { %>
+                           <%% if (!entity.force_allow_payment) { %>
+                            <div class="error-status">
+                              <%=t.order_management.form.payment_not_allowed%>
+                            </div>  
+                            <button class="top-margin form-button black-button element-action-button" id="allow_payment_button" 
+                                title="<%=t.order_management.form.allow_payment_button.label%>" 
+                                data-action-method="POST"
+                                data-action-url="/api/order/allow-payment/<%%=entity.id%>"
+                                data-confirm-message="<%=t.order_management.form.allow_payment_button.message%>">
+                                <%=t.order_management.form.allow_payment_button.label%>
+                            </button>
+                           <%% } 
+                               else { %>
+                            <span class="confirmed-status"><%=t.order_management.form.force_allow_payment%></span>    
+                           <%% } %>  
+                        <%% } %>  
+                     </div> 
+
+                     <div class="grid_4">
+                         <%% if (entity.status != 'cancelled') { %>
+                           <%% if (!entity.force_allow_deposit_payment) { %>
+                            <div class="error-status">
+                              <%=t.order_management.form.deposit_payment_not_allowed%>
+                            </div>  
+                            <button class="top-margin form-button black-button element-action-button" id="allow_payment_button" 
+                                title="<%=t.order_management.form.allow_deposit_payment_button.label%>" 
+                                data-action-method="POST"
+                                data-action-url="/api/order/allow-deposit-payment/<%%=entity.id%>"
+                                data-confirm-message="<%=t.order_management.form.allow_deposit_payment_button.message%>">
+                                <%=t.order_management.form.allow_deposit_payment_button.label%>
+                            </button>
+                           <%% } 
+                               else { %>
+                            <span class="confirmed-status"><%=t.order_management.form.force_allow_deposit_payment%></span>    
+                           <%% } %>  
+                        <%% } %>  
+                     </div> 
+
+                </div>
+
+      <%% } %>
+
       <%% if (entity) { %>
 
 
@@ -350,6 +427,8 @@
         </div>
       </div>
       <%% } %>  
+
+
 
 
       <%% if (!entity) { %>        

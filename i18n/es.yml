@@ -9,11 +9,22 @@ order:
   state:
     pending_confirmation: Pendiente de confirmación
     confirmed: Confirmada
-    cancelled: Cancelada  
+    cancelled: Cancelada
+  payment_method: Formas de pago
+  payment_type:
+    total:
+      label: Total
+    deposit:
+      label: Depósito
   payment:
     label: Pago
-    description: Puede realizar el pago del importe de la reserva, <strong>%1</strong>
-  payment_method: Formas de pago
+    description: Puede realizar el pago del importe del pedido, <strong>%1</strong>
+  deposit_payment:
+    label: Pago depósito 
+    description: Puede realizar el pago del depósito del pedido, <strong>%1</strong>  
+  pending_payment: 
+    label: Segundo pago
+    description: Puede realizar el pago de la cantidad pendiente, <strong>%1</strong>
 order_management:
   title: Pedidos
   description: Gestión de pedidos
@@ -48,6 +59,19 @@ order_management:
       cost: Coste total
       annotation: Notas
       add: Añadir
+    payment_title: Pago online
+    expired: Excedido el tiempo de pago del depósito  
+    payment_not_allowed: Pago total no permitido
+    deposit_payment_not_allowed: Pago del depósito no permitido   
+    allow_payment_button:
+      message: ¿Desea habilitar el pago total de este pedido?
+      label: Permitir pago total 
+    allow_deposit_payment_button:
+      message: ¿Desea habilitar el pago del depósito de este pedido? 
+      label: Permitir pago depósito
+    force_allow_payment: Pago del total habilitado
+    force_allow_deposit_payment: Pago del depósito habilitado
+    payment_allowed: El cliente puede pagar el pedido
 information_request_management:
   title: Solicitud información
   description: Gestión de solicitudes de información

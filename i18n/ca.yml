@@ -1,3 +1,30 @@
+order:
+  total: Total
+  paid: Pagat
+  pending: Pendent
+  expired: Caducada
+  title: Comanda %1
+  id: La seva comanda és la  <strong>%1</strong>. <span class="less_contrast_text smaller_text">Si us plau, utilitzi el nombre de comanda en totes les comunicacions.</span>
+  summary: Detall de la seva comanda  
+  state:
+    pending_confirmation: Pendent de confirmació
+    confirmed: Confirmada
+    cancelled: Cancelada
+  payment_method: Formas de pagament
+  payment_type:
+    total:
+      label: Total
+    deposit:
+      label: Depòsit
+  payment:
+    label: Pagament
+    description: Pot pagar el total de la comanda, <strong>%1</strong>
+  deposit_payment:
+    label: Pagament depòsit 
+    description: Pot pagar el depòsit de la comanda, <strong>%1</strong>  
+  pending_payment: 
+    label: Segon pagament
+    description: Pot pagar la quantitat pendent, <strong>%1</strong>
 order_management:
   title: Comandes
   description: Gestió de comandes

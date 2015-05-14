@@ -13,6 +13,24 @@ module Huasi
     #
     def install(context={})
 
+      SystemConfiguration::Variable.first_or_create(
+        {:name => 'order.deposit'},
+        {:value => '40',
+         :description => 'Deposit percentage or 0 if no deposit management',
+         :module => :booking})
+
+      SystemConfiguration::Variable.first_or_create(
+        {:name => 'order.allow_deposit_payment'},
+        {:value => 'true',
+         :description => 'Allow total payment. Values: true, false',
+         :module => :booking})
+
+      SystemConfiguration::Variable.first_or_create(
+        {:name => 'order.allow_total_payment'},
+        {:value => 'true',
+         :description => 'Allow total payment. Values: true, false',
+         :module => :booking})
+
     end
     
 
