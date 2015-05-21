@@ -18,8 +18,12 @@ module Sinatra
         #   
         app.get '/p/myorder/:id/?*' do
           if order = ::Yito::Model::Order::Order.get_by_free_access_id(params[:id])
-            locals = {:order => order}
-             load_page :order, :locals => locals
+            conf_allow_total_payment = SystemConfiguration::Variable.get_value('order.allow_total_payment','false').to_bool
+            conf_allow_deposit_payment = SystemConfiguration::Variable.get_value('order.allow_deposit_payment','false').to_bool
+            locals = {:order => order, 
+                      :order_allow_total_payment => conf_allow_total_payment,
+                      :order_allow_deposit_payment => conf_allow_deposit_payment}
+            load_page :order, :locals => locals
           else
             status 404
           end
@@ -57,8 +61,11 @@ module Sinatra
 
           if session[:charge_id]
             order = ::Yito::Model::Order::OrderCharge.order_from_charge(session[:charge_id])
-            locals = {}
-            locals.store(:order, order)
+            conf_allow_total_payment = SystemConfiguration::Variable.get_value('order.allow_total_payment','false').to_bool
+            conf_allow_deposit_payment = SystemConfiguration::Variable.get_value('order.allow_deposit_payment','false').to_bool
+            locals = {:order => order, 
+                      :order_allow_total_payment => conf_allow_total_payment,
+                      :order_allow_deposit_payment => conf_allow_deposit_payment}
             load_page(:order_finished, :locals => locals)
           else
             logger.error "Back from payment gateway NOT charge in session"
@@ -75,7 +82,11 @@ module Sinatra
 
           if session[:charge_id]
              order = ::Yito::Model::Order::OrderCharge.order_from_charge(session[:charge_id])
-             locals = {:order => order}
+             conf_allow_total_payment = SystemConfiguration::Variable.get_value('order.allow_total_payment','false').to_bool
+             conf_allow_deposit_payment = SystemConfiguration::Variable.get_value('order.allow_deposit_payment','false').to_bool
+             locals = {:order => order, 
+                      :order_allow_total_payment => conf_allow_total_payment,
+                      :order_allow_deposit_payment => conf_allow_deposit_payment}
              load_page :order, :locals => locals
           else
              logger.error "Back from payment gateway NOT charge in session"
@@ -92,7 +103,11 @@ module Sinatra
           if session[:charge_id]
             order = ::Yito::Model::Order::OrderCharge.order_from_charge(session[:charge_id])
             locals = {}
-            locals.store(:order, order)
+            conf_allow_total_payment = SystemConfiguration::Variable.get_value('order.allow_total_payment','false').to_bool
+            conf_allow_deposit_payment = SystemConfiguration::Variable.get_value('order.allow_deposit_payment','false').to_bool
+            locals = {:order => order, 
+                      :order_allow_total_payment => conf_allow_total_payment,
+                      :order_allow_deposit_payment => conf_allow_deposit_payment}
             load_page(:order_denied, :locals => locals)
           else
             logger.error "Back from payment gateway NOT charge in session"

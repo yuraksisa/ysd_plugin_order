@@ -10,6 +10,8 @@
  </div>
  <div class="container_12">
    <div class="grid_12">
-   	  <%= partial(:order_payment, :locals => {:order => order}) %>
+   	  <%= partial(:order_payment, :locals => {:order => order,
+                      :order_allow_total_payment => order_allow_total_payment,
+                      :order_allow_deposit_payment => order_allow_deposit_payment}) %>
    </div>
  </div>
