@@ -211,107 +211,153 @@
       <%% if (entity) { %>
 
       <div class="container_12">
-        <form name="add_order_item">
-          <table class="table">
-            <thead class="table-header">
-              <tr>
-                <th class="table-cell left_text" scope="col" style="width:30%"><%=t.order_management.form.order_item.item%></th>                         
-                <th class="table-cell right_text" scope="col" style="width:7em"><%=t.order_management.form.order_item.quantity%></th>                            
-                <th class="table-cell right_text" scope="col" style="width:7em"><%=t.order_management.form.order_item.unit_cost%></th>                            
-                <th class="table-cell right_text" scope="col" style="width:5em"><%=t.order_management.form.order_item.cost%></th>     
-                <th class="table-cell left_text" scope="col" style="width:25%"><%=t.order_management.form.order_item.annotation%></th>   
-                <th class="table-cell left_text" scope="col" style="width:15%"></th>
-              </tr>
-            </thead>
-            <tbody>
-
+          <div class="xtable">
+            <div class="xtable-header">
+              <div class="xtable-row container_12">
+                <span class="xtable-cell left_text grid_3 more_contrast_text">Fecha</span>                                         
+                <span class="xtable-cell left_text grid_3 more_contrast_text"><%=t.order_management.form.order_item.item%></span>
+                <span class="xtable-cell left_text grid_1 more_contrast_text"><%=t.order_management.form.order_item.quantity%></span>
+                <span class="xtable-cell left_text grid_1 more_contrast_text">Tarifa</span>                            
+                <span class="xtable-cell left_text grid_1 more_contrast_text"><%=t.order_management.form.order_item.unit_cost%></span>                            
+                <span class="xtable-cell left_text grid_1 more_contrast_text"><%=t.order_management.form.order_item.cost%></span>     
+                <span class="xtable-cell centered_text grid_2 more_contrast_text"><%=t.order_management.form.order_item.annotation%></span>   
+              </div>
+            </div>
+            <div class="xtable-tbody">
               <%% for (var lineIdx=0; lineIdx < entity.order_items.length; lineIdx++) { %>
-              <tr>
-                <td class="table-cell left_text"><%%=entity.order_items[lineIdx].item_id%> - <%%= entity.order_items[lineIdx].item_description %></td>
-                <td class="table-cell right_text"><span class="right-margin"><%%= entity.order_items[lineIdx].quantity %></span></td>
-                <td class="table-cell right_text"><span class="right-margin"><%%= new Number(entity.order_items[lineIdx].item_unit_cost).toFixed(2) %></span></td>
-                <td class="table-cell right_text"><span class="right-margin"><%%= new Number(entity.order_items[lineIdx].item_cost).toFixed(2) %></span></td>   
-                <td class="table-cell"><%%=entity.order_items[lineIdx].notes%></td>
-                <td class="table-cell"></td>             
-              </tr>
+              <form name="update_order_item_<%%=lineIdx%>" class="update_order_item table-row container_12 bottom-separator bottom-margin" style="padding-top: 5px; padding-bottom: 15px">
+                <input type="hidden" id="id" name="id" value="<%%=entity.order_items[lineIdx].id%>"/>            
+                <span class="xtable-cell grid_3">
+                  <input type="text" name="date" class="fieldcontrol date_control" id="date_<%%=lineIdx%>" size="14" value="<%%=entity.order_items[lineIdx].date%>" value="<%%= entity.order_items[lineIdx].time %>"/>
+                  <input type="text" name="time" class="fieldcontrol" size="14" value="<%%= entity.order_items[lineIdx].time %>"/>
+                </span>
+                <span class="xtable-cell grid_3">
+                  <input type="text" name="item_id" class="fieldcontrol" size="5" value="<%%=entity.order_items[lineIdx].item_id%>"/>
+                  <input type="text" name="item_description" class="fieldcontrol" size="23" value="<%%= entity.order_items[lineIdx].item_description %>"/>
+                </span>
+                <span class="xtable-cell grid_1">
+                  <input type="text" class="right_text" name="quantity" size="8" value="<%%= entity.order_items[lineIdx].quantity %>"/>
+                </span>
+                <span class="xtable-cell grid_1">
+                  <input type="text" class="right_text" name="item_price_type" size="8" value="<%%= entity.order_items[lineIdx].item_price_type %>"/>
+                </span>                
+                <span class="xtable-cell grid_1">
+                  <input type="text" class="right_text" name="item_unit_cost" size="8" value="<%%= new Number(entity.order_items[lineIdx].item_unit_cost).toFixed(2) %>"/>
+                </span>
+                <span class="xtable-cell grid_1">
+                  <input type="text" class="right_text" name="item_cost" size="8" value="<%%= new Number(entity.order_items[lineIdx].item_cost).toFixed(2) %>"/> 
+                </span>   
+                <span class="xtable-cell grid_2">
+                  <textarea name="notes" rows="1" style="padding: 7px;" cols="20"><%%=entity.order_items[lineIdx].notes%></textarea>                 
+                </span>
+                <span class="xtable-cell grid_12 right_text top-margin  right-margin" style="position: relative; right: 5px;">
+                   <input type="submit" class="form-button action-button entity-management-button" value="<%=t.order_management.form.order_item.update%>"/>
+                   <button type="button" class="element-action-button form-button action-button entity-management-button" 
+                      data-action-method="DELETE"
+                      data-action-url="/api/order/order-item/<%%=entity.order_items[lineIdx].id%>"
+                      data-confirm-message="<%=t.order_management.form.order_item.delete_button.message%>">
+                      <%=t.order_management.form.order_item.delete%>
+                    </button>
+                </span> 
+         
+              </form>   
               <%% } %>
 
-              <tr>
-                 <td class="table-cell"><span class="more_contrast_text">TOTAL</span></td>
-                 <td class="table-cell" colspan="2"></td>
-                 <td class="table-cell right_text">
+              <form class="xtable-row container_12" name="add_order_item"  style="padding-top: 5px; padding-bottom: 5px">              
+                <input type="hidden" name="order_id" value="<%%=entity.id%>"/>
+                <span class="xtable-cell grid_3">
+                  <input type="text" name="date" id="new_order_line_date" class="fieldcontrol date_control" size="14"/>
+                  <input type="text" name="time" class="fieldcontrol" size="14"/>
+                </span>                
+                <span class="xtable-cell grid_3">
+                  <input type="text" name="item_id" class="fieldcontrol" size="5"/>
+                  <input type="text" name="item_description" class="fieldcontrol" size="23"/>
+                </span>
+                <span class="xtable-cell grid_1">
+                  <input type="text" name="quantity" size="8"/>
+                </span>
+                <span class="xtable-cell grid_1">
+                  <input type="text" class="right_text" name="item_price_type" size="8"/>
+                </span>                   
+                <span class="xtable-cell grid_1">
+                  <input type="text" name="item_unit_cost" size="8"/>
+                </span>
+                <span class="xtable-cell grid_1">
+                  <input type="text" name="item_cost" size="8"/>
+                </span>
+                <span class="xtable-cell grid_2">
+                  <textarea name="notes" rows="1" style="padding: 7px;" cols="20"></textarea>
+                </span>
+                <span class="xtable-cell grid_12 right_text top-margin  right-margin" style="position: relative; right: 5px;">
+                   <input type="submit" class="left-margin form-button action-button entity-management-button" value="<%=t.order_management.form.order_item.add%>"/>                
+                </span>
+              </form>              
+
+              <div class="xtable-row all-space container_12">
+                 <span class="xtable-cell grid_3">
+                    <span class="more_contrast_text">TOTAL</span>
+                 </span>
+                 <span class="xtable-cell grid_1">&nbsp;</span>
+                 <span class="xtable-cell grid_1">&nbsp;</span>
+                 <span class="xtable-cell grid_1 right_text">
                    <span class="more_contrast_text right-margin">
                       <%%=new Number(entity.total_cost).toFixed(2)%>
                    </span>
-                 </td>
-                 <td class="table-cell" colspan="2"></td>
-              </tr>
+                 </span>
+                 <span class="xtable-cell grid_3">&nbsp;</span>
+                 <span class="xtable-cell grid_3">&nbsp;</span>
+              </div>
 
-              <tr>
-                 <form name="deposit" class="all-space">
+              <form class="xtable-row all-space container_12" name="deposit">
                  <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
-                 <td class="table-cell"><span class="more_contrast_text">DEPÓSITO</span></td>
-                 <td class="table-cell" colspan="2"></td>
-                 <td class="table-cell right_text">
-                   <input type="text" name="reservation_amount" size="10" maxlength="10" value="<%%=new Number(entity.reservation_amount).toFixed(2)%>" class="right_text"/>
+                 <span class="xtable-cell grid_3">
+                   <span class="more_contrast_text">DEPÓSITO</span>
+                 </span>
+                 <span class="xtable-cell grid_1">&nbsp;</span>
+                 <span class="xtable-cell grid_1">&nbsp;</span>
+                 <span class="xtable-cell grid_1">
+                   <input type="text" name="reservation_amount" size="8" maxlength="10" value="<%%=new Number(entity.reservation_amount).toFixed(2)%>" class="right_text"/>
                    </span>
-                 </td>
-                 <td class="table-cell" colspan="2">
+                 </span>
+                 <span class="xtable-cell grid_3">
                    <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
-                 </td>
-                 </form>
-              </tr> 
+                 </span>                 
+                 <span class="xtable-cell grid_3">&nbsp;</span>
+              </form>
 
-              <tr>
-                 <td class="table-cell"><span class="more_contrast_text">PAGADO</span></td>
-                 <td class="table-cell" colspan="2"></td>
-                 <td class="table-cell right_text">
+              <div class="xtable-row all-space container_12">
+                 <span class="xtable-cell grid_3">
+                   <span class="more_contrast_text">PAGADO</span>
+                 </span>
+                 <span class="xtable-cell grid_1">&nbsp;</span>
+                 <span class="xtable-cell grid_1">&nbsp;</span>
+                 <span class="xtable-cell grid_1 right_text">
                    <span class="more_contrast_text right-margin">
                       <%%=new Number(entity.total_paid).toFixed(2)%>
                    </span>
-                 </td>
-                 <td class="table-cell" colspan="2"></td>
-              </tr>
+                 </span>
+                 <span class="xtable-cell grid_3">&nbsp;</span>
+                 <span class="xtable-cell grid_3">&nbsp;</span>
+              </div>
 
-              <tr>
-                 <td class="table-cell"><span class="more_contrast_text">PENDIENTE</span></td>
-                 <td class="table-cell" colspan="2"></td>
-                 <td class="table-cell right_text">
+              <div class="xtable-row all-space container_12">
+                 <span class="xtable-cell grid_3">
+                   <span class="more_contrast_text">PENDIENTE</span>
+                 </span>
+                 <span class="xtable-cell grid_1">&nbsp;</span>
+                 <span class="xtable-cell grid_1">&nbsp;</span>                 
+                 <span class="xtable-cell grid_1 right_text">
                    <span class="more_contrast_text right-margin">
                       <%%=new Number(entity.total_pending).toFixed(2)%>
                    </span>
-                 </td>
-                 <td class="table-cell" colspan="2"></td>
-              </tr>              
+                 </span>
+                 <span class="xtable-cell grid_3">&nbsp;</span>
+                 <span class="xtable-cell grid_3">&nbsp;</span>
+              </div>              
 
-              <tr>
-                <input type="hidden" name="order_id" value="<%%=entity.id%>"/>
-                <td class="all-space">
-                  <input type="text" name="item_id" class="fieldcontrol" size="5"/>
-                  <input type="text" name="item_description" class="fieldcontrol" size="25"/>
-                </td>
-                <td class="all-space">
-                  <input type="text" name="quantity" size="10"/>
-                </td>
-                <td class="all-space">
-                  <input type="text" name="item_unit_cost" size="10"/>
-                </td>
-                <td class="all-space">
-                  <input type="text" name="item_cost" size="10"/>
-                </td>
-                <td>
-                  <textarea name="notes" rows="1" style="width:90%; padding: 10px; position:relative; top:-0.5em"></textarea>
-                </td>
-                <td>
-                   <input type="submit" class="left-margin action-button entity-management-button" value="<%=t.order_management.form.order_item.add%>"/>                
-                </td>
-              </tr>
-
-
-
-            </tbody>
-          </table>
-        </form>
+            </div>
+          </div>
+          
       </div>
 
 

@@ -2,7 +2,7 @@
            <div>
              <div class="top-space bottom-space bottom-margin bottom-separator">
                <div class="centered_text">
-                  <span class="uppercase_text less_contrast_text"><%=t.order.total.upcase%></span>
+                  <span class="uppercase_text less_contrast_text"><%=t.order.total%></span>
                </div>
                <div class="centered_text">
                   <span class="more_contrast_text"><%= "%.2f" % order.total_cost%> €</span>
@@ -11,7 +11,7 @@
              <% if order.status == :confirmed %>
              <div class="bottom-space bottom-margin bottom-separator">              
                <div class="centered_text">
-                  <span class="uppercase_text less_contrast_text"><%=t.order.paid.upcase%></span>
+                  <span class="uppercase_text less_contrast_text"><%=t.order.paid%></span>
                </div>
                <div class="centered_text">
                   <span class="more_contrast_text"><%= "%.2f" % order.total_paid%> €</span>
@@ -21,7 +21,7 @@
              <% if order.total_pending > 0 %>
              <div class="bottom-space bottom-margin bottom-separator">              
                <div class="centered_text">
-                  <span class="uppercase_text less_contrast_text"><%=t.order.pending.upcase%></span>
+                  <span class="uppercase_text less_contrast_text"><%=t.order.pending%></span>
                </div>
                <div class="centered_text">
                   <span class="more_contrast_text"><%= "%.2f" % order.total_pending%> €</span>

@@ -116,6 +116,9 @@ module Sinatra
               order_item = ::Yito::Model::Order::OrderItem.new 
               order_item.item_id = data_request[:item_id]
               order_item.item_description = data_request[:item_description]
+              order_item.date = data_request[:date]
+              order_item.time = data_request[:time]
+              order_item.item_price_type = data_request[:item_price_type]
               order_item.quantity = data_request[:quantity]
               order_item.item_unit_cost = data_request[:item_unit_cost]
               order_item.item_cost = data_request[:item_cost]
@@ -135,6 +138,63 @@ module Sinatra
           end
 
         end
+
+        #
+        # Update an order item
+        #
+        app.put '/api/order/order-item', :allowed_usergroups => ['order_manager','staff']  do 
+
+          request.body.rewind
+          data_request = JSON.parse(URI.unescape(request.body.read))
+          data_request.symbolize_keys!
+
+          if order_item = ::Yito::Model::Order::OrderItem.get(data_request[:id])
+            order = order_item.order
+            ::Yito::Model::Order::OrderItem.transaction do |transaction|
+              old_item_cost = order_item.item_cost
+              order_item.item_id = data_request[:item_id]
+              order_item.item_description = data_request[:item_description]
+              order_item.date = data_request[:date]
+              order_item.time = data_request[:time]
+              order_item.item_price_type = data_request[:item_price_type]              
+              order_item.quantity = data_request[:quantity]
+              order_item.item_unit_cost = data_request[:item_unit_cost]
+              order_item.item_cost = data_request[:item_cost]
+              order_item.notes = data_request[:notes]
+              order_item.save
+              order.total_cost = order.total_cost - old_item_cost + order_item.item_cost
+              order.total_pending = order.total_pending - old_item_cost + order_item.item_cost 
+              order.save
+              transaction.commit 
+              order.reload
+            end
+            content_type :json 
+            order.to_json 
+          else
+            status 404
+          end
+
+        end
+
+        #
+        # Delete an order item
+        #
+        app.delete '/api/order/order-item/:id', :allowed_usergroups => ['order_manager','staff']  do 
+          if order_item = ::Yito::Model::Order::OrderItem.get(params[:id])
+            order = order_item.order
+            order_item_cost = order_item.item_cost
+            order_item.destroy 
+            order.total_cost = order.total_cost - order_item_cost 
+            order.total_pending = order.total_pending - order_item_cost
+            order.save            
+            order.reload 
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+        end
+
 
         #
         # Allow order total payment

@@ -55,10 +55,14 @@ order_management:
     order_item:
       item: Producto
       quantity: Cantidad
-      unit_cost: Coste unitario
+      unit_cost: Coste u.
       cost: Coste total
       annotation: Notas
       add: Añadir
+      update: Modificar
+      delete: Eliminar
+      delete_button:
+        message: ¿Está seguro que desea eliminar la línea?
     payment_title: Pago online
     expired: Excedido el tiempo de pago del depósito  
     payment_not_allowed: Pago total no permitido
