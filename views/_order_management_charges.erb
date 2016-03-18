@@ -1,0 +1,66 @@
+        <div class="container_12">
+          <div class="grid_7">
+             <div class="bottom-margin bottom-space" style="border:1px solid #EEE">      
+                  <%% if (entity.charges.length > 0) { %>
+                     <table class="table bottom-margin-line bottom-separator">
+                        <thead class="table-header">
+                          <tr>
+                            <th class="table-cell" scope="col" style="width:20%"><%=t.booking_management.form.charge_date%></th>
+                            <th class="table-cell" scope="col" style="width:20%"><%=t.booking_management.form.charge_payment_method%></th>                            
+                            <th class="table-cell" scope="col" style="width:30%"><%=t.booking_management.form.charge_amount%></th>
+                            <th class="table-cell" scope="col" style="width:30%"><%=t.booking_management.form.charge_status%></th>        
+                          </tr>
+                        </thead>
+                        <tbody class="table-tbody">
+                          <%% for (var chargeIdx=entity.charges.length-1; chargeIdx >=0 ; chargeIdx--) { %>
+                            <tr class="table-row">
+                               <td class="table-cell centered_text"><%%=self.formatDate(entity.charges[chargeIdx].date, 'dd.MM.yyyy HH:mm')%></td>
+                               <td class="table-cell centered_text"><%%=entity.charges[chargeIdx].payment_method_id%></td>
+                               <td class="table-cell centered_text"><%%= new Number(entity.charges[chargeIdx].amount).toFixed(2) %></td>
+                               <td class="table-cell centered_text"><span class="element-status <%%=self.model.entityHooks[0].chargeStatusClass(entity.charges[chargeIdx])%>"><%%= self.model.entityHooks[0].chargeStatusDescription[entity.charges[chargeIdx].status] %></span></td>
+                            </tr>
+                          <%% } %>
+                        </tbody>
+                     </table>        
+                  <%% } else { %>
+                    <p class="all-space"><%=t.booking_management.form.no_charges%></p>
+                  <%% } %>  
+            </div>
+          </div>
+          <div class="grid_5">
+                <div class="top-margin-top-space left-margin">
+                   <button id="new_charge" type="button" class="form-button green-button" style="background: none; color:black;text-decoration:underline">
+                     <%=t.booking_management.form.new_charge%>
+                   </button>
+
+                  <form name="charge" style="display:none">
+                    <div class="grid_6">
+                      <input type="hidden" name="id" value="<%%=entity.id%>"/>                   
+                      <div class="formrow">
+                        <label for="date" class="fieldtitle"><%=t.booking_management.charge_form.date%></label>
+                        <input type="text" name="date" id="date" class="fieldcontrol" size="30" maxlength="16"/>
+                      </div>
+      
+                      <div class="formrow">
+                        <label for="payment_method" class="fieldtitle"><%=t.booking_management.charge_form.payment_method%></label>
+                        <select name="payment_method_id" class="fieldcontrol customer_height">
+                          <option value="bank_transfer"><%=t.booking_management.charge_form.bank_transfer%></option>
+                          <option value="cash"><%=t.booking_management.charge_form.cash%></option>
+                        </select> 
+                      </div>
+
+                      <div class="formrow">
+                        <label for="amount" class="fieldtitle"><%=t.booking_management.charge_form.amount%></label>
+                        <input type="text" name="amount" id="amount" class="fieldcontrol" size="30" maxlength="10"/>
+                      </div>
+
+                      <div class="navigation-bar bottom-margin">
+                        <div class="navigation-bar-crud-buttons right-float">
+                           <input id="new_charge_button" type="button" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.create%>"/>
+                        </div>
+                      </div>  
+                    </div>
+                  </form>
+                </div>
+            </div>
+          </div>

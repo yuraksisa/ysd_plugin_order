@@ -1,4 +1,4 @@
-         <div class="left-margin highlight_block">
+         <div class="left-margin guiblock">
            <div>
              <div class="top-space bottom-space bottom-margin bottom-separator">
                <div class="centered_text">
@@ -32,10 +32,10 @@
            <div class="item_properties_attributes smaller_text">
              <% order.order_items.each do |order_item| %>
              <div class="item_properties_attribute bottom-margin">
-               <span class="item_properties_attribute_name left_text">
-                 <%= order_item.item_description %> X <%= order_item.quantity %>
+               <span class="item_properties_attribute_name left_text smaller_text" style="width: 75%">
+                 <%= order_item.item_description %> <% if !order_item.item_price_description.nil? and !order_item.item_price_description.empty?%> (<%= order_item.item_price_description %>) <% end %> X <%= order_item.quantity %>
                </span>
-               <span class="item_properties_attribute_value right_text">
+               <span class="item_properties_attribute_value right_text" style="width: 25%">
                  <%= "%.2f" % order_item.item_cost %> €
                </span>
              </div>

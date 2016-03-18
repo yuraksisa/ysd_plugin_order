@@ -92,6 +92,41 @@
 
     this.onEdit = function(entity) {
       this.configForm(entity);
+
+      $('#new_charge').bind('click', function(){
+        $('#new_charge_button').unbind('click');
+        $('#date').datetimepicker(
+            {controlType: 'select', showTimezone: false, useLocalTimezone: true, 
+             numberOfMonths:1, dateFormat: 'dd/mm/yy'},
+            '<%= session[:locale] %>');
+        $('#date').datetimepicker('setDate', new Date());
+        $('#amount').autoNumeric('init',{aSep:''});
+        $('#new_charge_button').bind('click', function(){
+           var formdata = $('form[name="charge"]').formParams(true);
+           var json_request = JSON.stringify(formdata);
+           $.ajax({
+               type: 'POST',
+               data : json_request,
+               url : '/api/order/charge',
+               success: function(data, textStatus, jqXHR) {
+                 orderManager.model.synchronizeCurrentEntity(data);
+                 orderManager.model.change_state('entity_updated_successfully');
+                 alert('<%=t.booking_management.charge_form.done%>');
+                 $('form[name="charge"]').hide();
+               },
+               error: function(data, textStatus, jqXHR) {
+                 alert('Error updating resource');
+               }
+           });
+        });       
+        if ($('form[name="charge"]').is(':visible')) {
+          $('form[name="charge"]').hide();
+        }
+        else {
+          $('form[name="charge"]').show();          
+        }
+      });
+
     };
   
     this.onNew = function() {

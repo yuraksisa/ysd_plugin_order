@@ -3,9 +3,9 @@
    	  <input type="hidden" name="id" value="<%=order.id%>"/>
       <h3 class="guiblock-title"><%=t.order.payment.label%></h3>
       <% if order.total_paid == 0 %>
-        <div class="formrow">
+        <div class="formrow" style="padding-bottom: 0.1em;">
           <% if (order_allow_total_payment or order.force_allow_payment) and 
-                (order_allow_deposit_payment or (order.force_allow_deposit_payment and order.reservation_amount > 0)) %>
+                ((order_allow_deposit_payment or order.force_allow_deposit_payment) and order.reservation_amount > 0) %>
             <div class="radio-block">
               <input type="radio" name="payment" value="total" checked="true"><%=t.order.payment_type.total.label%></input>
                 <p class="radio-info less_contrast_text"><%= "%.2f €" % order.total_cost%></p>

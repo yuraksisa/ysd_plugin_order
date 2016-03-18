@@ -1,0 +1,53 @@
+                <div class="overflow">
+
+                     <%% if (entity.is_expired) { %>
+                     <div class="grid_4">
+                        <span class="error-status"><%=t.order_management.form.expired%></span>
+                     </div> 
+                     <%% } else {%>
+                     <div class="grid_4">
+                        <span><%=t.order_management.form.payment_allowed%></span>
+                     </div> 
+                     <%% } %>    
+                
+                     <div class="grid_4">
+                         <%% if (entity.status != 'cancelled') { %>
+                           <%% if (!entity.force_allow_payment) { %>
+                            <div class="error-status">
+                              <%=t.order_management.form.payment_not_allowed%>
+                            </div>  
+                            <button class="top-margin form-button black-button element-action-button" id="allow_payment_button" 
+                                title="<%=t.order_management.form.allow_payment_button.label%>" 
+                                data-action-method="POST"
+                                data-action-url="/api/order/allow-payment/<%%=entity.id%>"
+                                data-confirm-message="<%=t.order_management.form.allow_payment_button.message%>">
+                                <%=t.order_management.form.allow_payment_button.label%>
+                            </button>
+                           <%% } 
+                               else { %>
+                            <span class="confirmed-status"><%=t.order_management.form.force_allow_payment%></span>    
+                           <%% } %>  
+                        <%% } %>  
+                     </div> 
+
+                     <div class="grid_4">
+                         <%% if (entity.status != 'cancelled') { %>
+                           <%% if (!entity.force_allow_deposit_payment) { %>
+                            <div class="error-status">
+                              <%=t.order_management.form.deposit_payment_not_allowed%>
+                            </div>  
+                            <button class="top-margin form-button black-button element-action-button" id="allow_payment_button" 
+                                title="<%=t.order_management.form.allow_deposit_payment_button.label%>" 
+                                data-action-method="POST"
+                                data-action-url="/api/order/allow-deposit-payment/<%%=entity.id%>"
+                                data-confirm-message="<%=t.order_management.form.allow_deposit_payment_button.message%>">
+                                <%=t.order_management.form.allow_deposit_payment_button.label%>
+                            </button>
+                           <%% } 
+                               else { %>
+                            <span class="confirmed-status"><%=t.order_management.form.force_allow_deposit_payment%></span>    
+                           <%% } %>  
+                        <%% } %>  
+                     </div> 
+
+                </div>

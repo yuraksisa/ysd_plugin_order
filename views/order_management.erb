@@ -20,13 +20,27 @@
          <th class="table-header-title" scope="col" style="width:15%"><%= t.order_management.table.creation_date %></th>
          <th class="table-header-title" scope="col" style="width:35%"><%= t.order_management.table.customer %></th>
          <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.status %></th>
-         <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.payment_status %></th>  
+         <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.payment_status %></th>
+         <th class="table-header-title centered_text" scope="col" style="width:5%"><%= t.booking_management.table.notifications %></th>           
        </tr>
      </thead>
      <tbody id="elements_tbody" class="table-tbody">             
      </tbody>
   </table>
-
+  <div class="guiblock smaller_text all-space left-margin right-margin">
+    <p><%=t.booking_management.footer.title%>:</p>
+    <div>
+    <span class="more_contrast_text">c1:</span><span class="less_contrast_text"><%=t.booking_management.footer.c1_notification%></span>&nbsp;
+    <span class="more_contrast_text">c2:</span><span class="less_contrast_text"><%=t.booking_management.footer.c2_notification%></span>&nbsp;
+    <span class="more_contrast_text">c3:</span><span class="less_contrast_text"><%=t.booking_management.footer.c3_notification%></span>&nbsp;
+    <span class="more_contrast_text">c4:</span><span class="less_contrast_text"><%=t.booking_management.footer.c4_notification%></span>&nbsp;
+    </div>
+    <div>
+    <span class="more_contrast_text">m:</span><span class="less_contrast_text"><%=t.booking_management.footer.m1_notification%></span>&nbsp;
+    <span class="more_contrast_text">m2:</span><span class="less_contrast_text"><%=t.booking_management.footer.m2_notification%></span>&nbsp;    
+    <span class="more_contrast_text">m2:</span><span class="less_contrast_text"><%=t.booking_management.footer.m3_notification%></span>&nbsp;     
+    </div>
+  </div>
 </script>
 
 <!-- Renders one element in the elements list view -->
@@ -47,7 +61,16 @@
          <%% if (entity.payment_status == 'deposit') { %><span class="element-status doing-status smaller_text">d</span> <%% } %>      
          <%% if (entity.payment_status == 'total') { %><span class="element-status done-status smaller_text">t</span> <%%}%>
          <%% if (entity.payment_status == 'refunded') { %><span class="element-status error-status smaller_text">c</span> <%%}%>        
-      </td>      
+      </td>
+      <td class="table-cell centered_text">
+         <%% if (entity.customer_req_notification_sent) { %><span class="element-status pending-status smaller_text">c1</span> <%% } %>
+         <%% if (entity.customer_notification_sent) { %><span class="element-status confirmed-status smaller_text">c2</span> <%%}%>
+         <%% if (entity.customer_req_notification_p_sent) { %><span class="element-status confirmed-status smaller_text">c3</span> <%%}%>
+         <%% if (entity.customer_payment_enabled_sent) { %><span class="element-status confirmed-status smaller_text">c4</span> <%%}%>                  
+         <%% if (entity.manager_notification_sent) { %><span class="element-status confirmed-status smaller_text">m</span><%%}%>
+         <%% if (entity.manager_notification_p_n_sent) { %><span class="element-status confirmed-status smaller_text">m2</span><%%}%>
+         <%% if (entity.manager_confirm_notification_sent) { %><span class="element-status confirmed-status smaller_text">m3</span><%%}%>            
+      </td>             
     </tr>
 
 </script>
@@ -69,7 +92,7 @@
 
       <%% if (entity) { %> 
       <div class="container_12">
-        <div class="element-detail guiblock overflow">
+        <div class="element-detail all-border-solid-light all-space overflow bottom-margin-1line">
           <div class="grid_6">
             <div class="element_template">
               <div class="entity-field">
@@ -211,6 +234,8 @@
       <%% if (entity) { %>
 
       <div class="container_12">
+        <h2>Detalle del pedido</h2>
+        <div class="all-space" style="border:1px solid #EEE">
           <div class="xtable">
             <div class="xtable-header">
               <div class="xtable-row container_12">
@@ -234,6 +259,7 @@
                 <span class="xtable-cell grid_3">
                   <input type="text" name="item_id" class="fieldcontrol" size="5" value="<%%=entity.order_items[lineIdx].item_id%>"/>
                   <input type="text" name="item_description" class="fieldcontrol" size="23" value="<%%= entity.order_items[lineIdx].item_description %>"/>
+                  <input type="text" name="item_price_description" class="fieldcontrol top-margin" size="31" value="<%%= entity.order_items[lineIdx].item_price_description %>" style="width:17em"/>                  
                 </span>
                 <span class="xtable-cell grid_1">
                   <input type="text" class="right_text" name="quantity" size="8" value="<%%= entity.order_items[lineIdx].quantity %>"/>
@@ -248,7 +274,7 @@
                   <input type="text" class="right_text" name="item_cost" size="8" value="<%%= new Number(entity.order_items[lineIdx].item_cost).toFixed(2) %>"/> 
                 </span>   
                 <span class="xtable-cell grid_2">
-                  <textarea name="notes" rows="1" style="padding: 7px;" cols="20"><%%=entity.order_items[lineIdx].notes%></textarea>                 
+                  <textarea name="notes" rows="1" style="padding: 7px;" cols="18"><%%=entity.order_items[lineIdx].notes%></textarea>                 
                 </span>
                 <span class="xtable-cell grid_12 right_text top-margin  right-margin" style="position: relative; right: 5px;">
                    <input type="submit" class="form-button action-button entity-management-button" value="<%=t.order_management.form.order_item.update%>"/>
@@ -263,227 +289,59 @@
               </form>   
               <%% } %>
 
-              <form class="xtable-row container_12" name="add_order_item"  style="padding-top: 5px; padding-bottom: 5px">              
-                <input type="hidden" name="order_id" value="<%%=entity.id%>"/>
-                <span class="xtable-cell grid_3">
-                  <input type="text" name="date" id="new_order_line_date" class="fieldcontrol date_control" size="14"/>
-                  <input type="text" name="time" class="fieldcontrol" size="14"/>
-                </span>                
-                <span class="xtable-cell grid_3">
-                  <input type="text" name="item_id" class="fieldcontrol" size="5"/>
-                  <input type="text" name="item_description" class="fieldcontrol" size="23"/>
-                </span>
-                <span class="xtable-cell grid_1">
-                  <input type="text" name="quantity" size="8"/>
-                </span>
-                <span class="xtable-cell grid_1">
-                  <input type="text" class="right_text" name="item_price_type" size="8"/>
-                </span>                   
-                <span class="xtable-cell grid_1">
-                  <input type="text" name="item_unit_cost" size="8"/>
-                </span>
-                <span class="xtable-cell grid_1">
-                  <input type="text" name="item_cost" size="8"/>
-                </span>
-                <span class="xtable-cell grid_2">
-                  <textarea name="notes" rows="1" style="padding: 7px;" cols="20"></textarea>
-                </span>
-                <span class="xtable-cell grid_12 right_text top-margin  right-margin" style="position: relative; right: 5px;">
-                   <input type="submit" class="left-margin form-button action-button entity-management-button" value="<%=t.order_management.form.order_item.add%>"/>                
-                </span>
-              </form>              
-
-              <div class="xtable-row all-space container_12">
-                 <span class="xtable-cell grid_3">
-                    <span class="more_contrast_text">TOTAL</span>
-                 </span>
-                 <span class="xtable-cell grid_1">&nbsp;</span>
-                 <span class="xtable-cell grid_1">&nbsp;</span>
-                 <span class="xtable-cell grid_1 right_text">
-                   <span class="more_contrast_text right-margin">
-                      <%%=new Number(entity.total_cost).toFixed(2)%>
-                   </span>
-                 </span>
-                 <span class="xtable-cell grid_3">&nbsp;</span>
-                 <span class="xtable-cell grid_3">&nbsp;</span>
-              </div>
-
-              <form class="xtable-row all-space container_12" name="deposit">
-                 <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
-                 <span class="xtable-cell grid_3">
-                   <span class="more_contrast_text">DEPÓSITO</span>
-                 </span>
-                 <span class="xtable-cell grid_1">&nbsp;</span>
-                 <span class="xtable-cell grid_1">&nbsp;</span>
-                 <span class="xtable-cell grid_1">
-                   <input type="text" name="reservation_amount" size="8" maxlength="10" value="<%%=new Number(entity.reservation_amount).toFixed(2)%>" class="right_text"/>
-                   </span>
-                 </span>
-                 <span class="xtable-cell grid_3">
-                   <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
-                 </span>                 
-                 <span class="xtable-cell grid_3">&nbsp;</span>
-              </form>
-
-              <div class="xtable-row all-space container_12">
-                 <span class="xtable-cell grid_3">
-                   <span class="more_contrast_text">PAGADO</span>
-                 </span>
-                 <span class="xtable-cell grid_1">&nbsp;</span>
-                 <span class="xtable-cell grid_1">&nbsp;</span>
-                 <span class="xtable-cell grid_1 right_text">
-                   <span class="more_contrast_text right-margin">
-                      <%%=new Number(entity.total_paid).toFixed(2)%>
-                   </span>
-                 </span>
-                 <span class="xtable-cell grid_3">&nbsp;</span>
-                 <span class="xtable-cell grid_3">&nbsp;</span>
-              </div>
-
-              <div class="xtable-row all-space container_12">
-                 <span class="xtable-cell grid_3">
-                   <span class="more_contrast_text">PENDIENTE</span>
-                 </span>
-                 <span class="xtable-cell grid_1">&nbsp;</span>
-                 <span class="xtable-cell grid_1">&nbsp;</span>                 
-                 <span class="xtable-cell grid_1 right_text">
-                   <span class="more_contrast_text right-margin">
-                      <%%=new Number(entity.total_pending).toFixed(2)%>
-                   </span>
-                 </span>
-                 <span class="xtable-cell grid_3">&nbsp;</span>
-                 <span class="xtable-cell grid_3">&nbsp;</span>
-              </div>              
+              <%= partial :order_management_new_item %>           
 
             </div>
           </div>
-          
+        </div>  
       </div>
 
+      <div class="container_12 bottom-margin-1line">
+         <%= partial :order_management_summary %>
+      </div>
 
       <%% } %>
 
-      <%% if (entity) { %>
-               <%% if (entity.charges.length > 0) { %>
-                     <table class="table bottom-margin-line bottom-separator">
-                        <thead class="table-header">
-                          <tr>
-                            <th class="table-cell" scope="col" style="width:20%"><%=t.order_management.form.charge_date%></th>
-                            <th class="table-cell" scope="col" style="width:20%"><%=t.order_management.form.charge_payment_method%></th>                            
-                            <th class="table-cell" scope="col" style="width:30%"><%=t.order_management.form.charge_amount%></th>
-                            <th class="table-cell" scope="col" style="width:30%"><%=t.order_management.form.charge_status%></th>        
-                          </tr>
-                        </thead>
-                        <tbody class="table-tbody">
-                          <%% for (var chargeIdx=entity.charges.length-1; chargeIdx >=0 ; chargeIdx--) { %>
-                            <tr class="table-row">
-                               <td class="table-cell centered_text"><%%=self.formatDate(entity.charges[chargeIdx].date, 'dd.MM.yyyy HH:mm')%></td>
-                               <td class="table-cell centered_text"><%%=entity.charges[chargeIdx].payment_method_id%></td>
-                               <td class="table-cell centered_text"><%%= new Number(entity.charges[chargeIdx].amount).toFixed(2) %></td>
-                               <td class="table-cell centered_text"><span class="element-status <%%=self.model.entityHooks[0].chargeStatusClass(entity.charges[chargeIdx])%>"><%%= self.model.entityHooks[0].chargeStatusDescription[entity.charges[chargeIdx].status] %></span></td>
-                            </tr>
-                          <%% } %>
-                        </tbody>
-                     </table>        
-                <%% } else { %>
-                  <p><%=t.order_management.form.no_charges%></p>
-                <%% } %>  
-      <%% } %>        
+    <%% if (entity) { %>
 
-
-      <%% if (entity) { %>
-
-                <div class="top-separator bottom-separator bottom-margin bottom-space-1line top-margin top-space overflow">
-
-                     <div class="more_contrast_text top-margin bottom-margin" style="text-decoration:underline; margin-left:5px"><%= t.order_management.form.payment_title %>
-                     </div> 
-
-                     <%% if (entity.is_expired) { %>
-                     <div class="grid_4">
-                        <span class="error-status"><%=t.order_management.form.expired%></span>
-                     </div> 
-                     <%% } else {%>
-                     <div class="grid_4">
-                        <span><%=t.order_management.form.payment_allowed%></span>
-                     </div> 
-                     <%% } %>    
-                
-                     <div class="grid_4">
-                         <%% if (entity.status != 'cancelled') { %>
-                           <%% if (!entity.force_allow_payment) { %>
-                            <div class="error-status">
-                              <%=t.order_management.form.payment_not_allowed%>
-                            </div>  
-                            <button class="top-margin form-button black-button element-action-button" id="allow_payment_button" 
-                                title="<%=t.order_management.form.allow_payment_button.label%>" 
-                                data-action-method="POST"
-                                data-action-url="/api/order/allow-payment/<%%=entity.id%>"
-                                data-confirm-message="<%=t.order_management.form.allow_payment_button.message%>">
-                                <%=t.order_management.form.allow_payment_button.label%>
-                            </button>
-                           <%% } 
-                               else { %>
-                            <span class="confirmed-status"><%=t.order_management.form.force_allow_payment%></span>    
-                           <%% } %>  
-                        <%% } %>  
-                     </div> 
-
-                     <div class="grid_4">
-                         <%% if (entity.status != 'cancelled') { %>
-                           <%% if (!entity.force_allow_deposit_payment) { %>
-                            <div class="error-status">
-                              <%=t.order_management.form.deposit_payment_not_allowed%>
-                            </div>  
-                            <button class="top-margin form-button black-button element-action-button" id="allow_payment_button" 
-                                title="<%=t.order_management.form.allow_deposit_payment_button.label%>" 
-                                data-action-method="POST"
-                                data-action-url="/api/order/allow-deposit-payment/<%%=entity.id%>"
-                                data-confirm-message="<%=t.order_management.form.allow_deposit_payment_button.message%>">
-                                <%=t.order_management.form.allow_deposit_payment_button.label%>
-                            </button>
-                           <%% } 
-                               else { %>
-                            <span class="confirmed-status"><%=t.order_management.form.force_allow_deposit_payment%></span>    
-                           <%% } %>  
-                        <%% } %>  
-                     </div> 
-
-                </div>
-
-      <%% } %>
-
-      <%% if (entity) { %>
-
-
-     <ul id="content_tabs" class="no-border no-background"class="no-border no-background">  
+     <ul id="content_tabs" class="no-border no-background top-margin-2lines">  
+          <li class="no-border no-background top-space" style="border:none; backgrond:none">
+              <a name="charges_tab" href="#charges_tab">Detalle cobros</a>
+          </li> 
+          <li class="no-border no-background top-space" style="border:none; backgrond:none">
+              <a name="notifications_tab" href="#notifications_tab">Notificaciones</a>
+          </li>                    
+          <li class="no-border no-background top-space" style="border:none; backgrond:none">
+              <a name="payment_tab" href="#payment_tab"><%= t.order_management.form.payment_title %></a>
+          </li>               
           <li class="no-border no-background top-space" style="border:none; backgrond:none">
               <a name="other_tab" href="#other_tab"><%=t.order_management.form.other_tab%></a>
           </li>          
       </ul>
 
-
       <div id="content">
+         <div id="charges_tab" class="top-margin-1line">
+           <%= partial :order_management_charges %>
+         </div>
+         <div id="notifications_tab" class="top-margin-1line">
+           <%= partial :order_management_notifications %>
+         </div>         
+         <div id="payment_tab" class="top-margin-1line">
+           <%= partial :order_management_payment %>
+         </div>
          <div id="other_tab"  class="top-margin-1line">
-            <div class="element_template">
-              <div class="entity-field">
-               <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.free_access_id %></span>
-               <span class="entity-fieldvalue"><a href="/p/myorder/<%%=entity.free_access_id%>" target="_blank">/p/myorder/<%%=entity.free_access_id%></a></span>
-              </div>
-            </div>
-        </div>
+           <%= partial :order_management_others %>         
+         </div>
       </div>
-      <%% } %>  
+    <%% } %>  
 
-
-
-
-      <%% if (!entity) { %>        
+    <%% if (!entity) { %>        
       <div class="bottom-navigation-bar navigation-bar">
           <div class="navigation-bar-crud-buttons">
               <input type="submit" class="create-entity-button action-button entity-management-button" value="<%=t.entitymanagement.create%>"/>
           </div>
       </div>
-      <%% } %>
+    <%% } %>
      
     <%% if (!entity) { %>
     </form>

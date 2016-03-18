@@ -1,5 +1,50 @@
       <h3 class="guiblock-title"><%=t.order.summary%></h3>
       <div class="left-space left-margin">
+          <div class="clearfix">
+            <% order.order_items_group_by_date_time_item_id.each do |idx,order_items| %>
+              <% first_order_item = order_items[:items].first %>
+              <div class="activity_list_item">
+                <div class="container_12">
+                  <div class="grid_7">
+                    <div class="left-margin">
+                      <h4><%=first_order_item.item_description%></h4>
+                      <div class="less_contrast_text"><%=l(first_order_item.date,"%d %B %Y") unless first_order_item.date.nil?%> <%first_order_item.time%></div>
+                      <div class="top-margin">
+                        <% order_items[:items].each do |order_item| %>
+                          <div class="grid_8 order_item">
+                            <div class="more_contrast_text"><%=order_item.quantity%> <%=order_item.item_price_description%> x <%="%.2f" % order_item.item_unit_cost%>€</div>
+                          </div>
+                          <div class="grid_2 order_item">
+                            <div class="right_text"><%="%.2f" % order_item.item_cost%>€</div>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="grid_2">
+                    <div class="left-margin right-margin">
+                      <h4 class="right_text more_contrast_text" style="font-size: 1.2em"><%="%.2f" % order_items[:total]%>€</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            <div class="order_total">
+              <div class="container_12">
+                <div class="grid_7">
+                  <span>&nbsp;</span>
+                </div>
+                <div class="grid_2">
+                  <div class="right_text right-margin">
+                    <div class="less_contrast_text">TOTAL</div>
+                  </div>
+                  <div class="left-margin right-margin">
+                    <div class="right_text more_contrast_text" style="font-size: 1.5em"><%="%.2f" % order.total_cost%>€</div>              
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="clearfix top-margin">
             <div class="smaller_text less_contrast_text bottom-separator bottom-margin">Cliente</div>
             <div class="item_properties_attributes smaller_text">

@@ -116,6 +116,7 @@ module Sinatra
               order_item = ::Yito::Model::Order::OrderItem.new 
               order_item.item_id = data_request[:item_id]
               order_item.item_description = data_request[:item_description]
+              order_item.item_price_description = data_request[:item_price_description]
               order_item.date = data_request[:date]
               order_item.time = data_request[:time]
               order_item.item_price_type = data_request[:item_price_type]
@@ -154,6 +155,7 @@ module Sinatra
               old_item_cost = order_item.item_cost
               order_item.item_id = data_request[:item_id]
               order_item.item_description = data_request[:item_description]
+              order_item.item_price_description = data_request[:item_price_description]
               order_item.date = data_request[:date]
               order_item.time = data_request[:time]
               order_item.item_price_type = data_request[:item_price_type]              
@@ -229,6 +231,109 @@ module Sinatra
           end
 
         end
+
+        #
+        # Register a booking charge
+        #
+        app.post '/api/order/charge', :allowed_usergroups => ['bookings_manager','staff'] do
+
+          request.body.rewind
+          data = JSON.parse(URI.unescape(request.body.read))
+          data.symbolize_keys! 
+
+          if order = ::Yito::Model::Order::Order.get(data[:id])
+            
+            order.transaction do  
+              charge = Payments::Charge.new
+              charge.date = data[:date]
+              charge.amount = data[:amount]
+              charge.payment_method_id = data[:payment_method_id]
+              charge.status = :pending
+              charge.currency = SystemConfiguration::Variable.get_value('payments.default_currency', 'EUR')
+              charge.save
+              order_charge = ::Yito::Model::Order::OrderCharge.new
+              order_charge.order = order
+              order_charge.charge = charge
+              order_charge.save
+              charge.update(:status => :done)
+              order.reload
+            end
+            content_type :json
+            status 200
+            order.to_json
+          else
+            status 404
+          end
+
+        end
+
+        # ------------ Send the notification emails ----------------------
+
+        #
+        # Request received
+        #
+        app.post '/api/order/send-customer-req-notification/:id' , :allowed_usergroups => ['booking_manager', 'staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:id].to_i) and 
+             order.status != :cancelled
+            order.notify_request_to_customer
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+
+        end
+
+        #
+        # Request received (with online payment)
+        #
+        app.post '/api/order/send-customer-req-notification-pay/:id' , :allowed_usergroups => ['booking_manager', 'staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:id].to_i) and 
+             order.status != :cancelled and 
+             (order.force_allow_payment or order.force_allow_deposit_payment)
+            order.notify_request_to_customer_pay_now
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+
+        end
+
+        #
+        # Request confirmed
+        #
+        app.post '/api/order/send-customer-conf-notification/:id' , :allowed_usergroups => ['booking_manager', 'staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:id].to_i) and
+             order.status != :pending_confirmation and 
+             order.status != :cancelled
+            order.notify_customer
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+
+        end        
+
+        #
+        # Payment enabled
+        #
+        app.post '/api/order/send-customer-pay-enabled/:id' , :allowed_usergroups => ['booking_manager', 'staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:id].to_i) and
+             order.status != :cancelled
+            order.notify_customer_payment_enabled
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+
+        end  
 
 
       end

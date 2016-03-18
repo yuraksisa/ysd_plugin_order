@@ -2,14 +2,14 @@ order:
   total: Total
   paid: Pagado
   pending: Pendiente
-  expired: Caducada
+  expired: Caducado
   title: Pedido %1
   id: Su número de pedido es <strong>%1</strong>. <span class="less_contrast_text smaller_text">Use su número de pedido en todas las comunicaciones.</span>
   summary: Detalle de su pedido  
   state:
     pending_confirmation: Pendiente de confirmación
-    confirmed: Confirmada
-    cancelled: Cancelada
+    confirmed: Confirmado
+    cancelled: Cancelado
   payment_method: Formas de pago
   payment_type:
     total:

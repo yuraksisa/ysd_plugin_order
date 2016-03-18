@@ -1,4 +1,4 @@
-      <% if order.expired? %>
+      <% if order.expired? && !order.force_allow_payment && !order.force_allow_deposit_payment && order.total_paid == 0 %>
       <h2><%=t.order.expired%></h2>      
       <% else %>
       <h2><%=t.order.title("#{t[:order][:state][order.status.to_sym]}")%></h2>
