@@ -11,7 +11,7 @@ module Sinatra
         #
         ["/api/information-requests","/api/information-requests/page/:page"].each do |path|
           
-          app.post path do
+          app.post path, :allowed_usergroups => ['order_manager','booking_manager','staff'] do
 
             page = params[:page].to_i || 1
             limit = 12
@@ -30,7 +30,7 @@ module Sinatra
         #
         # Get information-request
         #
-        app.get "/api/information-requests" do
+        app.get "/api/information-requests", :allowed_usergroups => ['order_manager','booking_manager','staff'] do
 
           data = ::Yito::Model::Order::RequestInformation.all
 
@@ -43,7 +43,7 @@ module Sinatra
         #
         # Get an information-request
         #
-        app.get "/api/information-request/:id" do
+        app.get "/api/information-request/:id", :allowed_usergroups => ['order_manager','booking_manager','staff'] do
         
           data = ::Yito::Model::Order::RequestInformation.get(params[:id].to_i)
           
@@ -54,13 +54,44 @@ module Sinatra
         end
         
         #
+        # Create a new information-request (public)
+        #
+        app.post "/api/public/orders/information-request" do
+        
+          data_request = body_as_json(::Yito::Model::Order::RequestInformation)
+          
+          data = ::Yito::Model::Order::RequestInformation.new
+          data.subject = data_request[:subject]
+          data.comments = data_request[:comments]
+          data.customer_name = data_request[:customer_name]
+          data.customer_surname = data_request[:customer_surname]
+          data.customer_phone = data_request[:customer_phone]
+          data.customer_email = data_request[:customer_email]
+          data.source = 'web'
+          data.created_by_manager = false
+          data.init_user_agent_data(request.env["HTTP_USER_AGENT"])
+          
+          begin
+            data.save
+          rescue
+            p "Error saving information request. #{data.inspect} #{data.errors.inspect}"
+            raise error
+          end
+          
+          status 200
+         
+        end
+
+        #
         # Create a new information-request
         #
-        app.post "/api/information-request" do
+        app.post "/api/information-request", :allowed_usergroups => ['order_manager','booking_manager','staff'] do
         
           data_request = body_as_json(::Yito::Model::Order::RequestInformation)
           data = ::Yito::Model::Order::RequestInformation.create(data_request)
-         
+          data.created_by_manager = true
+          data.init_user_agent_data(request.env["HTTP_USER_AGENT"])
+          
           status 200
           content_type :json
           data.to_json          
@@ -70,7 +101,7 @@ module Sinatra
         #
         # Updates a information-request
         #
-        app.put "/api/information-request" do
+        app.put "/api/information-request", :allowed_usergroups => ['order_manager','booking_manager','staff'] do
           
           data_request = body_as_json(::Yito::Model::Order::RequestInformation)
                               
@@ -87,7 +118,7 @@ module Sinatra
         #
         # Deletes anorder 
         #
-        app.delete "/api/information-request" do
+        app.delete "/api/information-request", :allowed_usergroups => ['order_manager','booking_manager','staff'] do
         
           data_request = body_as_json(::Yito::Model::Order::RequestInformation)
           

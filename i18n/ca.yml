@@ -1,3 +1,5 @@
+aspect:
+  request_information: Solicitud d\'informació
 order:
   total: Total
   paid: Pagat
@@ -53,3 +55,19 @@ information_request_management:
     customer_language: Idioma
     source: Canal
     anotations: Anotacions
+information_request:
+  title: Solicitut d\'informació
+  customer_name: Nom
+  customer_surname: Cognoms
+  customer_phone: Telèfon
+  customer_email: Email
+  customer_name_required: El nom és obligatori
+  customer_surname_required: Els cognoms són obligatoris
+  customer_phone_required: El telèfono de contacte és obligatori
+  customer_phone_min_length: El tamany mínim del telèfon és de 9 dígits
+  customer_email_required: El correu electrònic és obligatori
+  customer_email_format: El format del correu electrònico no és vàlido  
+  comments: Comentaris
+  send_button: Enviar
+  form_errors:
+    description: Si us plau, revisi els errors al formulari  

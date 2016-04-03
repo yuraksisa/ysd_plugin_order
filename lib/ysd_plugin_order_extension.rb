@@ -110,6 +110,25 @@ module Huasi
                ]
         
     end
+
+    # ======== Aspects ==================
+
+    #
+    # Retrieve an array of the aspects defined in the plugin
+    #
+    # The attachment aspect (complement)
+    #
+    def aspects(context={})
+      
+      app = context[:app]
+      
+      aspects = []
+      aspects << ::Plugins::Aspect.new(:request_information, app.t.aspect.request_information,
+        Aspect::RequestInformation, RequestInformationAspectDelegate.new)
+                                               
+      return aspects
+       
+    end     
     
     #
     # ---------- Path prefixes to be ignored ----------

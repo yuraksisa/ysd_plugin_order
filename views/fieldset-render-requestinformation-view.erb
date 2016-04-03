@@ -1,0 +1,31 @@
+<div class="highlight_block smaller_text all-space">
+  <h3><%=t.information_request.title%></h3>
+  <form name="request_information" method="POST">
+  	<input type="hidden" name="subject" value="<%=element.request_information_subject if defined?(element.request_information_subject)%>"/>
+    <div class="formrow">
+      <label class="fieldtitle"><%=t.information_request.customer_name%></label>
+      <input type="text" maxlength="40" name="customer_name" class="fieldcontrol"/>
+    </div>
+    <div class="formrow">
+      <label class="fieldtitle"><%=t.information_request.customer_surname%></label>
+      <input type="text" maxlength="40" name="customer_surname" class="fieldcontrol"/>
+    </div>    
+    <div class="formrow">
+      <label class="fieldtitle"><%=t.information_request.customer_phone%></label>
+      <input type="text" maxlength="15" name="customer_phone" class="fieldcontrol"/>
+    </div>   
+    <div class="formrow">
+      <label class="fieldtitle"><%=t.information_request.customer_email%></label>
+      <input type="text" maxlength="40" name="customer_email" class="fieldcontrol"/>
+    </div>    
+    <div class="formrow">
+      <label class="fieldtitle"><%=t.information_request.comments%></label>
+      <textarea name="comments" class="fieldcontrol" rows="5"></textarea>
+    </div>   
+    <div id="information_request_errors">
+    </div>
+    <div id="botonera" class="top-margin">
+      <input type="submit" class="form-button green-button" style="width:100%" value="<%=t.information_request.send_button%>"/>
+    </div>          
+  </form>
+</div>

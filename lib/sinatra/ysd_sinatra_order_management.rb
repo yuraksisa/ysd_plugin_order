@@ -7,7 +7,7 @@ module Sinatra
         #
         # Order management page
         #
-        app.get '/admin/order/orders/?*', :allowed_usergroups => ['order_manager','staff'] do 
+        app.get '/admin/order/orders/?*', :allowed_usergroups => ['order_manager', 'booking_manager', 'staff'] do 
 
           locals = {:order_page_size => 12}
           load_em_page :order_management, nil, false, :locals => locals

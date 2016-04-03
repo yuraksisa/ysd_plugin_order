@@ -11,7 +11,7 @@ module Sinatra
         #
         ["/api/orders","/api/orders/page/:page"].each do |path|
           
-          app.post path, :allowed_usergroups => ['order_manager','staff']  do
+          app.post path, :allowed_usergroups => ['order_manager', 'booking_manager', 'staff']  do
 
             page = params[:page].to_i || 1
             limit = 12
@@ -30,7 +30,7 @@ module Sinatra
         #
         # Get orders
         #
-        app.get "/api/orders", :allowed_usergroups => ['order_manager','staff']  do
+        app.get "/api/orders", :allowed_usergroups => ['order_manager', 'booking_manager', 'staff']  do
 
           data = ::Yito::Model::Order::Order.all
 
@@ -43,7 +43,7 @@ module Sinatra
         #
         # Get an order
         #
-        app.get "/api/order/:id", :allowed_usergroups => ['order_manager','staff']  do
+        app.get "/api/order/:id", :allowed_usergroups => ['order_manager','booking_manager','staff']  do
         
           data = ::Yito::Model::Order::Order.get(params[:id].to_i)
           
@@ -56,7 +56,7 @@ module Sinatra
         #
         # Create a new order
         #
-        app.post "/api/order", :allowed_usergroups => ['order_manager','staff']  do
+        app.post "/api/order", :allowed_usergroups => ['order_manager','booking_manager','staff']  do
         
           data_request = body_as_json(::Yito::Model::Order::Order)
           data = ::Yito::Model::Order::Order.create(data_request)
@@ -70,7 +70,7 @@ module Sinatra
         #
         # Updates a order
         #
-        app.put "/api/order", :allowed_usergroups => ['order_manager','staff']  do
+        app.put "/api/order", :allowed_usergroups => ['order_manager','booking_manager','staff']  do
           
           data_request = body_as_json(::Yito::Model::Order::Order)
                               

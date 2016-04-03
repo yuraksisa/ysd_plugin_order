@@ -1,3 +1,5 @@
+aspect:
+  request_information: Information request
 order:
   total: Total
   paid: Paid
@@ -53,3 +55,19 @@ information_request_management:
     customer_language: Language
     source: Source
     anotations: Notes
+information_request:
+  title: Information request
+  customer_name: Name
+  customer_surname: Surname
+  customer_phone: Phone number
+  customer_email: Email
+  customer_name_required: Name is required
+  customer_surname_required: Surname is required
+  customer_phone_required: Phone number is required
+  customer_phone_min_length: Phone number minimum length 9 digits
+  customer_email_required: Email is required
+  customer_email_format: Email format is not valid 
+  comments: Comments
+  send_button: Send
+  form_errors:
+    description: Please, check the errors in the form  
