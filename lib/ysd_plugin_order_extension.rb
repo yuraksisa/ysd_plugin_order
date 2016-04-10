@@ -148,5 +148,12 @@ module Huasi
       %w(/p/order/payment-gateway /p/order/pay /p/myorder /p/activity)
     end
 
+    #
+    # Ignore the following path prefix in breadcrumb
+    #
+    def ignore_path_prefix_breadcrumb(context={})
+      %w(/p/order/payment-gateway /p/order/pay /p/myorder /p/activity)
+    end    
+
   end
 end
