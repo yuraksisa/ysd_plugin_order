@@ -127,6 +127,10 @@
         }
       });
 
+      $('#new_order_line_button').bind('click', function(){
+        window.location.href = '/admin/order/new-order-item-step-1?order=' + entity.id;
+      });
+
     };
   
     this.onNew = function() {

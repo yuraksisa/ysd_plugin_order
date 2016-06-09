@@ -1,0 +1,72 @@
+<style>
+  body {
+    /*background-color: #DDD;*/
+  }
+  .activity_list_item {
+  	/*background-color: white;*/
+  	margin-bottom: 1em;
+  	margin-top: 1em;
+  	padding-bottom: 2em;
+  	padding-top: 1em;
+  	padding-right: 2em;
+  }
+</style>
+<div class="top-navigation-bar">
+  <h2 class="entity-title">Añadir línea de pedido (paso 1 : seleccionar actividad)</h2>
+</div>
+<div class="admin_content_wrapper all-space">
+  <div class="guiblock">
+    <div class="container_12">
+      <div class="grid_6">
+        <div>
+          <strong class="entity-fieldlabel less_contrast_text">Pedido:</strong> <a href="/admin/order/orders/<%=@order.id%>"><%=@order.id%></a>
+        </div>
+        <div>
+          <strong class="entity-fieldlabel less_contrast_text">Cliente:</strong> <%=@order.customer_name%> <%=@order.customer_surname %>
+        </div>             
+      </div>
+    </div>
+  </div>
+  <div class="container_12">
+	  <div class="grid_12">
+	    <% @activities.each do |activity| %>
+	    <div class="activity_list_item top-margin bottom-margin">
+	      <div class="container_12">
+          <div class="grid_3">
+            <div style="height:108px">
+              <% if activity.photo_url_small.nil? or activity.photo_url_small.empty?%> 
+                <div class="element-row-selector" style="width:144px; height: 108px" rel="<%%= index %>">
+                   <span class="centered_text" style="font-size:5em; display: block" data-icon="&#xe072;"></span> 
+                </div> 
+              <% else  %>
+                <img src="<%= activity.photo_url_small %>" class="box-shadow element-row-selector" style="display:block; margin: 0 auto" rel="<%%= index %>"/>
+              <% end %>
+            </div>          	
+          </div>
+          <div class="grid_9">
+          	<div class="left-margin">
+          	  <h4><a href="/p/activity/<%=activity.id%>"><%=activity.name%></a></h4>
+          	  <div class="less_contrast_text"><%=activity.short_description%></div>
+          	  <div class="container top-margin-1line">
+          	  	<div class="prefix_6 grid_3">
+          	       <p style="font-size:0.5em">desde <span style="text-decoration:line-through;"><%= activity.from_price != activity.from_price_offer ? "%.2f €" % activity.from_price : "" %></span></p>
+          	       <strong style="font-size:1.5em;position:relative; top:-0.3em" class="bigger_text right_text"><%=activity.from_price != activity.from_price_offer ? "%.2f €" % activity.from_price_offer : "%.2f €" % activity.from_price%></strong>
+          	    </div>
+          	    <div class="grid_3">
+          	      <div class="left-margin">
+                    <form name="choose_activity" action="/admin/order/new-order-item-step-2" method="POST">
+                      <input type="hidden" name="order_id" value="<%=@order.id%>"/>
+                      <input type="hidden" name="activity_id" value="<%=activity.id%>"/>
+                      <button type="submit" class="form-button green-button">Seleccionar</button>
+                    </form> 
+          	      </div>
+                </div>
+              </div>
+            </div>
+          </div>
+	      </div>
+	    </div>
+	    <% end %>
+	  </div>
+  </div>
+</div>

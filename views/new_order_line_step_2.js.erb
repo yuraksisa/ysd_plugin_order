@@ -1,0 +1,7 @@
+     <% if @activity.occurence == :cyclic %>
+         <%= partial 'reservation_activity_cyclic.js'.to_sym %>
+      <% elsif @activity.occurence == :one_time %>
+         <%= partial 'reservation_activity_one_time.js'.to_sym %>
+      <% elsif @activity.occurence == :multiple_dates %>
+         <%= partial 'reservation_activity_multiple_dates.js'.to_sym %>      
+      <% end %>

@@ -1,0 +1,70 @@
+<style>
+  body {
+    /*background-color: #DDD;*/
+  }
+  .activity_list_item {
+  	/*background-color: white;*/
+  	margin-bottom: 1em;
+  	margin-top: 1em;
+  	padding-bottom: 2em;
+  	padding-top: 1em;
+  	padding-right: 2em;
+  }
+</style>
+<div class="top-navigation-bar">
+  <h2 class="entity-title">Añadir línea de pedido (paso 2: seleccionar tickets)</h2>
+</div>
+<div class="admin_content_wrapper all-space">
+  <div class="guiblock">
+    <div class="container_12">
+      <div class="grid_6">
+        <div>
+          <strong class="entity-fieldlabel less_contrast_text">Pedido:</strong> <a href="/admin/order/orders/<%=@order.id%>"><%=@order.id%></a>
+        </div>
+        <div>
+          <strong class="entity-fieldlabel less_contrast_text">Cliente:</strong> <%=@order.customer_name%> <%=@order.customer_surname %>
+        </div>             
+      </div>
+    </div>
+  </div>
+
+  <div class="container_12">
+    <h3><%=@activity.name%></h2>
+    <div class="grid_10">
+      <div class="top-margin-1line bottom-margin-1line less_contrast_text">
+        <%=@activity.short_description%>
+      </div>
+    </div>
+  </div>
+  <div class="container_12">
+    <div class="grid_8" style="background-color: white">
+      <div>
+        <% if @activity.photo_url_full.nil? or @activity.photo_url_full.empty?%> 
+           <div>
+             <span class="centered_text" style="font-size:25em; display: block" data-icon="&#xe072;"></span> 
+           </div> 
+        <% else  %>
+           <img id="activity_image" src="<%= @activity.photo_url_full %>" class="box-shadow element-row-selector" style="display:block; margin: 0 auto" rel="<%%= index %>"/>
+        <% end %>
+      </div>  
+      <div class="top-margin-1line bottom-margin-2lines">
+        <%= @activity.description %> 
+      </div>
+    </div>
+    <div class="grid_4">
+      <div class="left-margin" style="position:relative; top: -10px">
+        <div id="activity_reservation" class="highlight_block smaller_text">
+          <% if @activity.occurence == :cyclic %>
+            <%= partial :reservation_activity_cyclic %>
+          <% elsif @activity.occurence == :one_time %>
+            <%= partial :reservation_activity_one_time %>
+          <% elsif @activity.occurence == :multiple_dates %>
+            <%= partial :reservation_activity_multiple_dates %>
+          <% end %>
+          <p class="smaller_text less_contrast_text">Plazas reservadas: <%= @occupation[:total_occupation].to_i%></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
