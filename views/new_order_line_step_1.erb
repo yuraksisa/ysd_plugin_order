@@ -12,7 +12,7 @@
   }
 </style>
 <div class="top-navigation-bar">
-  <h2 class="entity-title">Añadir línea de pedido (paso 1 : seleccionar actividad)</h2>
+  <h2 class="entity-title">Añadir línea de pedido (paso 1 de 2 : Seleccionar actividad)</h2>
 </div>
 <div class="admin_content_wrapper all-space">
   <div class="guiblock">
@@ -30,42 +30,42 @@
   <div class="container_12">
 	  <div class="grid_12">
 	    <% @activities.each do |activity| %>
-	    <div class="activity_list_item top-margin bottom-margin">
+	    <div class="activity_list_item">
 	      <div class="container_12">
           <div class="grid_3">
-            <div style="height:108px">
-              <% if activity.photo_url_small.nil? or activity.photo_url_small.empty?%> 
-                <div class="element-row-selector" style="width:144px; height: 108px" rel="<%%= index %>">
+            <div style="max-height:108px">
+              <% if activity.photo_url_medium.nil? or activity.photo_url_medium.empty?%> 
+                <div class="element-row-selector" style="max-width:144px; max-height: 108px" rel="<%%= index %>">
                    <span class="centered_text" style="font-size:5em; display: block" data-icon="&#xe072;"></span> 
                 </div> 
               <% else  %>
-                <img src="<%= activity.photo_url_small %>" class="box-shadow element-row-selector" style="display:block; margin: 0 auto" rel="<%%= index %>"/>
+                <img src="<%= activity.photo_url_medium %>" class="box-shadow element-row-selector" style="display:block; margin: 0 auto; width: 100%" rel="<%%= index %>"/>
               <% end %>
             </div>          	
           </div>
-          <div class="grid_9">
+          <div class="grid_4">
           	<div class="left-margin">
-          	  <h4><a href="/p/activity/<%=activity.id%>"><%=activity.name%></a></h4>
+          	  <h4><%=activity.name%></h4>
           	  <div class="less_contrast_text"><%=activity.short_description%></div>
-          	  <div class="container top-margin-1line">
-          	  	<div class="prefix_6 grid_3">
-          	       <p style="font-size:0.5em">desde <span style="text-decoration:line-through;"><%= activity.from_price != activity.from_price_offer ? "%.2f €" % activity.from_price : "" %></span></p>
-          	       <strong style="font-size:1.5em;position:relative; top:-0.3em" class="bigger_text right_text"><%=activity.from_price != activity.from_price_offer ? "%.2f €" % activity.from_price_offer : "%.2f €" % activity.from_price%></strong>
-          	    </div>
-          	    <div class="grid_3">
-          	      <div class="left-margin">
-                    <form name="choose_activity" action="/admin/order/new-order-item-step-2" method="POST">
-                      <input type="hidden" name="order_id" value="<%=@order.id%>"/>
-                      <input type="hidden" name="activity_id" value="<%=activity.id%>"/>
-                      <button type="submit" class="form-button green-button">Seleccionar</button>
-                    </form> 
-          	      </div>
-                </div>
-              </div>
+            </div>
+          </div>
+          <div class="grid_2">
+             <div class="left-margin top-margin right-float" style="margin-right: 3em">
+                <strong style="font-size:1.5em;" class="bigger_text right_text less_contrast_text"><%= "%.2f €" % activity.from_price %></strong>
+             </div>
+          </div>
+          <div class="grid_3">
+          	<div class="left-margin top-margin">
+              <form name="choose_activity" action="/admin/order/new-order-item-step-2" method="POST">
+                <input type="hidden" name="order_id" value="<%=@order.id%>"/>
+                <input type="hidden" name="activity_id" value="<%=activity.id%>"/>
+                <button type="submit" class="form-button green-button">Seleccionar</button>
+              </form> 
             </div>
           </div>
 	      </div>
 	    </div>
+      <hr  style="color: #DDD"/>
 	    <% end %>
 	  </div>
   </div>
