@@ -75,9 +75,15 @@ order_management:
     allow_deposit_payment_button:
       message: ¿Desea habilitar el pago del depósito de este pedido? 
       label: Permitir pago depósito
+    not_allow_payment_button:
+      message: ¿Desea evitar que pueda realizar el pago total de este pedido?
+      label: No permitir pago total 
+    not_allow_deposit_payment_button:
+      message: ¿Desea evitar que pueda realizar el pago del depósito de este pedido? 
+      label: No permitir pago depósito
     force_allow_payment: Pago del total habilitado
     force_allow_deposit_payment: Pago del depósito habilitado
-    payment_allowed: El cliente puede pagar el pedido
+    payment_allowed: El cliente puede pagar el pedido    
 information_request_management:
   title: Solicitud información
   description: Gestión de solicitudes de información

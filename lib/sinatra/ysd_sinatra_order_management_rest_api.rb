@@ -216,6 +216,23 @@ module Sinatra
         end
 
         #
+        # Not allow order total payment
+        #
+        app.post '/api/order/not-allow-payment/:order_id', 
+          :allowed_usergroups => ['order_manager', 'staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:order_id].to_i)
+            order.force_allow_payment = false
+            order.save
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+
+        end
+
+        #
         # Allow order deposit payment
         #
         app.post '/api/order/allow-deposit-payment/:order_id', 
@@ -223,6 +240,23 @@ module Sinatra
 
           if order=::Yito::Model::Order::Order.get(params[:order_id].to_i)
             order.force_allow_deposit_payment = true
+            order.save
+            content_type :json
+            order.to_json
+          else
+            status 404
+          end
+
+        end
+
+        #
+        # Not allow order deposit payment
+        #
+        app.post '/api/order/not-allow-deposit-payment/:order_id', 
+          :allowed_usergroups => ['order_manager', 'staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:order_id].to_i)
+            order.force_allow_deposit_payment = false
             order.save
             content_type :json
             order.to_json

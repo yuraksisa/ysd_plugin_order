@@ -1,36 +1,19 @@
-<% if order.can_pay? %>
+<% if (order.can_pay_deposit? && order.total_paid == 0) || order.can_pay_total? %>
    <form name="form-payment" id="form-payment" action="/p/order/pay" method="POST">
    	  <input type="hidden" name="id" value="<%=order.id%>"/>
       <h3 class="guiblock-title"><%=t.order.payment.label%></h3>
-      <% if order.total_paid == 0 %>
-        <div class="formrow" style="padding-bottom: 0.1em;">
-          <% if (order_allow_total_payment or order.force_allow_payment) and 
-                ((order_allow_deposit_payment or order.force_allow_deposit_payment) and order.reservation_amount > 0) %>
-            <div class="radio-block">
-              <input type="radio" name="payment" value="total" checked="true"><%=t.order.payment_type.total.label%></input>
-                <p class="radio-info less_contrast_text"><%= "%.2f €" % order.total_cost%></p>
-            </div>
-            <div class="radio-block">
-              <input type="radio" name="payment" value="deposit"><%=t.order.payment_type.deposit.label%></input>
-              <p class="radio-info less_contrast_text"><%= "%.2f €" % order.reservation_amount%></p>
-            </div>
-          <% elsif order_allow_total_payment or order.force_allow_payment %>
-            <input type="hidden" name="payment" value="total"/>
-            <p><%= t.order.payment.description("%.2f €" % order.total_cost)%></p>
-          <% elsif (order_allow_deposit_payment or (order.force_allow_deposit_payment and order.reservation_amount > 0)) %>
-            <input type="hidden" name="payment" value="deposit"/>
-            <p><%= t.order.deposit_payment.description("%.2f €" % order.reservation_amount)%></p>          
-          <% end %>
-        </div>
-      <% else %>
-        <% if order_allow_total_payment or order.force_allow_payment %>
-          <div class="formrow">
-            <input type="hidden" name="payment" value="pending"/>
-            <p><%= t.order.pending_payment.description("%.2f €" % order.total_pending)%></p>
-          </div>
-        <% end %>  
+      <% if order.can_pay_deposit? && order.total_paid == 0%>
+        <input type="hidden" name="payment" value="deposit"/>
+        <p><%= t.order.deposit_payment.description("%.2f €" % order.reservation_amount)%></p>
+      <% elsif order.can_pay_total? %>
+        <% if order.total_paid == 0 %>
+          <input type="hidden" name="payment" value="total"/>
+          <p><%= t.order.payment.description("%.2f €" % order.total_cost)%></p>
+        <% else %>
+          <input type="hidden" name="payment" value="pending"/>
+            <p><%= t.order.pending_payment.description("%.2f €" % order.total_pending)%></p>        
+        <% end %>
       <% end %>
-
       <div class="formrow">
         <div id="payment_methods">
           <h4 class="top-margin bottom-margin"><%=t.order.payment_method%></h4>
