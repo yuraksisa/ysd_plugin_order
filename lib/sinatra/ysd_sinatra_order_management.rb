@@ -46,7 +46,7 @@ module Sinatra
             if @order = ::Yito::Model::Order::Order.get(order_id)
               if @activity = ::Yito::Model::Booking::Activity.get(activity_id)
                 
-                @occupation = {total_occupation: 0, occupation_detail: {}}
+                @occupation = {total_occupation: 0, occupation_detail: {}, occupation_capacity: @activity.capacity}
                 if session[:activity_date_id]
                   @activity_date_id = session[:activity_date_id]
                   if @activity_date = ::Yito::Model::Booking::ActivityDate.get(@activity_date_id)
@@ -59,6 +59,8 @@ module Sinatra
                     @occupation = @activity.occupation(@date, @time)
                   end
                 end
+
+                p "-occupation: #{@occupation}"
 
                 load_page(:new_order_line_step_2)
               else
@@ -83,7 +85,7 @@ module Sinatra
 
           if @order = ::Yito::Model::Order::Order.get(params[:order_id])
             if @activity = ::Yito::Model::Booking::Activity.get(params[:activity_id])
-              @occupation = {total_occupation: 0, occupation_detail: {}}
+              @occupation = {total_occupation: 0, occupation_detail: {}, occupation_capacity: @activity.capacity}
               if params[:activity_date_id]
                 @activity_date_id = params[:activity_date_id]
                 if @activity_date = ::Yito::Model::Booking::ActivityDate.get(@activity_date_id)

@@ -61,7 +61,7 @@
           <% elsif @activity.occurence == :multiple_dates %>
             <%= partial :reservation_activity_multiple_dates %>
           <% end %>
-          <p class="smaller_text less_contrast_text">Plazas reservadas: <%= @occupation[:total_occupation].to_i%></p>
+          <p class="smaller_text less_contrast_text">Plazas reservadas: <%= @occupation[:total_occupation].to_i%> de <%= @occupation[:occupation_capacity] %></p>
         </div>
       </div>
     </div>
