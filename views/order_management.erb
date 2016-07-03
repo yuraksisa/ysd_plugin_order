@@ -210,6 +210,10 @@
              <%% } %>
                <%% if (entity) { %>
                  <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+                 <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.comments %></div>            
+                 <div class="formrow">
+                   <%%=entity.comments%>
+                 </div>
                <%% } %>         
                <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.anotations %></div>
                <div class="formrow">

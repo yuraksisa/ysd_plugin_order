@@ -14,6 +14,12 @@ module Huasi
     def install(context={})
 
       SystemConfiguration::Variable.first_or_create(
+        {:name => 'order.request_reservations'},
+        {:value => 'true',
+         :description => 'Allow the customers to request reservation (without payment)'})
+
+
+      SystemConfiguration::Variable.first_or_create(
         {:name => 'order.payment'},
         {:value => 'false',
          :description => 'Integrate the payment in the booking process. Values: true, false',

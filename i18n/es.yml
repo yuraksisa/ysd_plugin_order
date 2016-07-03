@@ -46,7 +46,8 @@ order_management:
     customer_phone: Teléfono
     customer_email: Email
     customer_language: Idioma
-    anotations: Notas
+    comments: Comentarios (cliente)
+    anotations: Notas (internas)
     no_charges: No se han recibido pagos
     charge_date: Fecha 
     charge_payment_method: Forma de pago 
