@@ -90,6 +90,10 @@
       return entity.id;
     }
 
+    this.onRenderEntities = function(entities) {
+      $('.elements-search').show();
+    }    
+
     this.onEdit = function(entity) {
       this.configForm(entity);
 

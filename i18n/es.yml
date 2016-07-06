@@ -34,8 +34,9 @@ order_management:
     id: Id 
     creation_date: Fecha de recepción
     customer: Cliente
+    product: Productos
     status: Estado 
-    payment_status: Estado del pago
+    payment_status: Estado pago
   form:
     id: Número de pedido 
     creation_date: Fecha de creación

@@ -34,8 +34,9 @@ order_management:
     id: Id 
     creation_date: Data de recepció
     customer: Client
+    product: Productes
     status: Estat 
-    payment_status: Estat del pagament
+    payment_status: Estat pagament
 information_request_management:
   title: Solicitut d\'informació
   description: Gestió de les solicituts d\'informació

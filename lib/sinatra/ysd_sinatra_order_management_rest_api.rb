@@ -13,13 +13,22 @@ module Sinatra
           
           app.post path, :allowed_usergroups => ['order_manager', 'booking_manager', 'staff']  do
 
-            page = params[:page].to_i || 1
-            limit = 12
-            offset = (page-1) * 12
-
-            data  = ::Yito::Model::Order::Order.all(:limit => limit, :offset => offset, :order => [:creation_date.desc])
-            total = ::Yito::Model::Order::Order.count
+            page = [params[:page].to_i, 1].max  
+            page_size = 20
+            offset_order_query = {:offset => (page - 1)  * page_size, :limit => page_size, :order => [:creation_date.desc]} 
           
+            if request.media_type == "application/x-www-form-urlencoded"
+              search_text = if params[:search]
+                              params[:search]
+                            else
+                              request.body.rewind
+                              request.body.read
+                            end
+              total, data = ::Yito::Model::Order::Order.text_search(search_text,offset_order_query)
+            else
+              data, total = ::Yito::Model::Order::Order.all_and_count(offset_order_query)
+            end
+
             content_type :json
             {:data => data, :summary => {:total => total}}.to_json
           

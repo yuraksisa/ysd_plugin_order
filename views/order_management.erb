@@ -18,9 +18,10 @@
        <tr>
         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.id %></th>
          <th class="table-header-title" scope="col" style="width:15%"><%= t.order_management.table.creation_date %></th>
-         <th class="table-header-title" scope="col" style="width:35%"><%= t.order_management.table.customer %></th>
-         <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.status %></th>
-         <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.payment_status %></th>
+         <th class="table-header-title" scope="col" style="width:25%"><%= t.order_management.table.customer %></th>
+         <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.product %></th>
+         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.status %></th>
+         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.payment_status %></th>
          <th class="table-header-title centered_text" scope="col" style="width:5%"><%= t.booking_management.table.notifications %></th>           
        </tr>
      </thead>
@@ -51,12 +52,21 @@
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.id %></td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= self.formatDate(entity.creation_date) %></td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.customer_name %> <%%=entity.customer_surname%></td>
+      <td class="table-cell element-navigation-detail smaller_text" rel="<%%=index%>">
+        <%% var items = []; %>
+        <%% for (var idx=0;idx<entity.order_items.length;idx++) { %>
+          <%% if (items.indexOf(entity.order_items[idx].item_id) == -1) { %>
+            <%%= entity.order_items[idx].item_id %>
+            <%% items.push(entity.order_items[idx].item_id); %>
+          <%% } %>
+        <%% } %>
+      </td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>">
         <span class="smaller_text <%%=self.model.entityHooks[0].statusClass(entity)%> element-status">
           <%%= self.model.entityHooks[0].statusDescription[entity.status] %>
         </span>      
       </td>
-      <td class="table-cell element-navigation-detail" rel="<%%= index %>">
+      <td class="table-cell element-navigation-detail centered_text" rel="<%%= index %>">
          <%% if (entity.payment_status == 'none') { %><span class="element-status pending-status smaller_text">p</span> <%% } %>   
          <%% if (entity.payment_status == 'deposit') { %><span class="element-status doing-status smaller_text">d</span> <%% } %>      
          <%% if (entity.payment_status == 'total') { %><span class="element-status done-status smaller_text">t</span> <%%}%>

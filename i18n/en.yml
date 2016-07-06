@@ -34,6 +34,7 @@ order_management:
     id: Id 
     creation_date: Creation date
     customer: Customer
+    product: Products
     status: Status
     payment_status: Payment status
 information_request_management:
