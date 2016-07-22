@@ -91,12 +91,12 @@
     }
 
     this.onRenderEntities = function(entities) {
-      $('.elements-search').show();
+      $('.elements-search').show();   
     }    
 
     this.onEdit = function(entity) {
       this.configForm(entity);
-
+      $('.new-entity-button').show();
       $('#new_charge').bind('click', function(){
         $('#new_charge_button').unbind('click');
         $('#date').datetimepicker(
@@ -138,8 +138,9 @@
     };
   
     this.onNew = function() {
+      $('.new-entity-button').hide();
   	  this.configForm(null);
-    }
+    };
     
     this.configForm = function(entity) {
       
@@ -177,7 +178,7 @@
       $('#new_order_line_date').datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
       var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
 
-      for (var idx=0; idx<entity.order_items.length; idx++) {
+      for (var idx=0; entity != null && idx<entity.order_items.length; idx++) {
 
         $('#date_'+idx).datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
         $('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date)); 
