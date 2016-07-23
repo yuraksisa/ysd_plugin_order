@@ -37,6 +37,13 @@ order_management:
     product: Productes
     status: Estat 
     payment_status: Estat pagament
+  form:
+    cancel_button:   
+      label: Cancelar comanda
+      message: Vol cancelar la comanda?
+    confirm_button: 
+      label: Confirmar
+      message: Vol confirmar la comanda?    
 information_request_management:
   title: Solicitut d\'informació
   description: Gestió de les solicituts d\'informació

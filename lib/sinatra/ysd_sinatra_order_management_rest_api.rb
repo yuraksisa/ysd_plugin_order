@@ -206,6 +206,37 @@ module Sinatra
           end
         end
 
+        #
+        # Confirm an order
+        #
+        app.post '/api/order/confirm/:order_id', :allowed_usergroups => ['order_manager','staff'] do
+
+          if order=::Yito::Model::Order::Order.get(params[:order_id].to_i)
+            content_type :json
+            result = order.confirm!
+            order.notify_customer if order.total_paid > 0
+            result.to_json
+          else
+            status 404
+          end
+
+        end
+
+        #
+        # Cancel an order
+        #
+        app.post '/api/order/cancel/:order_id',
+          :allowed_usergroups => ['order_manager','staff']  do
+
+          if order=::Yito::Model::Order::Order.get(params[:order_id].to_i)
+            content_type :json
+            order.cancel.to_json
+          else
+            status 404
+          end
+
+        end
+
 
         #
         # Allow order total payment

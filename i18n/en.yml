@@ -37,6 +37,13 @@ order_management:
     product: Products
     status: Status
     payment_status: Payment status
+  form:
+    cancel_button:   
+      label: Cancel order
+      message: Do you want to cancel the order?
+    confirm_button: 
+      label: Confirm
+      message: Do you want to confirm the order?    
 information_request_management:
   title: Information requests
   description: Information requests management

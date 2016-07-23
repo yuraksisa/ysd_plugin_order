@@ -1,0 +1,25 @@
+                    <%% if (entity.status == 'pending_confirmation') { %>
+                    <button class="form-button red-button element-action-button" id="cancel_order_button" 
+                      title="<%=t.order_management.form.cancel_button.label%>" 
+                      data-action-method="POST"
+                      data-action-url="/api/order/cancel/<%%=entity.id%>"
+                      data-confirm-message="<%=t.order_management.form.cancel_button.message%>">
+                      <%=t.order_management.form.cancel_button.label%>
+                    </button>                      
+                    <button class="form-button element-action-button green-button" id="confirm_order_button" 
+                      title="<%=t.order_management.form.confirm_button.label%>"
+                      data-action-method="POST"
+                      data-action-url="/api/order/confirm/<%%=entity.id%>"
+                      data-confirm-message="<%=t.order_management.form.confirm_button.message%>">
+                      <%=t.order_management.form.confirm_button.label%>
+                    </button>                          
+                   <%% } %>
+                   <%% if (entity.status == 'confirmed') {  %>                    
+                   <button class="form-button red-button element-action-button" id="cancel_order_button" 
+                      title="<%=t.order_management.form.cancel_button.label%>" 
+                      data-action-method="POST"
+                      data-action-url="/api/order/cancel/<%%=entity.id%>"
+                      data-confirm-message="<%=t.order_management.form.cancel_button.message%>">
+                      <%=t.order_management.form.cancel_button.label%>
+                   </button>                                     
+                   <%%  } %>

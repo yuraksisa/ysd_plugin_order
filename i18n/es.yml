@@ -85,7 +85,13 @@ order_management:
       label: No permitir pago depósito
     force_allow_payment: Pago del total habilitado
     force_allow_deposit_payment: Pago del depósito habilitado
-    payment_allowed: El cliente puede pagar el pedido    
+    payment_allowed: El cliente puede pagar el pedido
+    cancel_button:   
+      label: Cancelar pedido
+      message: ¿Desea cancelar el pedido?
+    confirm_button: 
+      label: Confirmar
+      message: ¿Desea confirmar el pedido?              
 information_request_management:
   title: Solicitud información
   description: Gestión de solicitudes de información
