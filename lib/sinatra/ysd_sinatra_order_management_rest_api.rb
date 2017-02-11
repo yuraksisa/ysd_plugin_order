@@ -17,14 +17,14 @@ module Sinatra
             page_size = 20
             offset_order_query = {:offset => (page - 1)  * page_size, :limit => page_size, :order => [:creation_date.desc]} 
           
-            if request.media_type == "application/x-www-form-urlencoded"
-              search_text = if params[:search]
-                              params[:search]
-                            else
-                              request.body.rewind
-                              request.body.read
-                            end
-              total, data = ::Yito::Model::Order::Order.text_search(search_text,offset_order_query)
+            if request.media_type == "application/json"
+              request.body.rewind
+              search_request = JSON.parse(URI.unescape(request.body.read))
+              if search_request.has_key?('search')
+                total, data = ::Yito::Model::Order::Order.text_search(search_request['search'],offset_order_query)
+              else
+                data, total = ::Yito::Model::Order::Order.all_and_count(offset_order_query)
+              end
             else
               data, total = ::Yito::Model::Order::Order.all_and_count(offset_order_query)
             end
