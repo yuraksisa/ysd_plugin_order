@@ -96,13 +96,31 @@
 
 <script type="text/tmpl" id="element_template_form">
      
-    <%% if (!entity) { %>         
+  <%% if (!entity) { %>
     <form name="element" id="order_management_form">
-    <%% } %>   
 
-      <%% if (entity) { %> 
-      <div id="dialogs_container">
-      </div> 
+      <div class="container_12">
+        <%= partial :order_management_customer %>
+        <div class="grid_6">
+          <div class="left-margin all-space bottom-margin" style="border:1px solid #EEE; padding-bottom: 25px">
+            <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.comments_new %></div>
+            <div class="formrow">
+              <textarea name="comments" rows="6" class="fieldcontrol"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-navigation-bar navigation-bar">
+          <div class="navigation-bar-crud-buttons">
+              <input type="submit" class="create-entity-button action-button entity-management-button" value="<%=t.entitymanagement.create%>"/>
+          </div>
+      </div>
+    </form>
+
+  <%% } else { %>
+
+    <div id="dialogs_container">
 
       <div class="container_12">
         <div class="element-detail all-border-solid-light all-space overflow bottom-margin-1line">
@@ -154,9 +172,6 @@
           </div>
         </div>
       </div>
-      <%% } %>
-
-      <%% if (entity) { %>
 
       <div class="container_12">
         <h2>Detalle del pedido</h2>
@@ -167,11 +182,7 @@
       
       </div>
 
-      <%% } %>
-
-    <%% if (entity) { %>
-
-     <ul id="content_tabs" class="no-border no-background top-margin-2lines">  
+      <ul id="content_tabs" class="no-border no-background top-margin-2lines">
           <li class="no-border no-background top-space" style="border:none; background:none">
               <a name="customer_tab" href="#customer_tab">Cliente</a>
           </li>
@@ -212,21 +223,6 @@
            <%= partial :order_management_others %>         
          </div>
       </div>
-    <%% } %>  
-
-    <%% if (!entity) { %>        
-      <div class="bottom-navigation-bar navigation-bar">
-          <div class="navigation-bar-crud-buttons">
-              <input type="submit" class="create-entity-button action-button entity-management-button" value="<%=t.entitymanagement.create%>"/>
-          </div>
-      </div>
-    <%% } %>
-     
-    <%% if (!entity) { %>
-    </form>
-    <%% } %>
-
-    <%% if (entity) { %>
 
                                   <div id="create_order_item_container" class="all-space all-border-solid" style="display:none; background: #fff; min-width:600px">
 

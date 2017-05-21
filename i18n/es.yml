@@ -50,6 +50,7 @@ order_management:
     customer_phone: Teléfono
     customer_email: Email
     customer_language: Idioma
+    comments_new: Comentarios
     comments: Comentarios (cliente)
     anotations: Notas (internas)
     no_charges: No se han recibido pagos

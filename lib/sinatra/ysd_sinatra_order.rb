@@ -31,6 +31,24 @@ module Sinatra
           if @order = ::Yito::Model::Order::Order.get_by_free_access_id(params[:id])
             if request.post?
               @order.transaction do
+
+                if @order.request_customer_address
+                  customer_address = @order.customer_address || LocationDataSystem::Address.new
+                  customer_address.street = params[:street]
+                  customer_address.number = params[:number]
+                  customer_address.complement = params[:complement]
+                  customer_address.city = params[:city]
+                  customer_address.state = params[:state]
+                  customer_address.country = params[:country]
+                  customer_address.zip = params[:zip]
+                  customer_address.save
+                  if @order.customer_address.nil?
+                    @order.customer_address = customer_address
+                    @order.save
+                  end
+                end
+
+                # Update customers data
                 if params[:order_item_customers]
                   params[:order_item_customers].each do |item|
                     if order_item_customer = ::Yito::Model::Order::OrderItemCustomer.get(item[:id])

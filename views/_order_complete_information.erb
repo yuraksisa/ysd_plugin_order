@@ -1,13 +1,30 @@
 <form name="complete_order_data_form" class="top-margin" action="/p/myorder/<%=params[:id]%>" method="post">
+
+
+  <% if order.request_customer_address %>
+      <h3 class="guiblock-title"><%=t.order.complete_information.label%></h3>
+      <br>
+      <div class="alert">
+        <p><%=t.order.complete_data%></p>
+      </div>
+      <br>
+      <div class="smaller_text">
+        <%= partial :customer_address, locals: {source: order} %>
+      </div>
+      <br>
+  <% end %>
+
   <% order.order_items.each do |order_item| %>
     <!-- Customer information -->
     <% if order_item.request_customer_information %>
+        <% unless order.request_customer_address %>
         <h3 class="guiblock-title"><%=t.order.complete_information.label%></h3>
         <br>
         <div class="alert">
             <p><%=t.order.complete_data%></p>
         </div>
         <br>
+        <% end %>
         <% activity = order_item.item_activity.translate(session[:locale]) %>
         <h4 class="activity_customers_title"><%=t.activity_checkout.activity_customers(activity.name)%></h4>
         <br>

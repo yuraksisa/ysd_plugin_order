@@ -1,10 +1,14 @@
+   <%% if (entity) { %>
+   <form name="customer">
+     <div class="all-space bottom-margin" style="border:1px solid #EEE">
+     <div class="container_12">
+   <%% } %>
         <div class="grid_6">
+          <%% if (!entity) { %>
           <div class="all-space bottom-margin" style="border:1px solid #EEE">
-            <%% if (entity) { %>
-            <form name="customer">
-            <%% } %>
+          <%% } %>
               <div class="more_contrast_text top-margin bottom-margin" style="text-decoration:underline; margin-left:5px"><%= t.order_management.form.customer_title %>
-              </div> 
+              </div>
               <%% if (entity) { %>
                 <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
               <%% } %>
@@ -45,15 +49,90 @@
                   <span class="entity-fieldvalue"><%% if (entity) { %><%%= entity.customer_language %><%%}%></span>
                 </div>
               </div>
-              <%% if (entity) {%>
-              <div class="navigation-bar bottom-margin">
-                <div class="navigation-bar-crud-buttons right-float">
-                  <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
-                </div>
-              </div>             
-              <%% } %>   
-            <%% if (entity) { %>         
-            </form>    
+          <%% if (!entity) { %>
+          </div>
           <%% } %>
+        </div>
+
+        <%% if (entity) { %>
+        <div class="grid_6">
+          <div class="more_contrast_text top-margin" style="text-decoration:underline; margin-left:5px"><%=t.booking_management.form.driver_address_title%></div>
+          <div class="element_template">
+            <div class="entity-field">
+              <span class="entity-fieldlabel less_contrast_text"><%= t.booking_management.form.driver_address_street %></span>
+              <span class="entity-fieldvalue">
+                      <input type="text" maxlength="60" size="25" name="customer_address[street]" id="customer_address[street]"
+                             <%%if(entity.customer_address){%>value="<%%=entity.customer_address.street%>"<%%}%>/>
+                    </span>
+            </div>
+          </div>
+          <div class="element_template">
+            <div class="entity-field">
+              <span class="entity-fieldlabel less_contrast_text"><%= t.booking_management.form.driver_address_number %></span>
+              <span class="entity-fieldvalue">
+                      <input type="text" maxlength="10" size="25" name="customer_address[number]" id="customer_address[number]"
+                             <%%if(entity.customer_address){%>value="<%%=entity.customer_address.number%>"<%%}%>/>
+                    </span>
+            </div>
+          </div>
+          <div class="element_template">
+            <div class="entity-field">
+              <span class="entity-fieldlabel less_contrast_text"><%= t.booking_management.form.driver_address_complement %></span>
+              <span class="entity-fieldvalue">
+                      <input type="text" maxlength="20" size="25" name="customer_address[complement]" id="customer_address[complement]"
+                             <%%if(entity.customer_address){%>value="<%%=entity.customer_address.complement%>"<%%}%>/>
+                    </span>
+            </div>
+          </div>
+          <div class="element_template">
+            <div class="entity-field">
+              <span class="entity-fieldlabel less_contrast_text"><%= t.booking_management.form.driver_address_city %></span>
+              <span class="entity-fieldvalue">
+                      <input type="text" maxlength="60" size="25" name="customer_address[city]" id="customer_address[city]"
+                             <%%if(entity.customer_address){%>value="<%%=entity.customer_address.city%>"<%%}%>/>
+                    </span>
+            </div>
+          </div>
+          <div class="element_template">
+            <div class="entity-field">
+              <span class="entity-fieldlabel less_contrast_text"><%= t.booking_management.form.driver_address_state %></span>
+              <span class="entity-fieldvalue">
+                      <input type="text" maxlength="60" size="25" name="customer_address[state]" id="customer_address[state]"
+                             <%%if(entity.customer_address){%>value="<%%=entity.customer_address.state%>"<%%}%>/>
+                    </span>
+            </div>
+          </div>
+          <div class="element_template">
+            <div class="entity-field">
+              <span class="entity-fieldlabel less_contrast_text"><%= t.booking_management.form.driver_address_country %></span>
+              <span class="entity-fieldvalue">
+                      <input type="text" maxlength="50" size="25" name="customer_address[country]" id="customer_address[country]"
+                             <%%if(entity.customer_address){%>value="<%%=entity.customer_address.country%>"<%%}%>/>
+                    </span>
+            </div>
+          </div>
+          <div class="element_template">
+            <div class="entity-field">
+              <span class="entity-fieldlabel less_contrast_text"><%= t.booking_management.form.driver_address_zip %></span>
+              <span class="entity-fieldvalue">
+                      <input type="text" maxlength="10" size="25" name="customer_address[zip]" id="customer_address[zip]"
+                             <%%if(entity.customer_address){%>value="<%%=entity.customer_address.zip%>"<%%}%>/>
+                    </span>
+            </div>
           </div>
         </div>
+     </div>
+
+     <div class="container_12">
+        <div class="navigation-bar bottom-margin">
+          <div class="navigation-bar-crud-buttons right-float">
+            <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+          </div>
+        </div>
+     </div>
+
+     </div>
+   </form>
+
+
+      <%% } %>

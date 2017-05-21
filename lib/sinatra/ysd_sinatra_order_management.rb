@@ -137,19 +137,19 @@ module Sinatra
             quantity_rate_1 = params[:quantity_rate_1].to_i
             quantity_rate_2 = params[:quantity_rate_2].to_i
             quantity_rate_3 = params[:quantity_rate_3].to_i
-            
-            activity_options = {
-              request_customer_information: @activity.request_customer_information,
-              request_customer_document_id: @activity.request_customer_document_id,
-              request_customer_phone: @activity.request_customer_phone,
-              request_customer_email: @activity.request_customer_email,
-              request_customer_height: @activity.request_customer_height,
-              request_customer_weight: @activity.request_customer_weight,
-              request_customer_allergies_intolerances: @activity.request_customer_allergies_intolerances,
-              uses_planning_resources: @activity.uses_planning_resources
-            }
 
             if @activity = ::Yito::Model::Booking::Activity.get(activity_id)
+              activity_options = {
+                  request_customer_information: @activity.request_customer_information,
+                  request_customer_address: @activity.request_customer_address,
+                  request_customer_document_id: @activity.request_customer_document_id,
+                  request_customer_phone: @activity.request_customer_phone,
+                  request_customer_email: @activity.request_customer_email,
+                  request_customer_height: @activity.request_customer_height,
+                  request_customer_weight: @activity.request_customer_weight,
+                  request_customer_allergies_intolerances: @activity.request_customer_allergies_intolerances,
+                  uses_planning_resources: @activity.uses_planning_resources
+              }
               activity_name = @activity.name
               activity_name << " (#{description})" unless description.nil?           
               ::Yito::Model::Order::Order.transaction do 
