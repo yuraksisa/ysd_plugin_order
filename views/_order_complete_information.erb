@@ -1,0 +1,101 @@
+<form name="complete_order_data_form" class="top-margin" action="/p/myorder/<%=params[:id]%>" method="post">
+  <% order.order_items.each do |order_item| %>
+    <!-- Customer information -->
+    <% if order_item.request_customer_information %>
+        <h3 class="guiblock-title"><%=t.order.complete_information.label%></h3>
+        <br>
+        <div class="alert">
+            <p><%=t.order.complete_data%></p>
+        </div>
+        <br>
+        <% activity = order_item.item_activity.translate(session[:locale]) %>
+        <h4 class="activity_customers_title"><%=t.activity_checkout.activity_customers(activity.name)%></h4>
+        <br>
+        <div class="smaller_text">
+        <table class="table smaller_text activity_customers_table">
+          <thead class="table-header">
+          <tr>
+            <th class="table-header">#</th>
+            <th class="table-header-title" style="min-width: 230px;"><%=t.activity.item_customer_name%></th>
+            <% if activity.request_customer_document_id %>
+                <th class="table-header-title"><%=t.activity.item_customer_document_id%></th>
+            <% end %>
+            <% if activity.request_customer_phone %>
+                <th class="table-header-title"><%=t.activity.item_customer_phone%></th>
+            <% end %>
+            <% if activity.request_customer_email %>
+                <th class="table-header-title"><%=t.activity.item_customer_email%></th>
+            <% end %>
+            <% if activity.request_customer_height %>
+                <th class="table-header-title"><%=t.activity.item_customer_height%></th>
+            <% end %>
+            <% if activity.request_customer_weight %>
+                <th class="table-header-title"><%=t.activity.item_customer_weight%></th>
+            <% end %>
+            <% if activity.request_customer_allergies_intolerances%>
+                <th class="table-header-title"><%=t.activity.item_customer_allergies_intolerances%></th>
+            <% end %>
+          </tr>
+          </thead>
+          <tbody>
+          <% num = 0 %>
+          <% order_item.order_item_customers.each do |item| %>
+              <% num = num+1 %>
+              <input type="hidden" name="order_item_customers[][id]" value="<%=item.id%>"/>
+              <tr class="table-row">
+                <td class="table-cell"><%=num%></td>
+                <td class="table-cell">
+                  <input name="order_item_customers[][customer_name]" type="text" maxlength="80" size="15" value="<%=item.customer_name%>"/>
+                  <input name="order_item_customers[][customer_surname]" type="text" maxlength="80" size="15"  value="<%=item.customer_surname%>"/>
+                </td>
+                <% if activity.request_customer_document_id %>
+                    <td class="table-cell">
+                      <input name="order_item_customers[][customer_document_id]" type="text" maxlength="50" size="10" value="<%=item.customer_document_id%>"/>
+                    </td>
+                <% end %>
+                <% if activity.request_customer_phone %>
+                    <td class="table-cell">
+                      <input name="order_item_customers[][customer_phone]" type="text" maxlength="15" size="10" value="<%=item.customer_phone%>"/>
+                    </td>
+                <% end %>
+                <% if activity.request_customer_email %>
+                    <td class="table-cell">
+                      <input name="order_item_customers[][customer_email]" type="text" maxlength="40" size="15" value="<%=item.customer_email%>"/>
+                    </td>
+                <% end %>
+                <% if activity.request_customer_height %>
+                    <td class="table-cell">
+                      <select name="order_item_customers[][customer_height]">
+                        <option value=""><%=t.new_booking.height.placeholder%></option>
+                        <% @booking_item_family.height_values.split(',').each do |height|%>
+                            <option value="<%=height%>" <%if item.customer_height==height%>selected<%end%>><%=height%></option>
+                        <% end %>
+                      </select>
+                    </td>
+                <% end %>
+                <% if activity.request_customer_weight %>
+                    <td class="table-cell">
+                      <select name="order_item_customers[][customer_weight]">
+                        <option value=""><%=t.new_booking.weight.placeholder%></option>
+                        <% @booking_item_family.weight_values.split(',').each do |weight|%>
+                            <option value="<%=weight%>" <%if item.customer_weight==weight%>selected<%end%>><%=weight%></option>
+                        <% end %>
+                      </select>
+                    </td>
+                <% end %>
+                <% if activity.request_customer_allergies_intolerances %>
+                    <td class="table-cell">
+                      <textarea name="order_item_customers[][customer_allergies_or_intolerances]" rows="3"><%=item.customer_allergies_or_intolerances%></textarea>
+                    </td>
+                <% end %>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        </div>
+        <div class="formrow-botonera top-separator top-margin top-space">
+           <input type="submit" value="Actualizar"/>
+        </div>
+    <% end %>
+  <% end %>
+</form>

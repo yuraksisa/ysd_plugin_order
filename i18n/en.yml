@@ -7,7 +7,8 @@ order:
   expired: Expired
   title: Order number %1
   id: Your order number is <strong>%1</strong>. <span class="smaller_text less_contrast_text">Use the order number in all your communications.</span> 
-  summary: Order detail  
+  summary: Order detail
+  complete_data: Please complete this form
   state:
     pending_confirmation: Pending of confirmation
     confirmed: Confirmed
@@ -17,7 +18,9 @@ order:
     total:
       label: Total
     deposit:
-      label: Deposit 
+      label: Deposit
+  complete_information:
+    label: Complete information
   payment:
     label: Payment
     description:  You can pay of the order, <strong>%1</strong>

@@ -131,16 +131,34 @@ module Sinatra
               order_item.item_price_type = data_request[:item_price_type]
               order_item.quantity = data_request[:quantity]
               order_item.item_unit_cost = data_request[:item_unit_cost]
-              order_item.item_cost = data_request[:item_cost]
+              order_item.item_cost = order_item.item_unit_cost * order_item.quantity
               order_item.notes = data_request[:notes]
               order_item.order = order
+              # Append activity extra information
+              if activity = ::Yito::Model::Booking::Activity.first(code: order_item.item_id)
+                order_item.request_customer_information = activity.request_customer_information
+                order_item.request_customer_document_id = activity.request_customer_document_id
+                order_item.request_customer_phone = activity.request_customer_phone
+                order_item.request_customer_email = activity.request_customer_email
+                order_item.request_customer_height = activity.request_customer_height
+                order_item.request_customer_weight = activity.request_customer_weight
+                order_item.request_customer_allergies_intolerances = activity.request_customer_allergies_intolerances
+                order_item.uses_planning_resources = activity.uses_planning_resources
+              end
+              # Append customer information
+              if order_item.request_customer_information
+                (1..order_item.quantity).each do |item|
+                  order_item_customer = ::Yito::Model::Order::OrderItemCustomer.new
+                  order_item_customer.order_item = order_item 
+                  order_item.order_item_customers << order_item_customer
+                end
+              end
               order_item.save
               order.total_cost += order_item.item_cost
               order.total_pending += order_item.item_cost 
               order.save
-              transaction.commit 
-              order.reload
             end
+            order.reload
             content_type :json 
             order.to_json 
           else
@@ -162,6 +180,7 @@ module Sinatra
             order = order_item.order
             ::Yito::Model::Order::OrderItem.transaction do |transaction|
               old_item_cost = order_item.item_cost
+              old_item_quantity = order_item.quantity
               order_item.item_id = data_request[:item_id]
               order_item.item_description = data_request[:item_description]
               order_item.item_price_description = data_request[:item_price_description]
@@ -170,15 +189,43 @@ module Sinatra
               order_item.item_price_type = data_request[:item_price_type]              
               order_item.quantity = data_request[:quantity]
               order_item.item_unit_cost = data_request[:item_unit_cost]
-              order_item.item_cost = data_request[:item_cost]
+              order_item.item_cost = order_item.item_unit_cost * order_item.quantity
               order_item.notes = data_request[:notes]
+
+              data_request[:customers].each do |item|
+                order_item_customer = (order_item.order_item_customers.select { |oic| oic.id == item[:id].to_i}).first
+                if order_item_customer
+                  order_item_customer.customer_name = item[:customer_name]
+                  order_item_customer.customer_surname = item[:customer_surname]
+                  order_item_customer.customer_document_id = item[:customer_document_id]
+                  order_item_customer.customer_phone = item[:customer_phone]
+                  order_item_customer.customer_email = item[:customer_email]
+                  order_item_customer.customer_height = item[:customer_height]
+                  order_item_customer.customer_weight = item[:customer_weight]
+                  order_item_customer.customer_allergies_or_intolerances = item[:customer_allergies_or_intolerances]
+                end
+              end
+
+              # If the order item requests customer information
+              if order_item.request_customer_information
+                if old_item_quantity < order_item.quantity
+                  (old_item_quantity..order_item.quantity).each do |item|
+                    order_item_customer = ::Yito::Model::Order::OrderItemCustomer.new
+                    order_item_customer.order_item = order_item 
+                    order_item.order_item_customers << order_item_customer
+                  end
+                elsif old_item_quantity > order_item.quantity
+                  while order_item.order_items_customers.size > order_item.quantity 
+                    order_item.order_items_customers.last.destroy
+                  end              
+                end
+              end   
               order_item.save
               order.total_cost = order.total_cost - old_item_cost + order_item.item_cost
               order.total_pending = order.total_pending - old_item_cost + order_item.item_cost 
               order.save
-              transaction.commit 
-              order.reload
             end
+            order.reload
             content_type :json 
             order.to_json 
           else

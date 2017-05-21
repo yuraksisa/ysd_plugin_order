@@ -7,7 +7,8 @@ order:
   expired: Caducado
   title: Pedido %1
   id: Su número de pedido es <strong>%1</strong>. <span class="less_contrast_text smaller_text">Use su número de pedido en todas las comunicaciones.</span>
-  summary: Detalle de su pedido  
+  summary: Detalle de su pedido
+  complete_data: Por favor complete los siguientes datos de su reserve para agilizar su realización en la hora indicada
   state:
     pending_confirmation: Pendiente de confirmación
     confirmed: Confirmado
@@ -18,6 +19,8 @@ order:
       label: Total
     deposit:
       label: Depósito
+  complete_information:
+    label: Completar información
   payment:
     label: Pago
     description: Puede realizar el pago del importe del pedido, <strong>%1</strong>
@@ -63,6 +66,7 @@ order_management:
       cost: Coste total
       annotation: Notas
       add: Añadir
+      edit: Editar
       update: Modificar
       delete: Eliminar
       delete_button:

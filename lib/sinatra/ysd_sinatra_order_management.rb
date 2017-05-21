@@ -9,6 +9,7 @@ module Sinatra
         #
         app.get '/admin/order/orders/?*', :allowed_usergroups => ['order_manager', 'booking_manager', 'staff'] do 
 
+          @booking_item_family = ::Yito::Model::Booking::ProductFamily.get(SystemConfiguration::Variable.get_value('booking.item_family'))
           locals = {:order_page_size => 12}
           load_em_page :order_management, nil, false, :locals => locals
 
@@ -136,6 +137,17 @@ module Sinatra
             quantity_rate_1 = params[:quantity_rate_1].to_i
             quantity_rate_2 = params[:quantity_rate_2].to_i
             quantity_rate_3 = params[:quantity_rate_3].to_i
+            
+            activity_options = {
+              request_customer_information: @activity.request_customer_information,
+              request_customer_document_id: @activity.request_customer_document_id,
+              request_customer_phone: @activity.request_customer_phone,
+              request_customer_email: @activity.request_customer_email,
+              request_customer_height: @activity.request_customer_height,
+              request_customer_weight: @activity.request_customer_weight,
+              request_customer_allergies_intolerances: @activity.request_customer_allergies_intolerances,
+              uses_planning_resources: @activity.uses_planning_resources
+            }
 
             if @activity = ::Yito::Model::Booking::Activity.get(activity_id)
               activity_name = @activity.name
@@ -151,7 +163,8 @@ module Sinatra
                                   1,
                                   quantity_rate_1,
                                   @activity.rates(date)[1][1],
-                                  @activity.price_1_description)
+                                  @activity.price_1_description,
+                                  @activity.price_1_affects_capacity ? activity_options : {})
                   end
 
                   if !quantity_rate_2.nil? and quantity_rate_2 > 0
@@ -162,7 +175,8 @@ module Sinatra
                                   2,
                                   quantity_rate_2,
                                   @activity.rates(date)[2][1],
-                                  @activity.price_2_description) 
+                                  @activity.price_2_description,
+                                  @activity.price_2_affects_capacity ? activity_options : {}) 
                   end
 
                   if !quantity_rate_3.nil? and quantity_rate_3 > 0
@@ -173,7 +187,8 @@ module Sinatra
                                   3,
                                   quantity_rate_3,
                                   @activity.rates(date)[3][1],
-                                  @activity.price_3_description)               
+                                  @activity.price_3_description,
+                                  @activity.price_3_affects_capacity ? activity_options : {})               
                   end
                 rescue DataMapper::SaveFailureError => error
                   p "Error adding item(s) to shopping_cart. #{@shopping_cart.inspect} #{@shopping_cart.errors.inspect}"

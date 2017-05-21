@@ -7,7 +7,8 @@ order:
   expired: Caducada
   title: Comanda %1
   id: La seva comanda és la  <strong>%1</strong>. <span class="less_contrast_text smaller_text">Si us plau, utilitzi el nombre de comanda en totes les comunicacions.</span>
-  summary: Detall de la seva comanda  
+  summary: Detall de la seva comanda
+  complete_data: Si us plau, completi les següents dades per facilitar la realització de la seva reserva a l\'hora estimada
   state:
     pending_confirmation: Pendent de confirmació
     confirmed: Confirmada
@@ -18,6 +19,8 @@ order:
       label: Total
     deposit:
       label: Depòsit
+  complete_information:
+    label: Completar les dades
   payment:
     label: Pagament
     description: Pot pagar el total de la comanda, <strong>%1</strong>

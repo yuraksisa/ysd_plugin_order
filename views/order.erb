@@ -1,17 +1,30 @@
  <div class="container_12">
+   <!-- Order detail -->
    <div class="grid_8">
    	 <div class="guiblock">
        <%= partial(:order, :locals => {:order => order, :message => ""}) %>  
      </div>
    </div>
+   <!-- /Order detail -->
+   <!-- Order price -->
    <div class="grid_4">
      <%= partial(:order_price, :locals => {:order => order}) %>  
    </div>
+   <!--/Order price -->
  </div>
+
+ <!-- Order complete information -->
+ <div class="container_12">
+   <%= partial(:order_complete_information, :locals => {:order => order}) %>
+ </div>
+ <!--/Order complete information -->
+
+ <!-- Order payment -->
  <div class="container_12">
    <div class="grid_12">
    	  <%= partial(:order_payment, :locals => {:order => order,
-                      :order_allow_total_payment => order_allow_total_payment,
-                      :order_allow_deposit_payment => order_allow_deposit_payment}) %>
+                  :order_allow_total_payment => order_allow_total_payment,
+                  :order_allow_deposit_payment => order_allow_deposit_payment}) %>
    </div>
  </div>
+ <!-- /Order payment -->

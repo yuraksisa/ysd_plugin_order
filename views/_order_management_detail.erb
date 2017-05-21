@@ -1,0 +1,261 @@
+                  <div style="border:1px solid #EEE">
+                     <table class="table">
+                        <thead class="table-header">
+                          <tr>
+                            <th class="table-cell left_text" scope="col" style="width:4em">Fecha</th>
+                            <th class="table-cell left_text" scope="col" style="width:10em">Producto</th>
+                            <th class="table-cell left_text" scope="col" style="width:7em">Notas</th>     
+                            <th class="table-cell right_text" scope="col" style="width:7em">Cantidad</th>                           
+                            <th class="table-cell right_text" scope="col" style="width:7em">Coste unitario</th>                            
+                            <th class="table-cell right_text" scope="col" style="width:7em">Coste total</th> 
+                            <th class="table-cell centered_text" scope="col" style="width:10em"></th>     
+                          </tr>
+                        </thead>
+                        <tbody class="table-tbody">
+                          <%% for (var lineIdx=0; lineIdx < entity.order_items.length; lineIdx++) { %>
+                            <tr class="table-row" rel="<%%=entity.order_items[lineIdx].id%>">
+                               <td class="table-cell left_text">
+                                  <%%=entity.order_items[lineIdx].date.toString('dd/MM/yyyy')%> <%%= entity.order_items[lineIdx].time %></span>
+                               </td>
+                               <td class="table-cell left_text">
+                                  <%%=entity.order_items[lineIdx].item_id%> 
+                                  <%% if (entity.order_items[lineIdx].item_description) { %> - <%% } %> 
+                                  <%%= entity.order_items[lineIdx].item_description %> 
+                                  <%% if (entity.order_items[lineIdx].item_price_description) { %> - <%% } %>
+                                  <%%=entity.order_items[lineIdx].item_price_description%>
+                               </td>
+                               <td class="table-cell left_text">
+                                  <%%=entity.order_items[lineIdx].notes%>
+                               </td>
+                               <td class="table-cell right_text">
+                                  <%%=entity.order_items[lineIdx].quantity%>
+                               </td> 
+                               <td class="table-cell right_text">
+                                  <%%=new Number(entity.order_items[lineIdx].item_unit_cost).toFixed(2)%>
+                               </td> 
+                               <td class="table-cell right_text">
+                                  <%%=new Number(entity.order_items[lineIdx].item_cost).toFixed(2)%>
+                               </td>                                
+                               <td class="table-cell left_text">
+                              
+                                  <div id="order_item_edition_<%%=entity.order_items[lineIdx].id%>" class="all-space all-border-solid" style="display:none; background: #fff; min-width:800px">
+
+                                    <div class="guiblock">
+                                      <h4 class="left_text">Modificar línea de pedido</h4>
+                                    </div>
+                                    <form name="update_order_item_<%%=lineIdx%>" 
+                                          class="update_order_item form-element" style="padding-top: 5px">
+                                      <input type="hidden" id="id" name="id" value="<%%=entity.order_items[lineIdx].id%>"/> 
+                                      <div class="container_12">
+                                        <div class="grid_6">
+                                          <div class="formrow">
+                                            <label for="date" class="fieldtitle">Fecha</label>
+                                            <input type="text" name="date" class="fieldcontrol date_control" id="date_<%%=lineIdx%>" size="14" value="<%%=entity.order_items[lineIdx].date%>" value="<%%= entity.order_items[lineIdx].time %>"/>
+                                          </div>
+                                          <div>  
+                                            <label for="time" class="fieldtitle">Hora</label>
+                                            <input type="text" name="time" class="fieldcontrol" size="14" value="<%%= entity.order_items[lineIdx].time %>"/>
+                                          </div>           
+                                          <div class="formrow">
+                                            <label for="item_id" class="fieldtitle">Código del producto</label>
+                                            <input type="text" name="item_id" class="fieldcontrol" size="8" value="<%%=entity.order_items[lineIdx].item_id%>"/>
+                                          </div>
+                                          <div class="formrow">  
+                                            <label for="item_description" class="fieldtitle">Descripción del producto</label>
+                                            <input type="text" name="item_description" class="fieldcontrol" size="20" value="<%%= entity.order_items[lineIdx].item_description %>"/>
+                                          </div>
+                                          <div class="formrow">  
+                                            <label for="item_description" class="fieldtitle">Tipo de tarifa del producto</label>
+                                            <input type="text" name="item_price_description" class="fieldcontrol" size="31" value="<%%= entity.order_items[lineIdx].item_price_description %>"/>
+                                          </div>
+                                        </div>
+                                        <div class="grid_6">
+                                          <div class="left-margin">
+                                            <div class="formrow">
+                                              <label for="item_id" class="fieldtitle">Cantidad</label>
+                                              <input type="text" class="fieldcontrol right_text" name="quantity" size="8" style="padding:5px" value="<%%= entity.order_items[lineIdx].quantity %>"/>
+                                            </div>
+                                            <div class="formrow">
+                                              <label for="item_id" class="fieldtitle">Tarifa</label>
+                                              <input type="text" class="fieldcontrol right_text" name="item_price_type" size="8" style="padding:5px" value="<%%= entity.order_items[lineIdx].item_price_type %>"/>
+                                            </div>                
+                                            <div class="formrow">
+                                              <label for="item_id" class="fieldtitle">Coste unitario</label>
+                                              <input type="text" class="fieldcontrol right_text" name="item_unit_cost" size="8" style="padding:5px" value="<%%= new Number(entity.order_items[lineIdx].item_unit_cost).toFixed(2) %>"/>
+                                            </div>
+                                            <div class="formrow">
+                                              <label for="item_id" class="fieldtitle">Notas</label>
+                                              <textarea name="notes" rows="4" class="fieldcontrol" style="padding: 7px;" cols="18"><%%=entity.order_items[lineIdx].notes%></textarea>
+                                            </div>
+                                          </div>  
+                                        </div>
+                                      </div>  
+                                        <div class="container_12">
+                                          <%% if (entity.order_items[lineIdx].request_customer_information) { %>
+                                            <div class="guiblock">
+                                              <h4 class="left_text">Datos de los clientes</h4>
+                                            </div>
+                                            <table class="table smaller_text activity_customers_table">
+                                              <thead class="table-header">
+                                                <tr>
+                                                  <th class="table-header">#</th>
+                                                  <th class="table-header-title" style="min-width: 230px;"><%=t.activity.item_customer_name%></th>
+                                                  <%% if (entity.order_items[lineIdx].request_customer_document_id) { %>
+                                                    <th class="table-header-title"><%=t.activity.item_customer_document_id%></th>
+                                                  <%% } %>
+                                                  <%% if (entity.order_items[lineIdx].request_customer_phone) { %>
+                                                    <th class="table-header-title"><%=t.activity.item_customer_phone%></th>
+                                                  <%% } %>
+                                                  <%% if (entity.order_items[lineIdx].request_customer_email) { %>
+                                                    <th class="table-header-title"><%=t.activity.item_customer_email%></th>
+                                                  <%% } %>
+                                                  <%% if (entity.order_items[lineIdx].request_customer_height) { %>
+                                                    <th class="table-header-title"><%=t.activity.item_customer_height%></th>
+                                                  <%% } %>
+                                                  <%% if (entity.order_items[lineIdx].request_customer_weight) { %>
+                                                    <th class="table-header-title"><%=t.activity.item_customer_weight%></th>
+                                                  <%% } %>
+                                                  <%% if (entity.order_items[lineIdx].request_customer_allergies_intolerances) { %>
+                                                    <th class="table-header-title" style="min-width:230px"><%=t.activity.item_customer_allergies_intolerances%></th>
+                                                  <%% } %>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <%% var num=0;%>
+                                                <%% var item=null;%>
+                                                <%% for (var customerIdx=0;customerIdx<entity.order_items[lineIdx].customers.length;customerIdx++) { %>
+                                                  <%% item = entity.order_items[lineIdx].customers[customerIdx];%>
+                                                  <%% num++; %>
+                                                  <tr class="table-row">
+                                                     <input type="hidden" name="order_item_customers[<%%=num-1%>][id]" value="<%%=item.id%>"/>
+                                                     <td class="table-cell"><%%=num%></td> 
+                                                     <td class="table-cell">
+                                                        <input name="order_item_customers[<%%=num-1%>][customer_name]" type="text" maxlength="80" size="15" value="<%%=item.customer_name%>"/>
+                                                        <input name="order_item_customers[<%%=num-1%>][customer_surname]" type="text" maxlength="80" size="15"  value="<%%=item.customer_surname%>"/>
+                                                     </td>
+                                                     <%% if (entity.order_items[lineIdx].request_customer_document_id) { %>
+                                                     <td class="table-cell">
+                                                        <input name="order_item_customers[<%%=num-1%>][customer_document_id]" type="text" maxlength="50" size="10" value="<%%=item.customer_document_id%>"/>
+                                                     </td>
+                                                     <%% } %>
+                                                     <%% if (entity.order_items[lineIdx].request_customer_phone) { %>
+                                                     <td class="table-cell">
+                                                        <input name="order_item_customers[<%%=num-1%>][customer_phone]" type="text" maxlength="15" size="10" value="<%%=item.customer_phone%>"/>
+                                                     </td>                           
+                                                     <%% } %>     
+                                                     <%% if (entity.order_items[lineIdx].request_customer_email) { %>
+                                                     <td class="table-cell">
+                                                        <input name="order_item_customers[<%%=num-1%>][customer_email]" type="text" maxlength="40" size="15" value="<%%=item.customer_email%>"/>
+                                                     </td>                               
+                                                     <%% } %>
+                                                     <%% if (entity.order_items[lineIdx].request_customer_height) { %>
+                                                     <td class="table-cell">
+                                                       <select name="order_item_customers[<%%=num-1%>][customer_height]">
+                                                        <option value=""><%=t.new_booking.height.placeholder%></option>
+                                                        <% @booking_item_family.height_values.split(',').each do |height|%>
+                                                          <option value="<%=height%>" <%% if (item.customer_height=='<%=height%>') {%>selected<%%}%>><%=height%></option>
+                                                        <% end %>                                                        
+                                                       </select>
+                                                     </td>  
+                                                     <%% } %>
+                                                     <%% if (entity.order_items[lineIdx].request_customer_weight) { %>
+                                                     <td class="table-cell">
+                                                       <select name="order_item_customers[<%%=num-1%>][customer_weight]">
+                                                        <option value=""><%=t.new_booking.weight.placeholder%></option>
+                                                        <% @booking_item_family.weight_values.split(',').each do |weight|%>
+                                                          <option value="<%=weight%>" <%% if (item.customer_weight=='<%=weight%>') {%>selected<%%}%>><%=weight%></option>
+                                                        <% end %>
+                                                       </select>   
+                                                     </td>                          
+                                                     <%% } %>
+                                                     <%% if (entity.order_items[lineIdx].request_customer_allergies_intolerances) { %>
+                                                     <td class="table-cell">
+                                                        <textarea name="order_item_customers[<%%=num-1%>][customer_allergies_or_intolerances]" rows="4" style="width:95%"><%%=item.customer_allergies_or_intolerances%></textarea>
+                                                     </td>   
+                                                     <%% } %>
+                                                  </tr>
+                                                <%% } %>
+                           
+                                              </tbody>
+                                            </table>    
+                                          <%% } %>
+                                        </div>  
+
+                                      <div class="bottom-navigation-bar navigation-bar" style="padding: 0px; padding-top: 10px; margin-top: 10px;">
+                                        <div class="navigation-bar-crud-buttons" style="width: 100%; float: none; margin: 0">
+                                           <input type="submit" class="blue-button entity-management-button" style="width: 100%" value="<%=t.entitymanagement.update%>"/>
+                                        </div>
+                                      </div> 
+                                    </form>
+
+                                  </div>  
+
+                                  <div style="margin-left: 10px">
+
+                                    <input type="button" class="modify-order-line-button form-button action-button entity-management-button" 
+                                                       value="<%=t.order_management.form.order_item.edit%>"
+                                                       rel="<%%=entity.order_items[lineIdx].id%>"/>
+
+                                    <button type="button" class="element-action-button form-button action-button entity-management-button" 
+                                                        data-action-method="DELETE"
+                                                        data-action-url="/api/order/order-item/<%%=entity.order_items[lineIdx].id%>"
+                                                        data-confirm-message="<%=t.order_management.form.order_item.delete_button.message%>">
+                                                        <%=t.order_management.form.order_item.delete%></button>
+                                  </div>                      
+                               </td>                               
+                            </tr>
+                          <%% } %>
+                            <tr class="table-row">
+                               <td class="table-cell"><strong class="uppercase_text">PRECIO TOTAL</strong></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell right_text"><%%=new Number(entity.total_cost).toFixed(2)%></td>
+                               <td class="table-cell"></td>
+                            </tr>
+                            <tr class="table-row">
+                               <td class="table-cell"><strong class="uppercase_text">DEPÓSITO</strong></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell right_text">
+                                <form>
+                                <input type="text" id="reservation_amount_editable" size="8" maxlength="10" value="<%%=new Number(entity.reservation_amount).toFixed(2)%>" class="right_text" />
+                              </form>
+                               </td>
+                               <td class="table-cell">
+                                 <form name="deposit" style="margin-left:10px">
+                                   <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+                                   <input type="hidden" name="reservation_amount" id="reservation_amount" value="<%%=new Number(entity.reservation_amount).toFixed(2)%>"/>
+                                   <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+                                 </form>
+                               </td>
+                            </tr>           
+                            <tr class="table-row">
+                               <td class="table-cell"><strong class="uppercase_text">PAGADO</strong></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell right_text"><%%=new Number(entity.total_paid).toFixed(2)%></td>
+                               <td class="table-cell"></td>
+                            </tr>
+                            <tr class="table-row">
+                               <td class="table-cell"><strong class="uppercase_text">PENDIENTE</strong></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell"></td>
+                               <td class="table-cell right_text"><strong style="color:red"><%%=new Number(entity.total_pending).toFixed(2)%><strong></td>
+                               <td class="table-cell"></td>
+                            </tr>                                                        
+
+                        </tbody>
+                     </table>  
+                     <div class="top-margin all-space top-separator">
+                        <button id="create_order_line_button" class="form-button">Añadir producto</button>
+                        <button id="new_order_line_button" class="form-button">Asistente añadir producto</button>
+                     </div>    
+                  </div> 

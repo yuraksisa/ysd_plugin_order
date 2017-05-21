@@ -1,0 +1,59 @@
+        <div class="grid_6">
+          <div class="all-space bottom-margin" style="border:1px solid #EEE">
+            <%% if (entity) { %>
+            <form name="customer">
+            <%% } %>
+              <div class="more_contrast_text top-margin bottom-margin" style="text-decoration:underline; margin-left:5px"><%= t.order_management.form.customer_title %>
+              </div> 
+              <%% if (entity) { %>
+                <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+              <%% } %>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_name %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="40" size="12" name="customer_name" id="customer_name"
+                      <%% if (entity) { %>value="<%%=entity.customer_name%>"<%% } %>/>
+                    <input type="text" maxlength="40" size="13" name="customer_surname" id="customer_surname"
+                      <%% if (entity) { %>value="<%%=entity.customer_surname%>"<%% } %>/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_phone %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="15" size="12" name="customer_phone" id="customer_phone"
+                      <%% if (entity) { %>value="<%%=entity.customer_phone%>"<%% } %>/>
+                    <input type="text" maxlength="15" size="13" name="customer_mobile_phone" id="customer_mobile_phone"
+                      <%% if (entity) { %>value="<%%=entity.customer_mobile_phone%>"<%% } %>/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_email %></span>
+                  <span class="entity-fieldvalue">
+                    <input type="text" maxlength="40" size="26" name="customer_email" id="customer_email"
+                      <%% if (entity) { %>value="<%%=entity.customer_email%>"<%% } %> style="width:100%"/>
+                  </span>
+                </div>
+              </div>
+              <div class="element_template" style="display:none">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_language %></span>
+                  <span class="entity-fieldvalue"><%% if (entity) { %><%%= entity.customer_language %><%%}%></span>
+                </div>
+              </div>
+              <%% if (entity) {%>
+              <div class="navigation-bar bottom-margin">
+                <div class="navigation-bar-crud-buttons right-float">
+                  <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+                </div>
+              </div>             
+              <%% } %>   
+            <%% if (entity) { %>         
+            </form>    
+          <%% } %>
+          </div>
+        </div>

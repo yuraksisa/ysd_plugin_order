@@ -1,0 +1,29 @@
+           <%% if (entity) { %>
+
+           <div class="all-space left-margin bottom-margin" style="border:1px solid #EEE">
+            
+             <div class="container_12">
+               <div class="grid_6">
+                 <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.comments %></div>            
+                 <div class="formrow">
+                   <%%=entity.comments%>
+                 </div>
+               </div>
+               <div class="grid_6">
+                 <form name="anotations" class="all-space left-margin">
+                   <input type="hidden" id="id" name="id" value="<%%=entity.id%>"/>
+                   <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.anotations %></div>
+                   <div class="formrow">
+                     <textarea name="notes" rows="6" class="fieldcontrol"><%% if (entity) { %><%%= entity.notes %><%%}%></textarea>
+                   </div>
+                   <div class="navigation-bar bottom-margin">
+                     <div class="navigation-bar-crud-buttons right-float">
+                       <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+                     </div>
+                   </div>             
+                 </form>  
+               </div>   
+             </div>          
+
+           </div>     
+           <%% } %>  

@@ -1,5 +1,16 @@
 module Sinatra
   module YitoExtension
+    module OrderHelper
+      def load_order
+        conf_allow_total_payment = SystemConfiguration::Variable.get_value('order.allow_total_payment','false').to_bool
+        conf_allow_deposit_payment = SystemConfiguration::Variable.get_value('order.allow_deposit_payment','false').to_bool
+        @booking_item_family = ::Yito::Model::Booking::ProductFamily.get(SystemConfiguration::Variable.get_value('booking.item_family'))
+        locals = {:order => @order,
+                  :order_allow_total_payment => conf_allow_total_payment,
+                  :order_allow_deposit_payment => conf_allow_deposit_payment}
+        load_page :order, :locals => locals
+      end
+    end
     module Order
       def self.registered(app)
 
@@ -16,14 +27,30 @@ module Sinatra
         #
         # Shows an order: To be managed by the customer
         #   
-        app.get '/p/myorder/:id/?*' do
-          if order = ::Yito::Model::Order::Order.get_by_free_access_id(params[:id])
-            conf_allow_total_payment = SystemConfiguration::Variable.get_value('order.allow_total_payment','false').to_bool
-            conf_allow_deposit_payment = SystemConfiguration::Variable.get_value('order.allow_deposit_payment','false').to_bool
-            locals = {:order => order, 
-                      :order_allow_total_payment => conf_allow_total_payment,
-                      :order_allow_deposit_payment => conf_allow_deposit_payment}
-            load_page :order, :locals => locals
+        app.route :get, :post, ['/p/myorder/:id/?*'] do
+          if @order = ::Yito::Model::Order::Order.get_by_free_access_id(params[:id])
+            if request.post?
+              @order.transaction do
+                if params[:order_item_customers]
+                  params[:order_item_customers].each do |item|
+                    if order_item_customer = ::Yito::Model::Order::OrderItemCustomer.get(item[:id])
+                      order_item_customer.customer_name = item[:customer_name] if item.has_key?('customer_name')
+                      order_item_customer.customer_surname = item[:customer_surname] if item.has_key?('customer_surname')
+                      order_item_customer.customer_document_id = item[:customer_document_id] if item.has_key?('customer_document_id')
+                      order_item_customer.customer_phone = item[:customer_phone] if item.has_key?('customer_phone')
+                      order_item_customer.customer_email = item[:customer_email] if item.has_key?('customer_email')
+                      order_item_customer.customer_height = item[:customer_height] if item.has_key?('customer_height')
+                      order_item_customer.customer_weight = item[:customer_weight] if item.has_key?('customer_weight')
+                      order_item_customer.customer_allergies_or_intolerances = item[:customer_allergies_or_intolerances] if item.has_key?('customer_allergies_or_intolerances')
+                      order_item_customer.save
+                    end
+                    @order.reload
+                  end
+                  #flash[:notice] = 'Datos actualizados'
+                end
+              end
+            end
+            load_order
           else
             status 404
           end

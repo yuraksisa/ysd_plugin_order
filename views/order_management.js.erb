@@ -1,12 +1,14 @@
  require(['jquery', 'YSDEntityManagement', 'YSDForms', 'YSDMemoryDataSource',
-          'YSDSelectSelector','jquery.validate','jquery.formparams',
+          'YSDSelectSelector', 'YSDGui', 'jquery.validate','jquery.formparams',
           'jquery.ui', 'jquery.ui.datepicker-es', 'jquery.ui.datepicker.validation',
           'json2'], 
-          function($, EntityManagement, YSDForms, MemoryDataSource, SelectSelector) {
+          function($, EntityManagement, YSDForms, MemoryDataSource, SelectSelector, YSDGui) {
 
  
   function OrderHook() {
  	   
+    this.order_item_id = null;
+
     this.statusDescription = {
        'pending_confirmation' : '<%= t.booking_status.pending_confirmation%>',
        'confirmed' : '<%= t.booking_status.confirmed%>',
@@ -97,6 +99,14 @@
     this.onEdit = function(entity) {
       this.configForm(entity);
       $('.new-entity-button').show();
+      var self = this;
+      $('.modify-order-line-button').bind('click', function() {
+         self.order_item_id = $(this).attr('rel');
+         if (self.order_item_id) {
+          YSDGui.showElement(document.getElementById('order_item_edition_'+self.order_item_id), true);
+         }
+      });
+
       $('#new_charge').bind('click', function(){
         $('#new_charge_button').unbind('click');
         $('#date').datetimepicker(
@@ -131,6 +141,11 @@
         }
       });
 
+      $('#create_order_line_button').bind('click', function(){
+        $('form[name=add_order_item]')[0].reset();
+        YSDGui.showElement(document.getElementById('create_order_item_container'), true);
+      });
+
       $('#new_order_line_button').bind('click', function(){
         window.location.href = '/admin/order/new-order-item-step-1?order=' + entity.id;
       });
@@ -148,19 +163,20 @@
 
       this.configValidation();
       this.configTabs();
-    
+      var self = this;
       $('form[name="add_order_item"]').validate({
 
         submitHandler: function(form) {
 
            var data = $(form).formParams(false);
            var json_request = JSON.stringify(data);
-
+           
            $.ajax({
                type: 'POST',
                data : json_request,
                url : '/api/order/order-item',
                success: function(data, textStatus, jqXHR) {
+                 YSDGui.hideElement(document.getElementById('create_order_item_container'));
                  orderManager.model.synchronizeCurrentEntity(data);
                  orderManager.model.change_state('entity_updated_successfully');
                  alert('Añadida linea');
@@ -183,18 +199,25 @@
         $('#date_'+idx).datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
         $('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date)); 
 
+        var self = this;
         $('form[name="update_order_item_' + idx + '"]').validate({
 
           submitHandler: function(form) {
 
              var data = $(form).formParams(false);
-             var json_request = JSON.stringify(data);
 
+             var customers = $.map(data.order_item_customers, function(value, index) {
+                               return [value];
+                             });
+             data.customers = customers;
+             var json_request = JSON.stringify(data);
+             
              $.ajax({
                type: 'PUT',
                data : json_request,
                url : '/api/order/order-item',
                success: function(data, textStatus, jqXHR) {
+                 YSDGui.hideElement(document.getElementById('order_item_edition_'+self.order_item_id));
                  orderManager.model.synchronizeCurrentEntity(data);
                  orderManager.model.change_state('entity_updated_successfully');
                  alert('Modificada linea');
@@ -209,6 +232,10 @@
 
         });      
       }
+
+      $('#reservation_amount_editable').bind('change', function() {
+        $('#reservation_amount').val($('#reservation_amount_editable').val());
+      })
 
     }
     
