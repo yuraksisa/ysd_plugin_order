@@ -23,6 +23,9 @@ module Sinatra
           if params[:order]
             if @order = ::Yito::Model::Order::Order.get(params[:order])
               @activities = ::Yito::Model::Booking::Activity.all(active: true)
+              session.delete(:backoffice_new_order_item_activity_date_id)
+              session.delete(:backoffice_new_order_item_date)
+              session.delete(:backoffice_new_order_item_turn)
               load_page(:new_order_line_step_1)
             else
               logger.error("Order #{params[:order]} not found")
@@ -46,23 +49,19 @@ module Sinatra
           if order_id and activity_id
             if @order = ::Yito::Model::Order::Order.get(order_id)
               if @activity = ::Yito::Model::Booking::Activity.get(activity_id)
-                
                 @occupation = {total_occupation: 0, occupation_detail: {}, occupation_capacity: @activity.capacity}
-                if session[:activity_date_id]
-                  @activity_date_id = session[:activity_date_id]
+                if session[:backoffice_new_order_item_activity_date_id]
+                  @activity_date_id = session[:backoffice_new_order_item_activity_date_id]
                   if @activity_date = ::Yito::Model::Booking::ActivityDate.get(@activity_date_id)
                     @occupation = @activity.occupation(@activity_date.date_from, @activity_date.time_from)
                   end
-                elsif session[:date] or session[:turn]
-                  @date = session[:date] ? Date.strptime(session[:date],'%Y-%m-%d') : nil
-                  @time = session[:turn] 
+                elsif session[:backoffice_new_order_item_date] or session[:backoffice_new_order_item_turn]
+                  @date = session[:backoffice_new_order_item_date] ? Date.strptime(session[:backoffice_new_order_item_date],'%Y-%m-%d') : nil
+                  @time = session[:backoffice_new_order_item_turn] 
                   if @date and !@date.nil? and @time and !@time.nil?
                     @occupation = @activity.occupation(@date, @time)
                   end
                 end
-
-                p "-occupation: #{@occupation}"
-
                 load_page(:new_order_line_step_2)
               else
                 logger.error("Activity #{activity_id} not found")
@@ -88,19 +87,23 @@ module Sinatra
             if @activity = ::Yito::Model::Booking::Activity.get(params[:activity_id])
               @occupation = {total_occupation: 0, occupation_detail: {}, occupation_capacity: @activity.capacity}
               if params[:activity_date_id]
-                @activity_date_id = params[:activity_date_id]
+                @activity_date_id = params[:backoffice_new_order_item_activity_date_id]
                 if @activity_date = ::Yito::Model::Booking::ActivityDate.get(@activity_date_id)
                   @occupation = @activity.occupation(@activity_date.date_from, @activity_date.time_from)
                 end
-                session[:activity_date_id] = @activity_date_id
+                session[:backoffice_new_order_item_activity_date_id] = @activity_date_id
               elsif params[:date] or params[:turn]
                 @date = params[:date]
-                @time = params[:turn]
+                if params[:turn] && !params[:turn].to_s.empty?
+                  @time = params[:turn]
+                else
+                  @time = nil
+                end
                 if @date and !@date.nil? and @time and !@time.nil?
                   @occupation = @activity.occupation(@date, @time)
                 end
-                session[:date] = @date
-                session[:turn] = @time
+                session[:backoffice_new_order_item_date] = @date
+                session[:backoffice_new_order_item_turn] = @time
               end
 
               load_page(:new_order_line_step_2)           
