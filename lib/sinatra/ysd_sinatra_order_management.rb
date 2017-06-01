@@ -87,7 +87,7 @@ module Sinatra
             if @activity = ::Yito::Model::Booking::Activity.get(params[:activity_id])
               @occupation = {total_occupation: 0, occupation_detail: {}, occupation_capacity: @activity.capacity}
               if params[:activity_date_id]
-                @activity_date_id = params[:backoffice_new_order_item_activity_date_id]
+                @activity_date_id = params[:activity_date_id]
                 if @activity_date = ::Yito::Model::Booking::ActivityDate.get(@activity_date_id)
                   @occupation = @activity.occupation(@activity_date.date_from, @activity_date.time_from)
                 end
