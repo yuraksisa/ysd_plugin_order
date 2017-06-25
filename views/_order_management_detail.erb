@@ -4,18 +4,18 @@
                           <tr>
                             <th class="table-cell left_text" scope="col" style="width:4em">Fecha</th>
                             <th class="table-cell left_text" scope="col" style="width:10em">Producto</th>
-                            <th class="table-cell left_text" scope="col" style="width:7em">Notas</th>     
-                            <th class="table-cell right_text" scope="col" style="width:7em">Cantidad</th>                           
-                            <th class="table-cell right_text" scope="col" style="width:7em">Coste unitario</th>                            
-                            <th class="table-cell right_text" scope="col" style="width:7em">Coste total</th> 
-                            <th class="table-cell centered_text" scope="col" style="width:10em"></th>     
+                            <th class="table-cell left_text" scope="col" style="width:10em">Notas</th>
+                            <th class="table-cell right_text" scope="col" style="width:6em">Cantidad</th>
+                            <th class="table-cell right_text" scope="col" style="width:6em">Coste unitario</th>
+                            <th class="table-cell right_text" scope="col" style="width:6em">Coste total</th>
+                            <th class="table-cell centered_text" scope="col" style="width:6em"></th>
                           </tr>
                         </thead>
                         <tbody class="table-tbody">
                           <%% for (var lineIdx=0; lineIdx < entity.order_items.length; lineIdx++) { %>
                             <tr class="table-row" rel="<%%=entity.order_items[lineIdx].id%>">
                                <td class="table-cell left_text">
-                                  <%%=entity.order_items[lineIdx].date.toString('dd/MM/yyyy')%> <%%= entity.order_items[lineIdx].time %></span>
+                                  <%%=entity.order_items[lineIdx].date.toString('dd/MM/yy')%> <%%= entity.order_items[lineIdx].time %></span>
                                </td>
                                <td class="table-cell left_text">
                                   <%%=entity.order_items[lineIdx].item_id%> 
@@ -26,6 +26,12 @@
                                </td>
                                <td class="table-cell left_text">
                                   <%%=entity.order_items[lineIdx].notes%>
+                                  <%% if (entity.order_items[lineIdx].customers_pickup_place && entity.order_items[lineIdx].customers_pickup_place!= '') { %>
+                                    <%% if (entity.order_items[lineIdx].notes && entity.order_items[lineIdx].notes != '') { %>
+                                    <br/>
+                                    <%% } %>
+                                  <em class="smaller_text less_contrast_text"><%=t.order_management.form.order_item.customers_pickup_place%>&nbsp;<%%=entity.order_items[lineIdx].customers_pickup_place%></em>
+                                  <%% } %>
                                </td>
                                <td class="table-cell right_text">
                                   <%%=entity.order_items[lineIdx].quantity%>
@@ -83,6 +89,12 @@
                                               <label for="item_id" class="fieldtitle">Coste unitario</label>
                                               <input type="text" class="fieldcontrol right_text" name="item_unit_cost" size="8" style="padding:5px" value="<%%= new Number(entity.order_items[lineIdx].item_unit_cost).toFixed(2) %>"/>
                                             </div>
+                                            <%% if (entity.order_items[lineIdx].custom_customers_pickup_place) { %>
+                                            <div class="formrow">
+                                              <label for="customers_pickup_place" class="fieldtitle">Lugar de recogida</label>
+                                              <select class="fieldcontrol right_text" name="customers_pickup_place" id="customers_pickup_place"></select>
+                                            </div>
+                                            <%% } %>
                                             <div class="formrow">
                                               <label for="item_id" class="fieldtitle">Notas</label>
                                               <textarea name="notes" rows="4" class="fieldcontrol" style="padding: 7px;" cols="18"><%%=entity.order_items[lineIdx].notes%></textarea>

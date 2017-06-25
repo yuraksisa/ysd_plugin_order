@@ -1,8 +1,8 @@
- require(['jquery', 'YSDEntityManagement', 'YSDForms', 'YSDMemoryDataSource',
+ require(['jquery', 'YSDEntityManagement', 'YSDForms', 'YSDMemoryDataSource', 'YSDRemoteDataSource',
           'YSDSelectSelector', 'YSDGui', 'jquery.validate','jquery.formparams',
           'jquery.ui', 'jquery.ui.datepicker-es', 'jquery.ui.datepicker.validation',
           'json2'], 
-          function($, EntityManagement, YSDForms, MemoryDataSource, SelectSelector, YSDGui) {
+          function($, EntityManagement, YSDForms, MemoryDataSource, RemoteDataSource, SelectSelector, YSDGui) {
 
  
   function OrderHook() {
@@ -103,7 +103,8 @@
       $('.modify-order-line-button').bind('click', function() {
          self.order_item_id = $(this).attr('rel');
          if (self.order_item_id) {
-          YSDGui.showElement(document.getElementById('order_item_edition_'+self.order_item_id), true);
+          YSDGui.showElementInMode(document.getElementById('order_item_edition_'+self.order_item_id),
+                                   true, null, 'absolute', 0, 200);
          }
       });
 
@@ -160,7 +161,6 @@
     this.configForm = function(entity) {
       
       $.datepicker.setDefaults( $.datepicker.regional["<%=session[:locale] || 'es'%>" ] );
-
       this.configValidation();
       this.configTabs();
       var self = this;
@@ -197,7 +197,13 @@
       for (var idx=0; entity != null && idx<entity.order_items.length; idx++) {
 
         $('#date_'+idx).datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
-        $('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date)); 
+        $('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date));
+
+        var pickupPlaceValueModel = entity.order_items[idx].customers_pickup_place;
+        var pickupPlaceDataSourceModel = new RemoteDataSource('/api/booking-activiy-places/'+entity.order_items[idx].item_id,{'id':'name',
+             'description':'name'});
+        var pickupPlaceSelectorModel = new SelectSelector('customers_pickup_place',
+            pickupPlaceDataSourceModel, pickupPlaceValueModel, true );
 
         var self = this;
         $('form[name="update_order_item_' + idx + '"]').validate({
@@ -206,10 +212,13 @@
 
              var data = $(form).formParams(false);
 
-             var customers = $.map(data.order_item_customers, function(value, index) {
-                               return [value];
-                             });
-             data.customers = customers;
+             if (data.order_item_customers && data.order_item_customers.length > 0) {
+                 var customers = $.map(data.order_item_customers, function (value, index) {
+                     return [value];
+                 });
+                 data.customers = customers;
+             }
+
              var json_request = JSON.stringify(data);
              
              $.ajax({

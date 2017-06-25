@@ -191,18 +191,20 @@ module Sinatra
               order_item.item_unit_cost = data_request[:item_unit_cost]
               order_item.item_cost = order_item.item_unit_cost * order_item.quantity
               order_item.notes = data_request[:notes]
-
-              data_request[:customers].each do |item|
-                order_item_customer = (order_item.order_item_customers.select { |oic| oic.id == item[:id].to_i}).first
-                if order_item_customer
-                  order_item_customer.customer_name = item[:customer_name]
-                  order_item_customer.customer_surname = item[:customer_surname]
-                  order_item_customer.customer_document_id = item[:customer_document_id]
-                  order_item_customer.customer_phone = item[:customer_phone]
-                  order_item_customer.customer_email = item[:customer_email]
-                  order_item_customer.customer_height = item[:customer_height]
-                  order_item_customer.customer_weight = item[:customer_weight]
-                  order_item_customer.customer_allergies_or_intolerances = item[:customer_allergies_or_intolerances]
+              order_item.customers_pickup_place = data_request[:customers_pickup_place] if data_request.has_key?(:customers_pickup_place)
+              if data_request.has_key?(:customers)
+                data_request[:customers].each do |item|
+                  order_item_customer = (order_item.order_item_customers.select { |oic| oic.id == item[:id].to_i}).first
+                  if order_item_customer
+                    order_item_customer.customer_name = item[:customer_name]
+                    order_item_customer.customer_surname = item[:customer_surname]
+                    order_item_customer.customer_document_id = item[:customer_document_id]
+                    order_item_customer.customer_phone = item[:customer_phone]
+                    order_item_customer.customer_email = item[:customer_email]
+                    order_item_customer.customer_height = item[:customer_height]
+                    order_item_customer.customer_weight = item[:customer_weight]
+                    order_item_customer.customer_allergies_or_intolerances = item[:customer_allergies_or_intolerances]
+                  end
                 end
               end
 

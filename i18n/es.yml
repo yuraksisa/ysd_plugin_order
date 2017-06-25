@@ -8,6 +8,7 @@ order:
   title: Pedido %1
   id: Su número de pedido es <strong>%1</strong>. <span class="less_contrast_text smaller_text">Use su número de pedido en todas las comunicaciones.</span>
   summary: Detalle de su pedido
+  pickup_customer: Recogida en %1
   complete_data: Por favor complete los siguientes datos de su reserve para agilizar su realización en la hora indicada
   state:
     pending_confirmation: Pendiente de confirmación
@@ -68,6 +69,7 @@ order_management:
       annotation: Notas
       add: Añadir
       edit: Editar
+      customers_pickup_place: "Recogida:"
       update: Modificar
       delete: Eliminar
       delete_button:

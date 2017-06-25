@@ -18,8 +18,8 @@
        <tr>
         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.id %></th>
          <th class="table-header-title" scope="col" style="width:15%"><%= t.order_management.table.creation_date %></th>
-         <th class="table-header-title" scope="col" style="width:25%"><%= t.order_management.table.customer %></th>
-         <th class="table-header-title" scope="col" style="width:20%"><%= t.order_management.table.product %></th>
+         <th class="table-header-title" scope="col" style="width:18%"><%= t.order_management.table.customer %></th>
+         <th class="table-header-title" scope="col" style="width:27%"><%= t.order_management.table.product %></th>
          <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.status %></th>
          <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.payment_status %></th>
          <th class="table-header-title centered_text" scope="col" style="width:5%"><%= t.booking_management.table.notifications %></th>           
@@ -56,8 +56,14 @@
         <%% var items = []; %>
         <%% for (var idx=0;idx<entity.order_items.length;idx++) { %>
           <%% if (items.indexOf(entity.order_items[idx].item_id) == -1) { %>
-            <%%= entity.order_items[idx].item_id %>
-            <%% items.push(entity.order_items[idx].item_id); %>
+            <%% if (items.length > 0) {%>
+            <br>
+            <%% } %>
+            <%% var description = entity.order_items[idx].item_id; %>
+            <%% description += ' ('+entity.order_items[idx].quantity+'pax) ';%>
+            <%% description += '- '+ entity.order_items[idx].date.toString('dd.MM.yy'); %>
+            <%%= description %>
+            <%% items.push(entity.order_items[idx].item_id ); %>
           <%% } %>
         <%% } %>
       </td>
@@ -225,8 +231,9 @@
       </div>
 
                                   <div id="create_order_item_container" class="all-space all-border-solid" style="display:none; background: #fff; min-width:600px">
-
-                                    <h4 class="left_text">Nueva línea de pedido</h4>
+                                    <div class="guiblock">
+                                      <h4 class="left_text">Nueva línea de pedido</h4>
+                                    </div>
                                     <form name="add_order_item" 
                                           class="update_order_item form-element" style="padding-top: 5px">
                                           <input type="hidden" name="order_id" value="<%%=entity.id%>"/>

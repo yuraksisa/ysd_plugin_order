@@ -9,6 +9,9 @@
                     <div class="left-margin">
                       <h4><%=first_order_item.item_description%></h4>
                       <div class="less_contrast_text"><%=l(first_order_item.date,"%d %B %Y") unless first_order_item.date.nil?%> <%first_order_item.time%></div>
+                      <% if first_order_item.custom_customers_pickup_place %>
+                          <div class="more_contrast_text top-margin smaller_text"><%=t.order.pickup_customer(first_order_item.customers_pickup_place)%></div>
+                      <% end %>
                       <div class="top-margin">
                         <% order_items[:items].each do |order_item| %>
                           <div class="grid_8 order_item">

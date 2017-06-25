@@ -140,6 +140,8 @@ module Sinatra
             quantity_rate_1 = params[:quantity_rate_1].to_i
             quantity_rate_2 = params[:quantity_rate_2].to_i
             quantity_rate_3 = params[:quantity_rate_3].to_i
+            custom_customers_pickup_place = params[:custom_customers_pickup_place].to_bool
+            customers_pickup_place = params[:customers_pickup_place]
 
             if @activity = ::Yito::Model::Booking::Activity.get(activity_id)
               activity_options = {
@@ -167,6 +169,8 @@ module Sinatra
                                   quantity_rate_1,
                                   @activity.rates(date)[1][1],
                                   @activity.price_1_description,
+                                  custom_customers_pickup_place,
+                                  customers_pickup_place,
                                   @activity.price_1_affects_capacity ? activity_options : {})
                   end
 
@@ -179,6 +183,8 @@ module Sinatra
                                   quantity_rate_2,
                                   @activity.rates(date)[2][1],
                                   @activity.price_2_description,
+                                  custom_customers_pickup_place,
+                                  customers_pickup_place,
                                   @activity.price_2_affects_capacity ? activity_options : {}) 
                   end
 
@@ -191,6 +197,8 @@ module Sinatra
                                   quantity_rate_3,
                                   @activity.rates(date)[3][1],
                                   @activity.price_3_description,
+                                  custom_customers_pickup_place,
+                                  customers_pickup_place,
                                   @activity.price_3_affects_capacity ? activity_options : {})               
                   end
                 rescue DataMapper::SaveFailureError => error
