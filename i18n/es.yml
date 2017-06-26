@@ -9,7 +9,7 @@ order:
   id: Su número de pedido es <strong>%1</strong>. <span class="less_contrast_text smaller_text">Use su número de pedido en todas las comunicaciones.</span>
   summary: Detalle de su pedido
   pickup_customer: Recogida en %1
-  complete_data: Por favor complete los siguientes datos de su reserve para agilizar su realización en la hora indicada
+  complete_data: "Por favor, rellene el formulario con sus datos para completar la reserva. Gracias."
   state:
     pending_confirmation: Pendiente de confirmación
     confirmed: Confirmado
@@ -31,6 +31,8 @@ order:
   pending_payment: 
     label: Segundo pago
     description: Puede realizar el pago de la cantidad pendiente, <strong>%1</strong>
+  update_data:
+    label: Actualizar datos      
 order_management:
   title: Pedidos
   description: Gestión de pedidos

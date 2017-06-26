@@ -8,7 +8,7 @@ order:
   title: Order number %1
   id: Your order number is <strong>%1</strong>. <span class="smaller_text less_contrast_text">Use the order number in all your communications.</span> 
   summary: Order detail
-  complete_data: Please complete this form
+  complete_data: "Please, fill out the form with your details to complete the reservation. Thank you!"
   state:
     pending_confirmation: Pending of confirmation
     confirmed: Confirmed
@@ -30,6 +30,8 @@ order:
   pending_payment: 
     label: 2nd charge
     description: You can make the payment of the pending amount, <strong>%1</strong>
+  update_data:
+    label: Update data  
 order_management:
   title: Orders
   description: Orders management
