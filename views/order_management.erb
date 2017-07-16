@@ -230,7 +230,7 @@
          </div>
       </div>
 
-                                  <div id="create_order_item_container" class="all-space all-border-solid" style="display:none; background: #fff; min-width:600px">
+                                  <div id="create_order_item_container" class="all-space all-border-solid" style="display:none; background: #fff; min-width:800px">
                                     <div class="guiblock">
                                       <h4 class="left_text">Nueva línea de pedido</h4>
                                     </div>
@@ -249,17 +249,18 @@
                                           </div>           
                                           <div class="formrow">
                                             <label for="item_id" class="fieldtitle">Código del producto</label>
-                                            <input type="text" name="item_id" class="fieldcontrol" size="8"/>
+                                            <input type="text" name="item_id" class="fieldcontrol" size="8" id="new_order_line_item_id"/>
                                           </div>
                                           <div class="formrow">  
                                             <label for="item_description" class="fieldtitle">Descripción del producto</label>
-                                            <input type="text" name="item_description" class="fieldcontrol" size="20"/>
+                                            <input type="text" name="item_description" class="fieldcontrol" size="20" id="new_order_line_item_description" style="background:#EEE"  tabindex="-1"/>
                                           </div>
                                           <div class="formrow">  
                                             <label for="item_description" class="fieldtitle">Tipo de tarifa del producto</label>
-                                            <input type="text" name="item_price_description" class="fieldcontrol" size="31"/>
+                                            <select name="item_price_type" id="new_order_line_item_price_type"></select>
+                                            <input type="hidden" name="item_price_description" id="new_order_line_item_price_description"/>
                                           </div>
-                                        </div>
+                                           </div>
                                         <div class="grid_6">
                                           <div class="left-margin">
                                             <div class="formrow">
@@ -267,16 +268,12 @@
                                               <input type="text" class="fieldcontrol right_text" name="quantity" size="8" style="padding:5px"/>
                                             </div>
                                             <div class="formrow">
-                                              <label for="item_id" class="fieldtitle">Tarifa</label>
-                                              <input type="text" class="fieldcontrol right_text" name="item_price_type" size="8" style="padding:5px"/>
-                                            </div>                
-                                            <div class="formrow">
                                               <label for="item_id" class="fieldtitle">Coste unitario</label>
                                               <input type="text" class="fieldcontrol right_text" name="item_unit_cost" size="8" style="padding:5px"/>
                                             </div>
                                             <div class="formrow">
                                               <label for="item_id" class="fieldtitle">Notas</label>
-                                              <textarea name="notes" rows="4" class="fieldcontrol" style="padding: 7px;" cols="18"></textarea>
+                                              <textarea name="notes" rows="7" class="fieldcontrol" style="padding: 7px;" cols="18"></textarea>
                                             </div>
                                           </div>  
                                         </div>

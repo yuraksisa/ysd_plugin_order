@@ -140,8 +140,8 @@ module Sinatra
             quantity_rate_1 = params[:quantity_rate_1].to_i
             quantity_rate_2 = params[:quantity_rate_2].to_i
             quantity_rate_3 = params[:quantity_rate_3].to_i
-            custom_customers_pickup_place = params[:custom_customers_pickup_place].to_bool if params.has_key?(:custom_customers_pickup_place)
-            customers_pickup_place = params[:customers_pickup_place] if params.has_key?(:customers_pickup_place)
+            custom_customers_pickup_place = params[:custom_customers_pickup_place].to_bool if params.has_key?('custom_customers_pickup_place')
+            customers_pickup_place = params[:customers_pickup_place] if params.has_key?('customers_pickup_place')
 
             if @activity = ::Yito::Model::Booking::Activity.get(activity_id)
               activity_options = {

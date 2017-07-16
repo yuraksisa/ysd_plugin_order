@@ -3,7 +3,8 @@
                         <thead class="table-header">
                           <tr>
                             <th class="table-cell left_text" scope="col" style="width:4em">Fecha</th>
-                            <th class="table-cell left_text" scope="col" style="width:10em">Producto</th>
+                            <th class="table-cell left_text" scope="col" style="width:5em">Producto</th>
+                            <th class="table-cell left_text" scope="col" style="width:3em">Tipo tarifa</th>
                             <th class="table-cell left_text" scope="col" style="width:10em">Notas</th>
                             <th class="table-cell right_text" scope="col" style="width:6em">Cantidad</th>
                             <th class="table-cell right_text" scope="col" style="width:6em">Coste unitario</th>
@@ -24,6 +25,9 @@
                                   <%% if (entity.order_items[lineIdx].item_price_description) { %> - <%% } %>
                                   <%%=entity.order_items[lineIdx].item_price_description%>
                                </td>
+                              <td class="table-cell left_text">
+                                <%%=entity.order_items[lineIdx].item_price_description%>
+                              </td>
                                <td class="table-cell left_text">
                                   <%%=entity.order_items[lineIdx].notes%>
                                   <%% if (entity.order_items[lineIdx].customers_pickup_place && entity.order_items[lineIdx].customers_pickup_place!= '') { %>
@@ -33,7 +37,7 @@
                                   <em class="smaller_text less_contrast_text"><%=t.order_management.form.order_item.customers_pickup_place%>&nbsp;<%%=entity.order_items[lineIdx].customers_pickup_place%></em>
                                   <%% } %>
                                </td>
-                               <td class="table-cell right_text">
+                              <td class="table-cell right_text">
                                   <%%=entity.order_items[lineIdx].quantity%>
                                </td> 
                                <td class="table-cell right_text">
@@ -64,15 +68,16 @@
                                           </div>           
                                           <div class="formrow">
                                             <label for="item_id" class="fieldtitle">Código del producto</label>
-                                            <input type="text" name="item_id" class="fieldcontrol" size="8" value="<%%=entity.order_items[lineIdx].item_id%>"/>
+                                            <input type="text" name="item_id" id="item_id_<%%=entity.order_items[lineIdx].id%>" class="fieldcontrol" size="8" value="<%%=entity.order_items[lineIdx].item_id%>"/>
                                           </div>
                                           <div class="formrow">  
                                             <label for="item_description" class="fieldtitle">Descripción del producto</label>
-                                            <input type="text" name="item_description" class="fieldcontrol" size="20" value="<%%= entity.order_items[lineIdx].item_description %>"/>
+                                            <input type="text" name="item_description" id="item_description_<%%=entity.order_items[lineIdx].id%>" class="fieldcontrol" size="20" value="<%%= entity.order_items[lineIdx].item_description %>"  style="background:#EEE" tabindex="-1"/>
                                           </div>
                                           <div class="formrow">  
-                                            <label for="item_description" class="fieldtitle">Tipo de tarifa del producto</label>
-                                            <input type="text" name="item_price_description" class="fieldcontrol" size="31" value="<%%= entity.order_items[lineIdx].item_price_description %>"/>
+                                            <label for="item_price_description" class="fieldtitle">Tipo de tarifa del producto</label>
+                                            <select name="item_price_type" id="item_price_type_<%%=entity.order_items[lineIdx].id%>"></select>
+                                            <input type="hidden" name="item_price_description" id="item_price_description_<%%=entity.order_items[lineIdx].id%>" value="<%%=entity.order_items[lineIdx].item_price_description%>"/>
                                           </div>
                                         </div>
                                         <div class="grid_6">
@@ -82,17 +87,13 @@
                                               <input type="text" class="fieldcontrol right_text" name="quantity" size="8" style="padding:5px" value="<%%= entity.order_items[lineIdx].quantity %>"/>
                                             </div>
                                             <div class="formrow">
-                                              <label for="item_id" class="fieldtitle">Tarifa</label>
-                                              <input type="text" class="fieldcontrol right_text" name="item_price_type" size="8" style="padding:5px" value="<%%= entity.order_items[lineIdx].item_price_type %>"/>
-                                            </div>                
-                                            <div class="formrow">
                                               <label for="item_id" class="fieldtitle">Coste unitario</label>
                                               <input type="text" class="fieldcontrol right_text" name="item_unit_cost" size="8" style="padding:5px" value="<%%= new Number(entity.order_items[lineIdx].item_unit_cost).toFixed(2) %>"/>
                                             </div>
                                             <%% if (entity.order_items[lineIdx].custom_customers_pickup_place) { %>
                                             <div class="formrow">
                                               <label for="customers_pickup_place" class="fieldtitle">Lugar de recogida</label>
-                                              <select class="fieldcontrol right_text" name="customers_pickup_place" id="customers_pickup_place"></select>
+                                              <select class="fieldcontrol right_text" name="customers_pickup_place" id="customers_pickup_place_<%%=entity.order_items[lineIdx].id%>"></select>
                                             </div>
                                             <%% } %>
                                             <div class="formrow">

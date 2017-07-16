@@ -1,4 +1,4 @@
-<% if (order.can_pay_deposit? && order.total_paid == 0) || order.can_pay_total? %>
+<% if (order.can_pay_deposit? && order.total_paid == 0) || (order.can_pay_total? && order.total_pending > 0)%>
    <form name="form-payment" id="form-payment" action="/p/order/pay" method="POST">
    	  <input type="hidden" name="id" value="<%=order.id%>"/>
       <h3 class="guiblock-title"><%=t.order.payment.label%></h3>

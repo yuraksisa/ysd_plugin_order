@@ -191,18 +191,79 @@
 
       });
 
+      // New order line
+
       $('#new_order_line_date').datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
       var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
 
+      var new_item_id_input = "#new_order_line_item_id";
+      var new_item_description_input = "#new_order_line_item_description";
+
+      $(new_item_id_input).autocomplete({
+            source: "/api/booking-activities-search",
+            minLength: 1,
+            select: function( event, ui ) {
+                if (ui.item && ui.item.value) {
+                    $(new_item_id_input).val(ui.item.value);
+                    $(new_item_description_input).val(ui.item.label);
+                    var priceDescriptionValueModel = null;
+                    var priceDescriptionDataSourceModel = new RemoteDataSource('/api/booking-activities-rate/'+ui.item.value,{'id':'id',
+                        'description':'description'});
+                    var priceDescriptionSelectorModel = new SelectSelector('new_order_line_item_price_type',
+                        priceDescriptionDataSourceModel, priceDescriptionValueModel, true );
+                    $('#new_order_line_item_price_type').unbind('change');
+                    $('#new_order_line_item_price_type').bind('change', function(){
+                       $('#new_order_line_item_price_description').val($('#new_order_line_item_price_type option:selected').text());
+                    });
+                }
+            }
+      });
+
+      // Edit order line
       for (var idx=0; entity != null && idx<entity.order_items.length; idx++) {
 
         $('#date_'+idx).datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
         $('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date));
 
+        var theId = entity.order_items[idx].id;
+        var item_id_input = "#item_id_" + theId;
+        var item_description_input = "#item_description_" + theId;
+        var item_price_select = "item_price_type_" + theId;
+
+        var priceDescriptionValueModel = entity.order_items[idx].item_price_type;
+        var priceDescriptionDataSourceModel = new RemoteDataSource('/api/booking-activities-rate/'+entity.order_items[idx].item_id,{'id':'id',
+              'description':'description'});
+        var priceDescriptionSelectorModel = new SelectSelector(item_price_select,
+              priceDescriptionDataSourceModel, priceDescriptionValueModel, true );
+        $('#'+item_price_select).unbind('change');
+        $('#'+item_price_select).bind('change', function(){
+            $('#item_price_description_'+theId).val($('#'+item_price_select+' option:selected').text());
+        });
+
+        $(item_id_input).autocomplete({
+              source: "/api/booking-activities-search",
+              minLength: 1,
+              select: function( event, ui ) {
+                  if (ui.item && ui.item.value) {
+                      $(item_id_input).val(ui.item.value);
+                      $(item_description_input).val(ui.item.label);
+                      var priceDescriptionValueModel = null;
+                      var priceDescriptionDataSourceModel = new RemoteDataSource('/api/booking-activities-rate/'+ui.item.value,{'id':'id',
+                          'description':'description'});
+                      var priceDescriptionSelectorModel = new SelectSelector(item_price_select,
+                          priceDescriptionDataSourceModel, priceDescriptionValueModel, true );
+                      $('#'+item_price_select).unbind('change');
+                      $('#'+item_price_select).bind('change', function(){
+                          $('#item_price_description_'+theId).val($('#'+item_price_select+' option:selected').text());
+                      });
+                  }
+              }
+        });
+
         var pickupPlaceValueModel = entity.order_items[idx].customers_pickup_place;
         var pickupPlaceDataSourceModel = new RemoteDataSource('/api/booking-activiy-places/'+entity.order_items[idx].item_id,{'id':'name',
              'description':'name'});
-        var pickupPlaceSelectorModel = new SelectSelector('customers_pickup_place',
+        var pickupPlaceSelectorModel = new SelectSelector('customers_pickup_place_'+theId,
             pickupPlaceDataSourceModel, pickupPlaceValueModel, true );
 
         var self = this;
