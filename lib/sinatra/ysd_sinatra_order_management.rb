@@ -93,7 +93,7 @@ module Sinatra
                 end
                 session[:backoffice_new_order_item_activity_date_id] = @activity_date_id
               elsif params[:date] or params[:turn]
-                @date = params[:date]
+                @date = params[:date] ? Date.strptime(params[:date],'%Y-%m-%d') : nil
                 if params[:turn] && !params[:turn].to_s.empty?
                   @time = params[:turn]
                 else
