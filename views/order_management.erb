@@ -16,7 +16,10 @@
   <table id="elements_table" class="table">
      <thead class="table-header">
        <tr>
-        <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.id %></th>
+         <% if multiple_rental_locations %>
+         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.rental_location %></th>
+         <% end %>
+         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.id %></th>
          <th class="table-header-title" scope="col" style="width:15%"><%= t.order_management.table.creation_date %></th>
          <th class="table-header-title" scope="col" style="width:18%"><%= t.order_management.table.customer %></th>
          <th class="table-header-title" scope="col" style="width:27%"><%= t.order_management.table.product %></th>
@@ -49,6 +52,9 @@
 <script type="text/tmpl" id="elements_list_template">
 
     <tr class="table-row" rel="<%%= index %>" id="element_row_<%%=index%>">
+      <% if multiple_rental_locations %>
+      <td class="table-cell"><%%= entity.rental_location_code %></td>
+      <% end %>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.id %></td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= self.formatDate(entity.creation_date) %></td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.customer_name %> <%%=entity.customer_surname%></td>
@@ -105,6 +111,24 @@
   <%% if (!entity) { %>
     <form name="element" id="order_management_form">
 
+      <% if multiple_rental_locations %>
+      <div class="container_12">
+        <div class="grid_12">
+          <div class="all-space bottom-margin" style="border:1px solid #EEE">
+            <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.rental_location_title %></div>
+            <div class="formrow">
+              <div class="entity-field">
+                <span class="less_contrast_text"><%= t.order_management.form.rental_location %></span>
+                <span class="" style="margin-left: 8.5em">
+                   <select name="rental_location_code" id="rental_location"></select>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% end %>
+
       <div class="container_12">
         <%= partial :order_management_customer %>
         <div class="grid_6">
@@ -146,6 +170,20 @@
                 </span>
               </div>
             </div>
+            <% if multiple_rental_locations %>
+            <div class="element_template">
+              <div class="entity-field">
+                <span class="entity-fieldlabel less_contrast_text"><%= t.booking_management.form.rental_location %></span>
+                <span class="entity-fieldvalue">
+                  <form name="rental_location">
+                      <input type="hidden" name="id" value="<%%=entity.id%>"/>
+                      <select name="rental_location_code" id="rental_location"></select>
+                      <input type="submit" class="update-entity-button action-button entity-management-button" value="<%=t.entitymanagement.update%>"/>
+                  </form>
+                </span>
+              </div>
+            </div>
+            <% end %>
           </div>
           <div class="grid_5">
             <div class="element_template">

@@ -36,14 +36,17 @@ order:
 order_management:
   title: Pedidos
   description: Gestión de pedidos
-  table: 
-    id: Id 
+  table:
+    rental_location: Centro
+    id: Localizador
     creation_date: Fecha de recepción
     customer: Cliente
     product: Productos
     status: Estado 
     payment_status: Estado pago
   form:
+    rental_location_title: Oficina/centro de gestión
+    rental_location: Oficina/centro
     id: Número de pedido 
     creation_date: Fecha de creación
     status: Estado 

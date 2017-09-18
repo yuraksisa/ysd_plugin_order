@@ -11,6 +11,7 @@ module Sinatra
 
           @booking_item_family = ::Yito::Model::Booking::ProductFamily.get(SystemConfiguration::Variable.get_value('booking.item_family'))
           locals = {:order_page_size => 12}
+          locals.store(:multiple_rental_locations, SystemConfiguration::Variable.get_value('booking.multiple_rental_locations', 'false').to_bool)
           load_em_page :order_management, nil, false, :locals => locals
 
         end

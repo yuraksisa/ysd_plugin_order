@@ -305,7 +305,16 @@
 
       $('#reservation_amount_editable').bind('change', function() {
         $('#reservation_amount').val($('#reservation_amount_editable').val());
-      })
+      });
+
+      // Configure rental
+      <% if multiple_rental_locations %>
+        var dataSourceRentalLocation = new RemoteDataSource('/api/booking-rental-locations?all=yes',{'id':'code','description':'name'});
+        var valueRentalLocation = entity ? entity.rental_location_code : null;
+        var selectorRentalLocation = new SelectSelector('rental_location',
+            dataSourceRentalLocation, valueRentalLocation, true );
+      <% end %>
+
 
     }
     
