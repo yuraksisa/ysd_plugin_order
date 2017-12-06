@@ -39,11 +39,11 @@ order_management:
   table:
     rental_location: Centro
     id: Localizador
-    creation_date: Fecha de recepción
+    creation_date: Recepción
     customer: Cliente
     product: Productos
     status: Estado 
-    payment_status: Estado pago
+    payment_status: Pago
   form:
     rental_location_title: Oficina/centro de gestión
     rental_location: Oficina/centro

@@ -1,7 +1,7 @@
  require(['jquery', 'YSDEntityManagement', 'YSDForms', 'YSDMemoryDataSource', 'YSDRemoteDataSource',
           'YSDSelectSelector', 'YSDGui', 'jquery.validate','jquery.formparams',
           'jquery.ui', 'jquery.ui.datepicker-es', 'jquery.ui.datepicker.validation',
-          'json2'], 
+          'json2','bootstrap'],
           function($, EntityManagement, YSDForms, MemoryDataSource, RemoteDataSource, SelectSelector, YSDGui) {
 
  
@@ -10,16 +10,16 @@
     this.order_item_id = null;
 
     this.statusDescription = {
-       'pending_confirmation' : '<%= t.booking_status.pending_confirmation%>',
-       'confirmed' : '<%= t.booking_status.confirmed%>',
-       'cancelled' : '<%= t.booking_status.cancelled%>'
+       'pending_confirmation' : '<span class="label label-warning"><%= t.booking_status.pending_confirmation%></span>',
+       'confirmed' : '<span class="label label-success"><%= t.booking_status.confirmed%></span>',
+       'cancelled' : '<span class="label label-danger"><%= t.booking_status.cancelled%></span>'
     }
      
     this.paymentStatusDescription = {
        'none' : '<%= t.booking_payment_status.none%>',
-       'deposit' : '<%= t.booking_payment_status.deposit%>',
-       'total' : '<%= t.booking_payment_status.total%>',
-       'refunded': '<%= t.booking_payment_status.refunded%>'
+       'deposit' : '<span class="label label-primary"><%= t.booking_payment_status.deposit%></span>',
+       'total' : '<span class="label label-success"><%= t.booking_payment_status.total%></span>',
+       'refunded': '<span class="label label-danger"><%= t.booking_payment_status.refunded%></span>'
     }
 
     this.chargeStatusDescription = {
@@ -93,7 +93,8 @@
     }
 
     this.onRenderEntities = function(entities) {
-      $('.elements-search').show();   
+      $('.elements-search').show();
+      $('.new-entity-button').hide();
     }    
 
     this.onEdit = function(entity) {
@@ -103,8 +104,11 @@
       $('.modify-order-line-button').bind('click', function() {
          self.order_item_id = $(this).attr('rel');
          if (self.order_item_id) {
-          YSDGui.showElementInMode(document.getElementById('order_item_edition_'+self.order_item_id),
-                                   true, null, 'absolute', 0, 200);
+          /*YSDGui.showElementInMode(document.getElementById('order_item_edition_'+self.order_item_id),
+                                   true, null, 'absolute', 0, 200);*/
+          $('#order_item_edition_'+self.order_item_id).detach('#col_edit_order_item_'+self.order_item_id);
+          $('#order_item_edition_'+self.order_item_id).appendTo('body');
+          $('#order_item_edition_'+self.order_item_id).modal();
          }
       });
 
@@ -144,7 +148,10 @@
 
       $('#create_order_line_button').bind('click', function(){
         $('form[name=add_order_item]')[0].reset();
-        YSDGui.showElement(document.getElementById('create_order_item_container'), true);
+        //YSDGui.showElement(document.getElementById('create_order_item_container'), true);
+        $('#create_order_item_container').detach('#dialogs_container');
+        $('#create_order_item_container').appendTo('body');
+        $('#create_order_item_container').modal();
       });
 
       $('#new_order_line_button').bind('click', function(){
@@ -176,10 +183,10 @@
                data : json_request,
                url : '/api/order/order-item',
                success: function(data, textStatus, jqXHR) {
-                 YSDGui.hideElement(document.getElementById('create_order_item_container'));
+                  //YSDGui.hideElement(document.getElementById('create_order_item_container'));
+                 $('#create_order_item_container').modal('hide');
                  orderManager.model.synchronizeCurrentEntity(data);
                  orderManager.model.change_state('entity_updated_successfully');
-                 alert('Añadida linea');
                },
                error: function(data, textStatus, jqXHR) {
                  alert('Error añadiendo linea de pedido');
@@ -287,10 +294,10 @@
                data : json_request,
                url : '/api/order/order-item',
                success: function(data, textStatus, jqXHR) {
-                 YSDGui.hideElement(document.getElementById('order_item_edition_'+self.order_item_id));
+                 //YSDGui.hideElement(document.getElementById('order_item_edition_'+self.order_item_id));
                  orderManager.model.synchronizeCurrentEntity(data);
                  orderManager.model.change_state('entity_updated_successfully');
-                 alert('Modificada linea');
+                 $('.order_item_edition').modal('hide');
                },
                error: function(data, textStatus, jqXHR) {
                  alert('Error modificando linea de pedido');
@@ -351,9 +358,21 @@
             },
                  	        	   
        	    rules : { // rules
+                'customer_name': {
+                    required: true
+                },
+                'customer_surname': {
+                    required: true
+                }
        	    },
        	    
        	    messages : { // messages
+                'customer_name': {
+                    required: '<%=t.booking_management.form.validations.customer_name_required%>'
+                },
+                'customer_surname': {
+                    required: '<%=t.booking_management.form.validations.customer_surname_required%>'
+                }
        	    }
        	    
        	  }

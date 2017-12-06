@@ -192,8 +192,8 @@ module Sinatra
               order_item.item_cost = order_item.item_unit_cost * order_item.quantity
               order_item.notes = data_request[:notes]
               order_item.customers_pickup_place = data_request[:customers_pickup_place] if data_request.has_key?(:customers_pickup_place)
-              if data_request.has_key?(:customers)
-                data_request[:customers].each do |item|
+              if data_request.has_key?(:order_item_customers)
+                data_request[:order_item_customers].each do |key, item|
                   order_item_customer = (order_item.order_item_customers.select { |oic| oic.id == item[:id].to_i}).first
                   if order_item_customer
                     order_item_customer.customer_name = item[:customer_name]

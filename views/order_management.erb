@@ -13,25 +13,25 @@
 <!-- Renders the elements container -->
 <script type="text/tmpl" id="elements_container_template">
 
-  <table id="elements_table" class="table">
+  <table id="elements_table" class="table table-striped">
      <thead class="table-header">
        <tr>
-         <% if multiple_rental_locations %>
-         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.rental_location %></th>
-         <% end %>
-         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.id %></th>
+         <th class="table-header-title" scope="col" style="width:10%">#</th>
          <th class="table-header-title" scope="col" style="width:15%"><%= t.order_management.table.creation_date %></th>
          <th class="table-header-title" scope="col" style="width:18%"><%= t.order_management.table.customer %></th>
          <th class="table-header-title" scope="col" style="width:27%"><%= t.order_management.table.product %></th>
-         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.status %></th>
-         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.payment_status %></th>
-         <th class="table-header-title centered_text" scope="col" style="width:5%"><%= t.booking_management.table.notifications %></th>           
+         <th class="table-header-title centered_text" scope="col" style="width:10%"><%= t.order_management.table.status %></th>
+         <th class="table-header-title centered_text" scope="col" style="width:10%"><%= t.order_management.table.payment_status %></th>
+         <% if multiple_rental_locations %>
+         <th class="table-header-title" scope="col" style="width:10%"><%= t.order_management.table.rental_location %></th>
+         <% end %>
+         <!--th class="table-header-title centered_text" scope="col" style="width:5%"><%= t.booking_management.table.notifications %></th-->
        </tr>
      </thead>
      <tbody id="elements_tbody" class="table-tbody">             
      </tbody>
   </table>
-  <div class="guiblock smaller_text all-space left-margin right-margin">
+  <!--div class="guiblock smaller_text all-space left-margin right-margin">
     <p><%=t.booking_management.footer.title%>:</p>
     <div>
     <span class="more_contrast_text">c1:</span><span class="less_contrast_text"><%=t.booking_management.footer.c1_notification%></span>&nbsp;
@@ -44,7 +44,7 @@
     <span class="more_contrast_text">m2:</span><span class="less_contrast_text"><%=t.booking_management.footer.m2_notification%></span>&nbsp;    
     <span class="more_contrast_text">m2:</span><span class="less_contrast_text"><%=t.booking_management.footer.m3_notification%></span>&nbsp;     
     </div>
-  </div>
+  </div-->
 </script>
 
 <!-- Renders one element in the elements list view -->
@@ -52,13 +52,10 @@
 <script type="text/tmpl" id="elements_list_template">
 
     <tr class="table-row" rel="<%%= index %>" id="element_row_<%%=index%>">
-      <% if multiple_rental_locations %>
-      <td class="table-cell"><%%= entity.rental_location_code %></td>
-      <% end %>
-      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.id %></td>
+      <td class="table-cell element-navigation-detail" rel="<%%= index %>"><strong class="text-primary"><%%= entity.id %></strong></td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= self.formatDate(entity.creation_date) %></td>
       <td class="table-cell element-navigation-detail" rel="<%%= index %>"><%%= entity.customer_name %> <%%=entity.customer_surname%></td>
-      <td class="table-cell element-navigation-detail smaller_text" rel="<%%=index%>">
+      <td class="table-cell element-navigation-detail" rel="<%%=index%>">
         <%% var items = []; %>
         <%% for (var idx=0;idx<entity.order_items.length;idx++) { %>
           <%% if (items.indexOf(entity.order_items[idx].item_id) == -1) { %>
@@ -73,18 +70,20 @@
           <%% } %>
         <%% } %>
       </td>
-      <td class="table-cell element-navigation-detail" rel="<%%= index %>">
-        <span class="smaller_text <%%=self.model.entityHooks[0].statusClass(entity)%> element-status">
+      <td class="table-cell element-navigation-detail centered_text" rel="<%%= index %>">
+        <span class="<%%=self.model.entityHooks[0].statusClass(entity)%> element-status">
           <%%= self.model.entityHooks[0].statusDescription[entity.status] %>
         </span>      
       </td>
       <td class="table-cell element-navigation-detail centered_text" rel="<%%= index %>">
-         <%% if (entity.payment_status == 'none') { %><span class="element-status pending-status smaller_text">p</span> <%% } %>   
-         <%% if (entity.payment_status == 'deposit') { %><span class="element-status doing-status smaller_text">d</span> <%% } %>      
-         <%% if (entity.payment_status == 'total') { %><span class="element-status done-status smaller_text">t</span> <%%}%>
-         <%% if (entity.payment_status == 'refunded') { %><span class="element-status error-status smaller_text">c</span> <%%}%>        
+         <%% if (entity.payment_status == 'deposit') { %><span class="label label-info">depósito</span> <%% } %>
+         <%% if (entity.payment_status == 'total') { %><span class="label label-success">total</span> <%%}%>
+         <%% if (entity.payment_status == 'refunded') { %><span class="label label-danger">devuelto</span> <%%}%>
       </td>
-      <td class="table-cell centered_text">
+      <% if multiple_rental_locations %>
+      <td class="table-cell"><%%= entity.rental_location_code %></td>
+      <% end %>
+      <!--td class="table-cell centered_text">
          <%% if (entity.customer_req_notification_sent) { %><span class="element-status pending-status smaller_text">c1</span> <%% } %>
          <%% if (entity.customer_notification_sent) { %><span class="element-status confirmed-status smaller_text">c2</span> <%%}%>
          <%% if (entity.customer_req_notification_p_sent) { %><span class="element-status confirmed-status smaller_text">c3</span> <%%}%>
@@ -92,7 +91,7 @@
          <%% if (entity.manager_notification_sent) { %><span class="element-status confirmed-status smaller_text">m</span><%%}%>
          <%% if (entity.manager_notification_p_n_sent) { %><span class="element-status confirmed-status smaller_text">m2</span><%%}%>
          <%% if (entity.manager_confirm_notification_sent) { %><span class="element-status confirmed-status smaller_text">m3</span><%%}%>            
-      </td>             
+      </td-->
     </tr>
 
 </script>
@@ -151,7 +150,6 @@
   <%% } else { %>
 
     <div id="dialogs_container">
-
       <div class="container_12">
         <div class="element-detail all-border-solid-light all-space overflow bottom-margin-1line">
           <div class="grid_5">
@@ -218,13 +216,14 @@
       </div>
 
       <div class="container_12">
-        <h2>Detalle del pedido</h2>
-        
-        <div class="container_12 bottom-margin-1line">
+
+        <div class="grid_12">
           <%= partial :order_management_detail %>
         </div>
       
       </div>
+
+      <br>
 
       <ul id="content_tabs" class="no-border no-background top-margin-2lines">
           <li class="no-border no-background top-space" style="border:none; background:none">
@@ -268,62 +267,80 @@
          </div>
       </div>
 
-                                  <div id="create_order_item_container" class="all-space all-border-solid" style="display:none; background: #fff; min-width:800px">
-                                    <div class="guiblock">
-                                      <h4 class="left_text">Nueva línea de pedido</h4>
-                                    </div>
-                                    <form name="add_order_item" 
-                                          class="update_order_item form-element" style="padding-top: 5px">
-                                          <input type="hidden" name="order_id" value="<%%=entity.id%>"/>
-                                      <div class="container_12">
-                                        <div class="grid_6">
-                                          <div class="formrow">
-                                            <label for="date" class="fieldtitle">Fecha</label>
-                                            <input type="text" name="date" class="fieldcontrol date_control" id="new_order_line_date" size="14"/>
-                                          </div>
-                                          <div>  
-                                            <label for="time" class="fieldtitle">Hora</label>
-                                            <input type="text" name="time" class="fieldcontrol" size="14"/>
-                                          </div>           
-                                          <div class="formrow">
-                                            <label for="item_id" class="fieldtitle">Código del producto</label>
-                                            <input type="text" name="item_id" class="fieldcontrol" size="8" id="new_order_line_item_id"/>
-                                          </div>
-                                          <div class="formrow">  
-                                            <label for="item_description" class="fieldtitle">Descripción del producto</label>
-                                            <input type="text" name="item_description" class="fieldcontrol" size="20" id="new_order_line_item_description" style="background:#EEE"  tabindex="-1"/>
-                                          </div>
-                                          <div class="formrow">  
-                                            <label for="item_description" class="fieldtitle">Tipo de tarifa del producto</label>
-                                            <select name="item_price_type" id="new_order_line_item_price_type"></select>
-                                            <input type="hidden" name="item_price_description" id="new_order_line_item_price_description"/>
-                                          </div>
-                                           </div>
-                                        <div class="grid_6">
-                                          <div class="left-margin">
-                                            <div class="formrow">
-                                              <label for="item_id" class="fieldtitle">Cantidad</label>
-                                              <input type="text" class="fieldcontrol right_text" name="quantity" size="8" style="padding:5px"/>
-                                            </div>
-                                            <div class="formrow">
-                                              <label for="item_id" class="fieldtitle">Coste unitario</label>
-                                              <input type="text" class="fieldcontrol right_text" name="item_unit_cost" size="8" style="padding:5px"/>
-                                            </div>
-                                            <div class="formrow">
-                                              <label for="item_id" class="fieldtitle">Notas</label>
-                                              <textarea name="notes" rows="7" class="fieldcontrol" style="padding: 7px;" cols="18"></textarea>
-                                            </div>
-                                          </div>  
-                                        </div>
-                                      </div>  
-                                      <div class="bottom-navigation-bar navigation-bar" style="padding: 0px; padding-top: 10px; margin-top: 10px">
-                                        <div class="navigation-bar-crud-buttons" style="width: 100%; float: none; margin: 0">
-                                           <input type="submit" class="entity-management-button" style="width: 100%" value="<%=t.entitymanagement.create%>"/>
-                                        </div>
-                                      </div> 
-                                    </form>
+       <div id="create_order_item_container"
+           class="modal fade all-space" style="display:none; background: #fff; width:1000px; margin:0 auto; height: 600px;z-index:100000">
+         <div class="modal-dialog" role="document" style=" width: 980px; margin:0 auto; z-index:100000">
+           <div class="modal-content">
+             <div class="modal-header">
+               <ul class="block-options">
+                 <li>
+                   <button data-dismiss="modal" type="button"><i class="si si-close"></i></button>
+                 </li>
+               </ul>
+               <h3 class="modal-title">Nueva línea de pedido</h3>
+             </div>
+             <div class="modal-body">
+                <form name="add_order_item"
+                      class="update_order_item form-element" style="padding-top: 5px">
+                      <input type="hidden" name="order_id" value="<%%=entity.id%>"/>
+                  <div class="container_12">
+                    <div class="grid_6">
+                      <div class="formrow">
+                        <label for="date" class="fieldtitle">Fecha</label>
+                        <input type="text" name="date" class="fieldcontrol date_control" id="new_order_line_date" size="14"/>
+                      </div>
+                      <div>
+                        <label for="time" class="fieldtitle">Hora</label>
+                        <input type="text" name="time" class="fieldcontrol" size="14"/>
+                      </div>
+                      <div class="formrow">
+                        <label for="item_id" class="fieldtitle">Código del producto</label>
+                        <input type="text" name="item_id" class="fieldcontrol" size="8" id="new_order_line_item_id"/>
+                      </div>
+                      <div class="formrow">
+                        <label for="item_description" class="fieldtitle">Descripción del producto</label>
+                        <input type="text" name="item_description" class="fieldcontrol" size="20" id="new_order_line_item_description" style="background:#EEE"  tabindex="-1"/>
+                      </div>
+                      <div class="formrow">
+                        <label for="item_description" class="fieldtitle">Tipo de tarifa del producto</label>
+                        <select name="item_price_type" id="new_order_line_item_price_type"></select>
+                        <input type="hidden" name="item_price_description" id="new_order_line_item_price_description"/>
+                      </div>
+                       </div>
+                    <div class="grid_6">
+                      <div class="left-margin">
+                        <div class="formrow">
+                          <label for="item_id" class="fieldtitle">Cantidad</label>
+                          <input type="text" class="fieldcontrol right_text" name="quantity" size="8" style="padding:5px"/>
+                        </div>
+                        <div class="formrow">
+                          <label for="item_id" class="fieldtitle">Coste unitario</label>
+                          <input type="text" class="fieldcontrol right_text" name="item_unit_cost" size="8" style="padding:5px"/>
+                        </div>
+                        <div class="formrow">
+                          <label for="item_id" class="fieldtitle">Notas</label>
+                          <textarea name="notes" rows="7" class="fieldcontrol" style="padding: 7px;" cols="18"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bottom-navigation-bar navigation-bar" style="padding: 0px; padding-top: 10px; margin-top: 10px">
+                    <div class="navigation-bar-crud-buttons" style="width: 100%; float: none; margin: 0">
+                       <input type="submit" class="blue-button entity-management-button" style="width: 100%" value="<%=t.entitymanagement.create%>"/>
+                    </div>
+                  </div>
+                </form>
 
-                                  </div>      
-      <%% } %>
+             </div>
+           </div>
+         </div>
+      </div>
+
+
+    </div>
+
+
+
+  <%% } %>
 </script>
 
