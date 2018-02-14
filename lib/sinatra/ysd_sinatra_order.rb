@@ -19,9 +19,9 @@ module Sinatra
           'views')))
         app.settings.translations = Array(app.settings.translations).push(File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'i18n')))      
 
-        app.set :ordercharge_gateway_return_ok, '/p/order/payment-gateway-return/ok'
-        app.set :ordercharge_gateway_return_cancel, '/p/order/payment-gateway-return/cancel'
-        app.set :ordercharge_gateway_return_nok, '/p/order/payment-gateway-return/nok'
+        #app.set :ordercharge_gateway_return_ok, '/p/order/payment-gateway-return/ok'
+        #app.set :ordercharge_gateway_return_cancel, '/p/order/payment-gateway-return/cancel'
+        #app.set :ordercharge_gateway_return_nok, '/p/order/payment-gateway-return/nok'
 
 
         #
