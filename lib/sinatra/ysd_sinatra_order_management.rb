@@ -154,7 +154,11 @@ module Sinatra
                   request_customer_height: @activity.request_customer_height,
                   request_customer_weight: @activity.request_customer_weight,
                   request_customer_allergies_intolerances: @activity.request_customer_allergies_intolerances,
-                  uses_planning_resources: @activity.uses_planning_resources
+                  uses_planning_resources: @activity.uses_planning_resources,
+                  custom_payment_allow_deposit_payment: @activity.custom_payment_allow_deposit_payment,
+                  custom_payment_deposit: @activity.custom_payment_deposit,
+                  custom_payment_allow_total_payment: @activity.custom_payment_allow_total_payment,
+                  allow_request_reservation: @activity.allow_request_reservation
               }
               activity_name = @activity.name
               activity_name << " (#{description})" unless description.nil?           

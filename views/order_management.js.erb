@@ -1,13 +1,14 @@
  require(['jquery', 'YSDEntityManagement', 'YSDForms', 'YSDMemoryDataSource', 'YSDRemoteDataSource',
           'YSDSelectSelector', 'YSDGui', 'jquery.validate','jquery.formparams',
           'jquery.ui', 'jquery.ui.datepicker-es', 'jquery.ui.datepicker.validation',
-          'json2','bootstrap'],
+          'json2','bootstrap', 'jquery.calendar'],
           function($, EntityManagement, YSDForms, MemoryDataSource, RemoteDataSource, SelectSelector, YSDGui) {
 
  
   function OrderHook() {
  	   
     this.order_item_id = null;
+    this.order_item_idx = null;
 
     this.statusDescription = {
        'pending_confirmation' : '<span class="label label-warning"><%= t.booking_status.pending_confirmation%></span>',
@@ -95,23 +96,58 @@
     this.onRenderEntities = function(entities) {
       $('.elements-search').show();
       $('.new-entity-button').hide();
-    }    
+    }
+
+    this.onNew = function() {
+        $('.new-entity-button').hide();
+        this.configForm(null);
+    };
 
     this.onEdit = function(entity) {
+
       this.configForm(entity);
+
       $('.new-entity-button').show();
       var self = this;
+
+      // Edit order item
       $('.modify-order-line-button').bind('click', function() {
          self.order_item_id = $(this).attr('rel');
+         self.order_item_idx = $(this).attr('data-line-idx');
          if (self.order_item_id) {
-          /*YSDGui.showElementInMode(document.getElementById('order_item_edition_'+self.order_item_id),
-                                   true, null, 'absolute', 0, 200);*/
+          $('#order_item_edition_'+self.order_item_id).on('shown.bs.modal', function () {
+             $('#order_item_edition_'+self.order_item_id).height($('#order_item_edition_'+self.order_item_id+' form.update_order_item').height()+120);
+              self.setupEditOrderItemForm(entity, self.order_item_idx);
+          });
+          $('#order_item_edition_'+self.order_item_id).on('hidden.bs.modal', function() {
+             $('#order_item_edition_'+self.order_item_id).detach('body');
+             $('#order_item_edition_'+self.order_item_id).appendTo('#col_edit_order_item_'+self.order_item_id);
+          });
+
           $('#order_item_edition_'+self.order_item_id).detach('#col_edit_order_item_'+self.order_item_id);
           $('#order_item_edition_'+self.order_item_id).appendTo('body');
           $('#order_item_edition_'+self.order_item_id).modal();
          }
       });
 
+      // Create order item (form)
+      $('#create_order_line_button').bind('click', function(){
+          $('#create_order_item_container').on('shown.bs.modal', function () {
+              $('#create_order_item_container').height($('form[name=add_order_item]').height()+120);
+              self.setupNewOrderItemForm();
+          });
+          $('form[name=add_order_item]')[0].reset();
+          $('#create_order_item_container').detach('#dialogs_container');
+          $('#create_order_item_container').appendTo('body');
+          $('#create_order_item_container').modal();
+      });
+
+      // Create order item (wizard)
+      $('#new_order_line_button').bind('click', function(){
+          window.location.href = '/admin/order/new-order-item-step-1?order=' + entity.id;
+      });
+
+      // Create charge
       $('#new_charge').bind('click', function(){
         $('#new_charge_button').unbind('click');
         $('#date').datetimepicker(
@@ -146,73 +182,80 @@
         }
       });
 
-      $('#create_order_line_button').bind('click', function(){
-        $('form[name=add_order_item]')[0].reset();
-        //YSDGui.showElement(document.getElementById('create_order_item_container'), true);
-        $('#create_order_item_container').detach('#dialogs_container');
-        $('#create_order_item_container').appendTo('body');
-        $('#create_order_item_container').modal();
-      });
-
-      $('#new_order_line_button').bind('click', function(){
-        window.location.href = '/admin/order/new-order-item-step-1?order=' + entity.id;
-      });
-
     };
-  
-    this.onNew = function() {
-      $('.new-entity-button').hide();
-  	  this.configForm(null);
-    };
-    
+
     this.configForm = function(entity) {
-      
-      $.datepicker.setDefaults( $.datepicker.regional["<%=session[:locale] || 'es'%>" ] );
-      this.configValidation();
-      this.configTabs();
-      var self = this;
-      $('form[name="add_order_item"]').validate({
 
-        submitHandler: function(form) {
+        $.datepicker.setDefaults( $.datepicker.regional["<%=session[:locale] || 'es'%>" ] );
+        this.configValidation();
+        this.configTabs();
 
-           var data = $(form).formParams(false);
-           var json_request = JSON.stringify(data);
-           
-           $.ajax({
-               type: 'POST',
-               data : json_request,
-               url : '/api/order/order-item',
-               success: function(data, textStatus, jqXHR) {
-                  //YSDGui.hideElement(document.getElementById('create_order_item_container'));
-                 $('#create_order_item_container').modal('hide');
-                 orderManager.model.synchronizeCurrentEntity(data);
-                 orderManager.model.change_state('entity_updated_successfully');
-               },
-               error: function(data, textStatus, jqXHR) {
-                 alert('Error añadiendo linea de pedido');
-               }
-           });
+        $('#reservation_amount_editable').bind('change', function() {
+            $('#reservation_amount').val($('#reservation_amount_editable').val());
+        });
 
-           return false;
-        }
+        // Configure rental
+        <% if multiple_rental_locations %>
+        var dataSourceRentalLocation = new RemoteDataSource('/api/booking-rental-locations?all=yes',{'id':'code','description':'name'});
+        var valueRentalLocation = entity ? entity.rental_location_code : null;
+        var selectorRentalLocation = new SelectSelector('rental_location',
+            dataSourceRentalLocation, valueRentalLocation, true );
+        <% end %>
 
-      });
 
-      // New order line
+    }
 
-      $('#new_order_line_date').datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
-      var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
+    this.setupNewOrderItemForm = function() {
 
-      var new_item_id_input = "#new_order_line_item_id";
-      var new_item_description_input = "#new_order_line_item_description";
+        // Setup form validate
+        $('form[name="add_order_item"]').data('validator', null);
+        $('form[name="add_order_item"]').validate({
+            submitHandler: function(form) {
+                var data = $(form).formParams(false);
+                var json_request = JSON.stringify(data);
+                $.ajax({
+                    type: 'POST',
+                    data : json_request,
+                    url : '/api/order/order-item',
+                    success: function(data, textStatus, jqXHR) {
+                        $('#create_order_item_container').modal('hide');
+                        orderManager.model.synchronizeCurrentEntity(data);
+                        orderManager.model.change_state('entity_updated_successfully');
+                    },
+                    error: function(data, textStatus, jqXHR) {
+                        alert('Error añadiendo linea de pedido');
+                    }
+                });
+                return false;
+            },
 
-      $(new_item_id_input).autocomplete({
+            rules : {
+                'time': {
+                    time24: true
+                }
+            },
+            messages : {
+                'time': {
+                    time24: '<%=t.validations.time_format_invalid%>'
+                }
+            }
+        });
+
+        // Datepicker
+        var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
+        //$('#new_order_line_date').datepicker('destroy');
+        //$('#new_order_line_date').datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
+        //$('#new_order_line_date').bootstrapDP();
+        $('#new_order_line_date').datePicker();
+
+        // Autocomplete
+        $("#new_order_line_item_id").autocomplete({
             source: "/api/booking-activities-search",
             minLength: 1,
             select: function( event, ui ) {
                 if (ui.item && ui.item.value) {
-                    $(new_item_id_input).val(ui.item.value);
-                    $(new_item_description_input).val(ui.item.label);
+                    $("#new_order_line_item_id").val(ui.item.value);
+                    $("#new_order_line_item_description").val(ui.item.label);
                     var priceDescriptionValueModel = null;
                     var priceDescriptionDataSourceModel = new RemoteDataSource('/api/booking-activities-rate/'+ui.item.value,{'id':'id',
                         'description':'description'});
@@ -220,111 +263,119 @@
                         priceDescriptionDataSourceModel, priceDescriptionValueModel, true );
                     $('#new_order_line_item_price_type').unbind('change');
                     $('#new_order_line_item_price_type').bind('change', function(){
-                       $('#new_order_line_item_price_description').val($('#new_order_line_item_price_type option:selected').text());
+                        $('#new_order_line_item_price_description').val($('#new_order_line_item_price_type option:selected').text());
                     });
                 }
             }
-      });
+        });
+    };
 
-      // Edit order line
-      for (var idx=0; entity != null && idx<entity.order_items.length; idx++) {
+    this.setupEditOrderItemForm = function(entity, idx) {
+        var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
 
-        $('#date_'+idx).datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
-        $('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date));
+        // Setup form validation
+        $('form[name="update_order_item_' + idx + '"]').data('validator', null);
+        $('form[name="update_order_item_' + idx + '"]').validate({
 
+            submitHandler: function(form) {
+
+                var data = $(form).formParams(false);
+
+                data.item_custom_payment_allow_deposit_payment = $('#item_custom_payment_allow_deposit_payment_'+entity.order_items[idx].id).is(':checked');
+                data.item_custom_payment_allow_total_payment = $('#item_custom_payment_allow_total_payment_'+entity.order_items[idx].id).is(':checked')
+
+                if (data.order_item_customers && data.order_item_customers.length > 0) {
+                    var customers = $.map(data.order_item_customers, function (value, index) {
+                        return [value];
+                    });
+                    data.customers = customers;
+                }
+
+                var json_request = JSON.stringify(data);
+
+                $.ajax({
+                    type: 'PUT',
+                    data : json_request,
+                    url : '/api/order/order-item',
+                    success: function(data, textStatus, jqXHR) {
+                        orderManager.model.synchronizeCurrentEntity(data);
+                        orderManager.model.change_state('entity_updated_successfully');
+                        $('.order_item_edition').modal('hide');
+                    },
+                    error: function(data, textStatus, jqXHR) {
+                        alert('Error modificando linea de pedido');
+                    }
+                });
+
+                return false;
+            },
+
+            rules : {
+                'time': {
+                    time24: true
+                }
+            },
+            messages : {
+                'time': {
+                    time24: '<%=t.validations.time_format_invalid%>'
+                }
+            }
+
+        });
+
+        // Datepicker
+        var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
+        //$('#date_'+idx).datepicker('destroy');
+        //$('#date_'+idx).datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
+        //$('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date));
+        $('#date_'+idx).val(entity.order_items[idx].date.toString("dd/MM/yyyy"));
+        $('#date_'+idx).datePicker();
+
+        // Autocomplete product
         var theId = entity.order_items[idx].id;
         var item_id_input = "#item_id_" + theId;
         var item_description_input = "#item_description_" + theId;
-        var item_price_select = "item_price_type_" + theId;
+        $(item_id_input).autocomplete({
+            source: "/api/booking-activities-search",
+            minLength: 1,
+            select: function( event, ui ) {
+                if (ui.item && ui.item.value) {
+                    $(item_id_input).val(ui.item.value);
+                    $(item_description_input).val(ui.item.label);
+                    var priceDescriptionValueModel = null;
+                    var priceDescriptionDataSourceModel = new RemoteDataSource('/api/booking-activities-rate/'+ui.item.value,{'id':'id',
+                        'description':'description'});
+                    var priceDescriptionSelectorModel = new SelectSelector(item_price_select,
+                        priceDescriptionDataSourceModel, priceDescriptionValueModel, true );
+                    $('#'+item_price_select).unbind('change');
+                    $('#'+item_price_select).bind('change', function(){
+                        $('#item_price_description_'+theId).val($('#'+item_price_select+' option:selected').text());
+                    });
+                }
+            }
+        });
 
+        // Product price (rate)
+        var item_price_select = "item_price_type_" + theId;
         var priceDescriptionValueModel = entity.order_items[idx].item_price_type;
         var priceDescriptionDataSourceModel = new RemoteDataSource('/api/booking-activities-rate/'+entity.order_items[idx].item_id,{'id':'id',
-              'description':'description'});
+            'description':'description'});
         var priceDescriptionSelectorModel = new SelectSelector(item_price_select,
-              priceDescriptionDataSourceModel, priceDescriptionValueModel, true );
+            priceDescriptionDataSourceModel, priceDescriptionValueModel, true );
         $('#'+item_price_select).unbind('change');
         $('#'+item_price_select).bind('change', function(){
             $('#item_price_description_'+theId).val($('#'+item_price_select+' option:selected').text());
         });
 
-        $(item_id_input).autocomplete({
-              source: "/api/booking-activities-search",
-              minLength: 1,
-              select: function( event, ui ) {
-                  if (ui.item && ui.item.value) {
-                      $(item_id_input).val(ui.item.value);
-                      $(item_description_input).val(ui.item.label);
-                      var priceDescriptionValueModel = null;
-                      var priceDescriptionDataSourceModel = new RemoteDataSource('/api/booking-activities-rate/'+ui.item.value,{'id':'id',
-                          'description':'description'});
-                      var priceDescriptionSelectorModel = new SelectSelector(item_price_select,
-                          priceDescriptionDataSourceModel, priceDescriptionValueModel, true );
-                      $('#'+item_price_select).unbind('change');
-                      $('#'+item_price_select).bind('change', function(){
-                          $('#item_price_description_'+theId).val($('#'+item_price_select+' option:selected').text());
-                      });
-                  }
-              }
-        });
-
+        // Customer pickup place
         var pickupPlaceValueModel = entity.order_items[idx].customers_pickup_place;
         var pickupPlaceDataSourceModel = new RemoteDataSource('/api/booking-activiy-places/'+entity.order_items[idx].item_id,{'id':'name',
-             'description':'name'});
+            'description':'name'});
         var pickupPlaceSelectorModel = new SelectSelector('customers_pickup_place_'+theId,
             pickupPlaceDataSourceModel, pickupPlaceValueModel, true );
 
-        var self = this;
-        $('form[name="update_order_item_' + idx + '"]').validate({
-
-          submitHandler: function(form) {
-
-             var data = $(form).formParams(false);
-
-             if (data.order_item_customers && data.order_item_customers.length > 0) {
-                 var customers = $.map(data.order_item_customers, function (value, index) {
-                     return [value];
-                 });
-                 data.customers = customers;
-             }
-
-             var json_request = JSON.stringify(data);
-             
-             $.ajax({
-               type: 'PUT',
-               data : json_request,
-               url : '/api/order/order-item',
-               success: function(data, textStatus, jqXHR) {
-                 //YSDGui.hideElement(document.getElementById('order_item_edition_'+self.order_item_id));
-                 orderManager.model.synchronizeCurrentEntity(data);
-                 orderManager.model.change_state('entity_updated_successfully');
-                 $('.order_item_edition').modal('hide');
-               },
-               error: function(data, textStatus, jqXHR) {
-                 alert('Error modificando linea de pedido');
-               }
-             });
-
-             return false;
-          }
-
-        });      
-      }
-
-      $('#reservation_amount_editable').bind('change', function() {
-        $('#reservation_amount').val($('#reservation_amount_editable').val());
-      });
-
-      // Configure rental
-      <% if multiple_rental_locations %>
-        var dataSourceRentalLocation = new RemoteDataSource('/api/booking-rental-locations?all=yes',{'id':'code','description':'name'});
-        var valueRentalLocation = entity ? entity.rental_location_code : null;
-        var selectorRentalLocation = new SelectSelector('rental_location',
-            dataSourceRentalLocation, valueRentalLocation, true );
-      <% end %>
-
-
     }
-    
+
     this.configTabs = function() {
 
       $("#content > div").hide(); // Initially hide all content

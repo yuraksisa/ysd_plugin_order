@@ -192,6 +192,9 @@ module Sinatra
               order_item.item_cost = order_item.item_unit_cost * order_item.quantity
               order_item.notes = data_request[:notes]
               order_item.customers_pickup_place = data_request[:customers_pickup_place] if data_request.has_key?(:customers_pickup_place)
+              order_item.item_custom_payment_allow_deposit_payment = data_request[:item_custom_payment_allow_deposit_payment] if data_request.has_key?(:item_custom_payment_allow_deposit_payment)
+              order_item.item_custom_payment_allow_total_payment = data_request[:item_custom_payment_allow_total_payment] if data_request.has_key?(:item_custom_payment_allow_total_payment)
+
               if data_request.has_key?(:order_item_customers)
                 data_request[:order_item_customers].each do |key, item|
                   order_item_customer = (order_item.order_item_customers.select { |oic| oic.id == item[:id].to_i}).first
@@ -217,8 +220,9 @@ module Sinatra
                     order_item.order_item_customers << order_item_customer
                   end
                 elsif old_item_quantity > order_item.quantity
-                  while order_item.order_items_customers.size > order_item.quantity 
-                    order_item.order_items_customers.last.destroy
+                  while order_item.order_item_customers.size > order_item.quantity
+                    order_item.order_item_customers.last.destroy
+                    order_item.order_item_customers.reload
                   end              
                 end
               end   

@@ -1,11 +1,10 @@
-<div class="bottom_margin" style="border:1px solid #EEE;padding-right: 20px;">
+<div id="order_item_edition_container" class="bottom_margin" style="border:1px solid #EEE;padding-right: 20px;">
   <table class="table table-hover">
     <thead class="table-header">
     <tr>
       <th class="table-cell left_text" scope="col" style="width:4em">Fecha</th>
       <th class="table-cell left_text" scope="col" style="width:5em">Producto</th>
       <th class="table-cell left_text" scope="col" style="width:3em">Tarifa</th>
-      <!--th class="table-cell left_text" scope="col" style="width:10em">Notas</th-->
       <th class="table-cell right_text" scope="col" style="width:6em">Cantidad</th>
       <th class="table-cell right_text" scope="col" style="width:6em">Coste</th>
       <th class="table-cell right_text" scope="col" style="width:6em">Coste</th>
@@ -25,15 +24,6 @@
       <td class="table-cell left_text">
         <%%=entity.order_items[lineIdx].item_price_description%>
       </td>
-      <!--td class="table-cell left_text">
-                                  <%%=entity.order_items[lineIdx].notes%>
-                                  <%% if (entity.order_items[lineIdx].customers_pickup_place && entity.order_items[lineIdx].customers_pickup_place!= '') { %>
-                                    <%% if (entity.order_items[lineIdx].notes && entity.order_items[lineIdx].notes != '') { %>
-                                    <br/>
-                                    <%% } %>
-                                  <em class="smaller_text less_contrast_text"><%=t.order_management.form.order_item.customers_pickup_place%>&nbsp;<%%=entity.order_items[lineIdx].customers_pickup_place%></em>
-                                  <%% } %>
-                               </td-->
       <td class="table-cell right_text">
         <%%=entity.order_items[lineIdx].quantity%>
       </td>
@@ -45,11 +35,11 @@
       </td>
       <td id="col_edit_order_item_<%%=entity.order_items[lineIdx].id%>" class="table-cell left_text">
         <div id="order_item_edition_<%%=entity.order_items[lineIdx].id%>"
-             class="modal fade all-space order_item_edition"
+             class="modal fade order_item_edition"
              tabindex="-1" role="dialog"
              style="display:none; background: #fff; width: 1000px; margin:0 auto; z-index:100000"
-             aria-labelledby="myModalLabel">
-          <div class="modal-dialog" role="document" style=" width: 980px; margin:0 auto; z-index:100000">
+             aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog"  style="width: 980px; margin:0 auto; z-index:100000">
             <div class="modal-content">
               <div class="modal-header">
                 <ul class="block-options">
@@ -67,7 +57,7 @@
                     <div class="grid_6">
                       <div class="formrow">
                         <label for="date" class="fieldtitle">Fecha</label>
-                        <input type="text" name="date" class="fieldcontrol date_control" id="date_<%%=lineIdx%>" size="14" value="<%%=entity.order_items[lineIdx].date%>" value="<%%= entity.order_items[lineIdx].time %>"/>
+                        <input type="text" name="date" class="fieldcontrol" id="date_<%%=lineIdx%>" size="14" value="<%%=entity.order_items[lineIdx].date%>" value="<%%= entity.order_items[lineIdx].time %>"/>
                       </div>
                       <div>
                         <label for="time" class="fieldtitle">Hora</label>
@@ -103,6 +93,14 @@
                           <select class="fieldcontrol right_text" name="customers_pickup_place" id="customers_pickup_place_<%%=entity.order_items[lineIdx].id%>"></select>
                         </div>
                         <%% } %>
+                        <div class="formrow">
+                          <label for="item_custom_payment_allow_deposit_payment_<%%=entity.order_items[lineIdx].id%>">Permite pagar depósito</label>
+                          <input type="checkbox" name="item_custom_payment_allow_deposit_payment" id="item_custom_payment_allow_deposit_payment_<%%=entity.order_items[lineIdx].id%>"
+                                 <%% if (entity.order_items[lineIdx].item_custom_payment_allow_deposit_payment) {%>checked<%%}%>>
+                          <label for="item_custom_payment_allow_deposit_payment_<%%=entity.order_items[lineIdx].id%>">Permite pagar total</label>
+                          <input type="checkbox" name="item_custom_payment_allow_total_payment" id="item_custom_payment_allow_total_payment_<%%=entity.order_items[lineIdx].id%>"
+                          <%% if (entity.order_items[lineIdx].item_custom_payment_allow_total_payment) {%>checked<%%}%>>
+                        </div>
                         <div class="formrow">
                           <label for="item_id" class="fieldtitle">Notas</label>
                           <textarea name="notes" rows="4" class="fieldcontrol" style="padding: 7px;" cols="18"><%%=entity.order_items[lineIdx].notes%></textarea>
@@ -206,7 +204,7 @@
         </div>
         <div style="margin-left: 10px">
           <button type="button" class="btn btn-default modify-order-line-button action-button entity-management-button"
-                  rel="<%%=entity.order_items[lineIdx].id%>">
+                  rel="<%%=entity.order_items[lineIdx].id%>" data-line-idx="<%%=lineIdx%>">
             <i class="fa fa-pencil"></i>
           </button>
           <button type="button" class="btn btn-default element-action-button action-button entity-management-button"
@@ -272,4 +270,4 @@
     <button id="create_order_line_button" class="form-button">Añadir producto</button>
     <button id="new_order_line_button" class="form-button">Asistente añadir producto</button>
   </div>
-</div> 
+</div>

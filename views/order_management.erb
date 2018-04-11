@@ -31,20 +31,6 @@
      <tbody id="elements_tbody" class="table-tbody">             
      </tbody>
   </table>
-  <!--div class="guiblock smaller_text all-space left-margin right-margin">
-    <p><%=t.booking_management.footer.title%>:</p>
-    <div>
-    <span class="more_contrast_text">c1:</span><span class="less_contrast_text"><%=t.booking_management.footer.c1_notification%></span>&nbsp;
-    <span class="more_contrast_text">c2:</span><span class="less_contrast_text"><%=t.booking_management.footer.c2_notification%></span>&nbsp;
-    <span class="more_contrast_text">c3:</span><span class="less_contrast_text"><%=t.booking_management.footer.c3_notification%></span>&nbsp;
-    <span class="more_contrast_text">c4:</span><span class="less_contrast_text"><%=t.booking_management.footer.c4_notification%></span>&nbsp;
-    </div>
-    <div>
-    <span class="more_contrast_text">m:</span><span class="less_contrast_text"><%=t.booking_management.footer.m1_notification%></span>&nbsp;
-    <span class="more_contrast_text">m2:</span><span class="less_contrast_text"><%=t.booking_management.footer.m2_notification%></span>&nbsp;    
-    <span class="more_contrast_text">m2:</span><span class="less_contrast_text"><%=t.booking_management.footer.m3_notification%></span>&nbsp;     
-    </div>
-  </div-->
 </script>
 
 <!-- Renders one element in the elements list view -->
@@ -109,7 +95,6 @@
      
   <%% if (!entity) { %>
     <form name="element" id="order_management_form">
-
       <% if multiple_rental_locations %>
       <div class="container_12">
         <div class="grid_12">
@@ -252,23 +237,23 @@
          </div>
          <div id="comments_notes_tab" class="top-margin-1line">
            <%= partial :order_management_comments_notes %>
-         </div>         
+         </div>
          <div id="charges_tab" class="top-margin-1line">
            <%= partial :order_management_charges %>
          </div>
          <div id="notifications_tab" class="top-margin-1line">
            <%= partial :order_management_notifications %>
-         </div>         
+         </div>
          <div id="payment_tab" class="top-margin-1line">
            <%= partial :order_management_payment %>
          </div>
          <div id="other_tab"  class="top-margin-1line">
-           <%= partial :order_management_others %>         
+           <%= partial :order_management_others %>
          </div>
       </div>
 
-       <div id="create_order_item_container"
-           class="modal fade all-space" style="display:none; background: #fff; width:1000px; margin:0 auto; height: 600px;z-index:100000">
+      <div id="create_order_item_container"
+           class="modal fade" style="display:none; background: #fff; width:1000px; margin:0 auto; z-index:100000">
          <div class="modal-dialog" role="document" style=" width: 980px; margin:0 auto; z-index:100000">
            <div class="modal-content">
              <div class="modal-header">
@@ -287,7 +272,7 @@
                     <div class="grid_6">
                       <div class="formrow">
                         <label for="date" class="fieldtitle">Fecha</label>
-                        <input type="text" name="date" class="fieldcontrol date_control" id="new_order_line_date" size="14"/>
+                        <input type="text" name="date" class="fieldcontrol" id="new_order_line_date" size="14"/>
                       </div>
                       <div>
                         <label for="time" class="fieldtitle">Hora</label>
