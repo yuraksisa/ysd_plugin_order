@@ -9,7 +9,6 @@ Plugins::SinatraAppPlugin.register :order do
    version=     '0.1'
    
    hooker       Huasi::OrderExtension
-   sinatra_helper Sinatra::YitoExtension::OrderHelper
    sinatra_extension Sinatra::YitoExtension::Order
    sinatra_extension Sinatra::YitoExtension::OrderManagement
    sinatra_extension Sinatra::YitoExtension::OrderManagementRESTApi   

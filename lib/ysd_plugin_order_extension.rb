@@ -13,11 +13,20 @@ module Huasi
     #
     def install(context={})
 
+      # Settings
+
       SystemConfiguration::Variable.first_or_create(
         {:name => 'order.request_reservations'},
         {:value => 'true',
          :description => 'Allow the customers to request reservation (without payment)'})
 
+      SystemConfiguration::Variable.first_or_create(
+          {:name => 'order.item_hold_time'},
+          {:value => '72',
+           :description => 'Reservation expiration time',
+           :module => :booking})
+
+      # Online payment
 
       SystemConfiguration::Variable.first_or_create(
         {:name => 'order.payment'},
@@ -25,23 +34,22 @@ module Huasi
          :description => 'Integrate the payment in the booking process. Values: true, false',
          :module => :booking})
 
+      SystemConfiguration::Variable.first_or_create({name: 'order.payment_amount_setup'},
+                                                    {value: 'deposit',
+                                                     description: 'deposit or total',
+                                                     module: :booking}
+      )
+
       SystemConfiguration::Variable.first_or_create(
         {:name => 'order.deposit'},
         {:value => '40',
          :description => 'Deposit percentage or 0 if no deposit management',
          :module => :booking})
 
-      SystemConfiguration::Variable.first_or_create(
-        {:name => 'order.allow_deposit_payment'},
-        {:value => 'true',
-         :description => 'Allow total payment. Values: true, false',
-         :module => :booking})
-
-      SystemConfiguration::Variable.first_or_create(
-        {:name => 'order.allow_total_payment'},
-        {:value => 'true',
-         :description => 'Allow total payment. Values: true, false',
-         :module => :booking})
+      SystemConfiguration::Variable.first_or_create({name: 'order.allow_pending_payment'},
+                                                    {value: 'true',
+                                                     description: 'Allow to pay the pending amount (after the deposit payment)',
+                                                     module: :booking})
 
       SystemConfiguration::Variable.first_or_create(
         {:name => 'order.payment_cadence'},
@@ -49,11 +57,7 @@ module Huasi
          :description => 'Cadence in hours from the reservation date to today',
          :module => :booking})
 
-      SystemConfiguration::Variable.first_or_create(
-        {:name => 'order.item_hold_time'},
-        {:value => '72',
-         :description => 'Reservation expiration time',
-         :module => :booking})
+      # Notifications
 
       ContentManagerSystem::Template.first_or_create({:name => 'order_manager_notification'},
           {:description=>'Mensaje que se envía al gestor de reservas al recibir un nuevo pedido',
