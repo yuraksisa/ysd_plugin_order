@@ -210,6 +210,18 @@
 
       <br>
 
+      <%% if (entity && entity.contracts.length > 0) { %>
+      <div class="container_12">
+        <%% for (var idx=0;idx<entity.contracts.length;idx++) {%>
+        <div class="form-button grid_3">
+          <a href="/admin/order/contract/<%%=entity.id%>/<%%=idx%>" target="_blank">Contrato <%%=entity.contracts[idx].item_description%> - <%%=entity.contracts[idx].date%></a>
+        </div>
+        <%% } %>
+      </div>
+      <%% } %>
+
+      <br>
+
       <ul id="content_tabs" class="no-border no-background top-margin-2lines">
           <li class="no-border no-background top-space" style="border:none; background:none">
               <a name="customer_tab" href="#customer_tab">Cliente</a>

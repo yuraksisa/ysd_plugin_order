@@ -17,6 +17,32 @@ module Sinatra
         end
 
         #
+        # Print the contract (PDF document)
+        #
+        app.get '/admin/order/contract/:id/:number', :allowed_usergroups => ['order_manager', 'booking_manager', 'booking_operator','staff'] do
+
+          if order = ::Yito::Model::Order::Order.get(params[:id])
+            contracts = order.contracts
+            if contracts and (params[:number].to_i < contracts.size)
+              contract = OpenStruct.new(contracts[params[:number].to_i])
+              if contract_template = ContentManagerSystem::Template.first({:name => contract.item_id})
+                contract_template = contract_template.translate(order.customer_language)
+                content_type 'application/pdf'
+                eval contract_template.text
+              else
+                status 404
+              end
+            else
+              status 404
+            end
+          else
+            status 404
+          end
+
+        end
+
+
+        #
         # Add new order item : Step 1 - Choose activity
         #
         app.get '/admin/order/new-order-item-step-1/?*', :allowed_usergroups => ['order_manager', 'booking_manager', 'staff'] do  
