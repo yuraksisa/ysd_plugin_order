@@ -55,6 +55,7 @@ order_management:
     customer_name: Nombre
     customer_phone: Teléfono
     customer_email: Email
+    customer_document_id: DNI o pasaporte
     customer_language: Idioma
     comments_new: Comentarios
     comments: Comentarios (cliente)

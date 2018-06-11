@@ -87,6 +87,11 @@ module Huasi
           {:description=>'Mensaje que se envía al cliente cuando se habilita el pago del pedido',
            :text => ::Yito::Model::Order::Order.customer_notification_payment_enabled_template}) 
 
+      # Contract
+      ContentManagerSystem::Template.first_or_create({:name => 'order_contract'},
+                                                     {:description=>'Contrato',
+                                                      :text => ::Yito::Model::Order::Templates.contract})
+
     end
     
 

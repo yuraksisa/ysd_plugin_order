@@ -210,15 +210,22 @@
 
       <br>
 
-      <%% if (entity && entity.contracts.length > 0) { %>
       <div class="container_12">
-        <%% for (var idx=0;idx<entity.contracts.length;idx++) {%>
-        <div class="form-button grid_3">
-          <a href="/admin/order/contract/<%%=entity.id%>/<%%=idx%>" target="_blank">Contrato <%%=entity.contracts[idx].item_description%> - <%%=entity.contracts[idx].date%></a>
+        <div class="grid_3">
+          <div class="form-button" style="width:90%">
+            <a href="/admin/order/contract/<%%=entity.id%>" target="_blank">Contrato</a>
+          </div>
         </div>
+        <%% if (entity && entity.contracts.length > 0) { %>
+          <%% for (var idx=0;idx<entity.contracts.length;idx++) {%>
+          <div class="grid_3">
+            <div class="form-button" style="width:90%">
+              <a href="/admin/order/contract/<%%=entity.id%>/<%%=idx%>" target="_blank">Contrato <%%=entity.contracts[idx].item_description%> - <%%=entity.contracts[idx].date%></a>
+            </div>
+          </div>
+          <%% } %>
         <%% } %>
       </div>
-      <%% } %>
 
       <br>
 

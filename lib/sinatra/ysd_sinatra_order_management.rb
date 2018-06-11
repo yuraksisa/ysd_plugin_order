@@ -10,6 +10,7 @@ module Sinatra
         app.get '/admin/order/orders/?*', :allowed_usergroups => ['order_manager', 'booking_manager', 'staff'] do 
 
           @booking_item_family = ::Yito::Model::Booking::ProductFamily.get(SystemConfiguration::Variable.get_value('booking.item_family'))
+          @languages = Model::Translation::TranslationLanguage.all
           locals = {:order_page_size => 12}
           locals.store(:multiple_rental_locations, SystemConfiguration::Variable.get_value('booking.multiple_rental_locations', 'false').to_bool)
           load_em_page :order_management, nil, false, :locals => locals
@@ -32,6 +33,27 @@ module Sinatra
               else
                 status 404
               end
+            else
+              status 404
+            end
+          else
+            status 404
+          end
+
+        end
+
+        # ------------------- Contract --------------------
+
+        #
+        # Print the contract (PDF document)
+        #
+        app.get '/admin/order/contract/:id', :allowed_usergroups => ['booking_manager', 'booking_operator','staff'] do
+
+          if order = ::Yito::Model::Order::Order.get(params[:id])
+            if contract_template = ContentManagerSystem::Template.first({:name => 'order_contract'})
+              contract_template = contract_template.translate(order.customer_language)
+              content_type 'application/pdf'
+              eval contract_template.text
             else
               status 404
             end

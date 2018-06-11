@@ -43,10 +43,26 @@
                   </span>
                 </div>
               </div>
-              <div class="element_template" style="display:none">
+              <div class="element_template">
+                <div class="entity-field">
+                  <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_document_id %></span>
+                  <span class="entity-fieldvalue">
+                      <input type="text" maxlength="50" size="26" name="customer_document_id" id="customer_document_id"
+                        <%% if (entity) { %>value="<%%=entity.customer_document_id%>"<%% } %>/>
+                    </span>
+                </div>
+              </div>
+              <div class="element_template">
                 <div class="entity-field">
                   <span class="entity-fieldlabel less_contrast_text"><%= t.order_management.form.customer_language %></span>
-                  <span class="entity-fieldvalue"><%% if (entity) { %><%%= entity.customer_language %><%%}%></span>
+                  <span class="entity-fieldvalue">
+                    <select name="customer_language" class="form-control" style="width: 100%">
+                        <option value="" <%% if (entity.customer_language == null || entity.customer_language == ''){%>selected<%%}%>>Seleccione idioma</option>
+                      <% @languages.each do |item| %>
+                        <option value="<%=item.code%>" <%% if (entity.customer_language == '<%=item.code%>'){%>selected<%%}%>><%=item.description%></option>
+                      <% end %>
+                    </select>
+                  </span>
                 </div>
               </div>
           <%% if (!entity) { %>
