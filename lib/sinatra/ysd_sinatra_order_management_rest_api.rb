@@ -20,7 +20,24 @@ module Sinatra
             if request.media_type == "application/json"
               request.body.rewind
               search_request = JSON.parse(URI.unescape(request.body.read))
-              if search_request.has_key?('search')
+              if search_request.has_key?('status') and ['pending','starting','confirmed','received'].include?(search_request['status'])
+                today = Date.today.to_date
+                first_year_date = Date.civil(today.year, 1, 1)
+                if search_request['status'] == 'pending'
+                  total = ::Yito::Model::Order::Order.count_pending_confirmation_orders(today.year)
+                  data = ::Yito::Model::Order::Order.pending_of_confirmation(offset_order_query)
+                elsif search_request['status'] == 'starting'
+                  total = ::Yito::Model::Order::Order.count_start(today)
+                  data = ::Yito::Model::Order::Order.start_on_date(today, offset_order_query)
+                elsif search_request['status'] == 'confirmed'
+                  data, total = ::Yito::Model::Order::Order.all_and_count(
+                      {:conditions => {:status => [:confirmed],
+                                       :creation_date.gte => first_year_date}}.merge(offset_order_query))
+                elsif search_request['status'] == 'received'
+                  data, total = ::Yito::Model::Order::Order.all_and_count(
+                      {:conditions => {:creation_date.gte => first_year_date}}.merge(offset_order_query))
+                end
+              elsif search_request.has_key?('search')
                 total, data = ::Yito::Model::Order::Order.text_search(search_request['search'],offset_order_query)
               else
                 data, total = ::Yito::Model::Order::Order.all_and_count(offset_order_query)
@@ -120,6 +137,8 @@ module Sinatra
           data_request = JSON.parse(URI.unescape(request.body.read))
           data_request.symbolize_keys!
 
+          p "data_request:#{data_request.inspect}"
+
           if order = ::Yito::Model::Order::Order.get(data_request[:order_id])
             ::Yito::Model::Order::OrderItem.transaction do |transaction|
               order_item = ::Yito::Model::Order::OrderItem.new 
@@ -194,7 +213,7 @@ module Sinatra
               order_item.customers_pickup_place = data_request[:customers_pickup_place] if data_request.has_key?(:customers_pickup_place)
               order_item.item_custom_payment_allow_deposit_payment = data_request[:item_custom_payment_allow_deposit_payment] if data_request.has_key?(:item_custom_payment_allow_deposit_payment)
               order_item.item_custom_payment_allow_total_payment = data_request[:item_custom_payment_allow_total_payment] if data_request.has_key?(:item_custom_payment_allow_total_payment)
-
+              order_item.own_contract = data_request[:own_contract] if data_request.has_key?(:own_contract)
               if data_request.has_key?(:order_item_customers)
                 data_request[:order_item_customers].each do |key, item|
                   order_item_customer = (order_item.order_item_customers.select { |oic| oic.id == item[:id].to_i}).first

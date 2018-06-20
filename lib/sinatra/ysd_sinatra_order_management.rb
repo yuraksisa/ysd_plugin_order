@@ -11,6 +11,14 @@ module Sinatra
 
           @booking_item_family = ::Yito::Model::Booking::ProductFamily.get(SystemConfiguration::Variable.get_value('booking.item_family'))
           @languages = Model::Translation::TranslationLanguage.all
+
+          @today = Date.today
+          @year = DateTime.now.year
+          @pending_confirmation_orders = ::Yito::Model::Order::Order.count_pending_confirmation_orders(@year)
+          @received_orders = ::Yito::Model::Order::Order.count_received_orders(@year)
+          @confirmed_orders = ::Yito::Model::Order::Order.count_confirmed_orders(@year)
+          @count_start = ::Yito::Model::Order::Order.count_start(@today)
+
           locals = {:order_page_size => 12}
           locals.store(:multiple_rental_locations, SystemConfiguration::Variable.get_value('booking.multiple_rental_locations', 'false').to_bool)
           load_em_page :order_management, nil, false, :locals => locals

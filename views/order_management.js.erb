@@ -1,14 +1,17 @@
  require(['jquery', 'YSDEntityManagement', 'YSDForms', 'YSDMemoryDataSource', 'YSDRemoteDataSource',
-          'YSDSelectSelector', 'YSDGui', 'jquery.validate','jquery.formparams',
+          'YSDSelectSelector', 'YSDGui', 'ysdtemplate', 'jquery.validate','jquery.formparams',
           'jquery.ui', 'jquery.ui.datepicker-es', 'jquery.ui.datepicker.validation',
           'json2','bootstrap', 'jquery.calendar'],
-          function($, EntityManagement, YSDForms, MemoryDataSource, RemoteDataSource, SelectSelector, YSDGui) {
+          function($, EntityManagement, YSDForms, MemoryDataSource, RemoteDataSource, SelectSelector, YSDGui,
+                  tmpl) {
 
  
   function OrderHook() {
  	   
     this.order_item_id = null;
     this.order_item_idx = null;
+
+    /* ----------------------- Helpers -------------------------------- */
 
     this.statusDescription = {
        'pending_confirmation' : '<span class="label label-warning"><%= t.booking_status.pending_confirmation%></span>',
@@ -88,6 +91,7 @@
       return className;
     }  
 
+    /* --------------------- Entity management Hooks ---------------------------- */
 
     this.entityKey = function(entity) {
       return entity.id;
@@ -115,31 +119,28 @@
          self.order_item_id = $(this).attr('rel');
          self.order_item_idx = $(this).attr('data-line-idx');
          if (self.order_item_id) {
-          $('#order_item_edition_'+self.order_item_id).on('shown.bs.modal', function () {
-             $('#order_item_edition_'+self.order_item_id).height($('#order_item_edition_'+self.order_item_id+' form.update_order_item').height()+120);
-              self.setupEditOrderItemForm(entity, self.order_item_idx);
+           $('#order_item_container').unbind();
+           $('#order_item_container').on('shown.bs.modal', function () {
+             var html = tmpl('order_item_edition_script', {entity: entity, lineIdx: parseInt(self.order_item_idx)});
+             $('#order_item_container .modal-title').html('Modificar línea de pedido');
+             $('#modal_container_order_item').html(html);
+             self.setupEditOrderItemForm(entity, self.order_item_idx);
           });
-          $('#order_item_edition_'+self.order_item_id).on('hidden.bs.modal', function() {
-             $('#order_item_edition_'+self.order_item_id).detach('body');
-             $('#order_item_edition_'+self.order_item_id).appendTo('#col_edit_order_item_'+self.order_item_id);
-          });
-
-          $('#order_item_edition_'+self.order_item_id).detach('#col_edit_order_item_'+self.order_item_id);
-          $('#order_item_edition_'+self.order_item_id).appendTo('body');
-          $('#order_item_edition_'+self.order_item_id).modal();
+          $('#order_item_container').modal('show');
          }
       });
 
       // Create order item (form)
+      $('#create_order_line_button').unbind('click');
       $('#create_order_line_button').bind('click', function(){
-          $('#create_order_item_container').on('shown.bs.modal', function () {
-              $('#create_order_item_container').height($('form[name=add_order_item]').height()+120);
-              self.setupNewOrderItemForm();
+          $('#order_item_container').unbind();
+          $('#order_item_container').on('shown.bs.modal', function () {
+              var html = tmpl('script_order_line_form', {entity: entity});
+              $('#order_item_container .modal-title').html('Nueva línea de pedido');
+              $('#modal_container_order_item').html(html);
+              self.setupNewOrderItemForm(entity);
           });
-          $('form[name=add_order_item]')[0].reset();
-          $('#create_order_item_container').detach('#dialogs_container');
-          $('#create_order_item_container').appendTo('body');
-          $('#create_order_item_container').modal();
+          $('#order_item_container').modal('show');
       });
 
       // Create order item (wizard)
@@ -202,23 +203,84 @@
             dataSourceRentalLocation, valueRentalLocation, true );
         <% end %>
 
-
     }
 
-    this.setupNewOrderItemForm = function() {
+      this.configTabs = function() {
 
+          $("#content > div").hide(); // Initially hide all content
+          $("#content_tabs li:first").attr("id","current"); // Activate first tab
+          $("#content > div:first").fadeIn(); // Show first tab content
+          $('#content_tabs a').click(function(e) {
+              e.preventDefault();
+              if ($(this).attr("name") == 'preview') {
+                  ($('#home_frame')[0]).contentWindow.location.reload();
+              }
+              if ($(this).closest("li").attr("id") == "current"){ //detection for current tab
+                  return;
+              }
+              else{
+                  $("#content > div").hide(); //Hide all content
+                  $("#content_tabs li").attr("id",""); //Reset id's
+                  $(this).parent().attr("id","current"); // Activate this
+                  $('#' + $(this).attr('name')).fadeIn(); // Show content for current tab
+              }
+          });
+
+      }
+
+      this.configValidation = function() {
+
+          $('#order_management_form').validate({
+
+                  submitHandler: function(form)
+                  {
+                      return false;
+                  },
+
+                  rules : { // rules
+                      'customer_name': {
+                          required: true
+                      },
+                      'customer_surname': {
+                          required: true
+                      }
+                  },
+
+                  messages : { // messages
+                      'customer_name': {
+                          required: '<%=t.booking_management.form.validations.customer_name_required%>'
+                      },
+                      'customer_surname': {
+                          required: '<%=t.booking_management.form.validations.customer_surname_required%>'
+                      }
+                  }
+
+              }
+          );
+
+
+      }
+
+    /* ---------------- Setup forms for create / edit order line ----------------------------------- */
+
+    this.setupNewOrderItemForm = function(entity) { /* Setup new order item form */
+
+        $('input[name=order_id]').val(entity.id);
         // Setup form validate
-        $('form[name="add_order_item"]').data('validator', null);
-        $('form[name="add_order_item"]').validate({
+        $('form[name=add_order_item]').data('validator', null);
+        $('form[name=add_order_item]').unbind('validate');
+        $('form[name=add_order_item]')[0].reset();
+        $('form[name=add_order_item]').validate({
             submitHandler: function(form) {
                 var data = $(form).formParams(false);
                 var json_request = JSON.stringify(data);
+                console.log('New order item');
                 $.ajax({
                     type: 'POST',
                     data : json_request,
                     url : '/api/order/order-item',
                     success: function(data, textStatus, jqXHR) {
-                        $('#create_order_item_container').modal('hide');
+                        $('#order_item_container').modal('hide');
                         orderManager.model.synchronizeCurrentEntity(data);
                         orderManager.model.change_state('entity_updated_successfully');
                     },
@@ -243,10 +305,8 @@
 
         // Datepicker
         var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
-        //$('#new_order_line_date').datepicker('destroy');
-        //$('#new_order_line_date').datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
-        //$('#new_order_line_date').bootstrapDP();
-        $('#new_order_line_date').datePicker();
+        $('#new_order_line_date').datepicker('destroy');
+        $('#new_order_line_date').datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
 
         // Autocomplete
         $("#new_order_line_item_id").autocomplete({
@@ -270,10 +330,10 @@
         });
     };
 
-    this.setupEditOrderItemForm = function(entity, idx) {
-        var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
+    this.setupEditOrderItemForm = function(entity, idx) { /* Setup edit order item */
 
         // Setup form validation
+        $('form[name="update_order_item_' + idx + '"]').data('validator', null);
         $('form[name="update_order_item_' + idx + '"]').data('validator', null);
         $('form[name="update_order_item_' + idx + '"]').validate({
 
@@ -282,7 +342,8 @@
                 var data = $(form).formParams(false);
 
                 data.item_custom_payment_allow_deposit_payment = $('#item_custom_payment_allow_deposit_payment_'+entity.order_items[idx].id).is(':checked');
-                data.item_custom_payment_allow_total_payment = $('#item_custom_payment_allow_total_payment_'+entity.order_items[idx].id).is(':checked')
+                data.item_custom_payment_allow_total_payment = $('#item_custom_payment_allow_total_payment_'+entity.order_items[idx].id).is(':checked');
+                data.own_contract = $('#own_contract_'+entity.order_items[idx].id).is(':checked');
 
                 if (data.order_item_customers && data.order_item_customers.length > 0) {
                     var customers = $.map(data.order_item_customers, function (value, index) {
@@ -298,9 +359,9 @@
                     data : json_request,
                     url : '/api/order/order-item',
                     success: function(data, textStatus, jqXHR) {
+                        $('#order_item_container').modal('hide');
                         orderManager.model.synchronizeCurrentEntity(data);
                         orderManager.model.change_state('entity_updated_successfully');
-                        $('.order_item_edition').modal('hide');
                     },
                     error: function(data, textStatus, jqXHR) {
                         alert('Error modificando linea de pedido');
@@ -325,11 +386,9 @@
 
         // Datepicker
         var locale = $.datepicker.regional["<%=session[:locale] || 'es'%>"];
-        //$('#date_'+idx).datepicker('destroy');
-        //$('#date_'+idx).datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
-        //$('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date));
-        $('#date_'+idx).val(entity.order_items[idx].date.toString("dd/MM/yyyy"));
-        $('#date_'+idx).datePicker();
+        $('#date_'+idx).datepicker('destroy');
+        $('#date_'+idx).datepicker({numberOfMonths:1, dateFormat: 'dd/mm/yy'}, locale);
+        $('#date_'+idx).datepicker('setDate', new Date(entity.order_items[idx].date));
 
         // Autocomplete product
         var theId = entity.order_items[idx].id;
@@ -376,61 +435,6 @@
 
     }
 
-    this.configTabs = function() {
-
-      $("#content > div").hide(); // Initially hide all content
-      $("#content_tabs li:first").attr("id","current"); // Activate first tab
-      $("#content > div:first").fadeIn(); // Show first tab content
-      $('#content_tabs a').click(function(e) {
-        e.preventDefault();
-        if ($(this).attr("name") == 'preview') {
-          ($('#home_frame')[0]).contentWindow.location.reload();
-        }
-        if ($(this).closest("li").attr("id") == "current"){ //detection for current tab
-         return;       
-        }
-        else{             
-          $("#content > div").hide(); //Hide all content
-          $("#content_tabs li").attr("id",""); //Reset id's
-          $(this).parent().attr("id","current"); // Activate this
-          $('#' + $(this).attr('name')).fadeIn(); // Show content for current tab
-        }
-      });
-      
-    }
-
-    this.configValidation = function() {
-           	 
-       	 $('#order_management_form').validate({
-       	  	
-            submitHandler: function(form) 
-            {
-               return false;
-            },
-                 	        	   
-       	    rules : { // rules
-                'customer_name': {
-                    required: true
-                },
-                'customer_surname': {
-                    required: true
-                }
-       	    },
-       	    
-       	    messages : { // messages
-                'customer_name': {
-                    required: '<%=t.booking_management.form.validations.customer_name_required%>'
-                },
-                'customer_surname': {
-                    required: '<%=t.booking_management.form.validations.customer_surname_required%>'
-                }
-       	    }
-       	    
-       	  }
-       	 );
-    	
-    	
-    }
   	
   };
   

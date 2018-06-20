@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.46] - 2018-06-20
+### Updated
+- Order management modals errors : edit line + new line
+- Order management filter by status
+
 ## [0.2.45] - 2018-06-12
 ### Updated
 - New order bug due to new fields
