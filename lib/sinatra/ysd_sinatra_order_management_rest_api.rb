@@ -137,7 +137,17 @@ module Sinatra
           data_request = JSON.parse(URI.unescape(request.body.read))
           data_request.symbolize_keys!
 
-          p "data_request:#{data_request.inspect}"
+          # Get the product translation
+          if product = ::Yito::Model::Booking::Activity.get(data_request[:item_id])
+            product_customer_translation = product.translate(self.customer_language)
+            if data_request[:item_description] == product.name
+              item_description_customer_translation = (product_customer_translation.nil? ? item_description : product_customer_translation.name)
+            else
+              item_description_customer_translation = data_request[:item_description]
+            end
+          else
+            item_description_customer_translation = data_request[:item_description]
+          end
 
           if order = ::Yito::Model::Order::Order.get(data_request[:order_id])
             ::Yito::Model::Order::OrderItem.transaction do |transaction|
@@ -145,6 +155,7 @@ module Sinatra
               order_item.item_id = data_request[:item_id]
               order_item.item_description = data_request[:item_description]
               order_item.item_price_description = data_request[:item_price_description]
+              order_item.item_description_customer_translation = item_description_customer_translation
               order_item.date = data_request[:date]
               order_item.time = data_request[:time]
               order_item.item_price_type = data_request[:item_price_type]
@@ -195,6 +206,18 @@ module Sinatra
           data_request = JSON.parse(URI.unescape(request.body.read))
           data_request.symbolize_keys!
 
+          # Get the product translation
+          if product = ::Yito::Model::Booking::Activity.get(data_request[:item_id])
+            product_customer_translation = product.translate(self.customer_language)
+            if data_request[:item_description] == product.name
+              item_description_customer_translation = (product_customer_translation.nil? ? item_description : product_customer_translation.name)
+            else
+              item_description_customer_translation = data_request[:item_description]
+            end
+          else
+            item_description_customer_translation = data_request[:item_description]
+          end
+
           if order_item = ::Yito::Model::Order::OrderItem.get(data_request[:id])
             order = order_item.order
             ::Yito::Model::Order::OrderItem.transaction do |transaction|
@@ -202,6 +225,7 @@ module Sinatra
               old_item_quantity = order_item.quantity
               order_item.item_id = data_request[:item_id]
               order_item.item_description = data_request[:item_description]
+              order_item.item_description_customer_translation = item_description_customer_translation
               order_item.item_price_description = data_request[:item_price_description]
               order_item.date = data_request[:date]
               order_item.time = data_request[:time]
@@ -244,7 +268,7 @@ module Sinatra
                     order_item.order_item_customers.reload
                   end              
                 end
-              end   
+              end
               order_item.save
               order.total_cost = order.total_cost - old_item_cost + order_item.item_cost
               order.total_pending = order.total_pending - old_item_cost + order_item.item_cost 

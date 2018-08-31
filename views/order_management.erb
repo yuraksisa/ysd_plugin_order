@@ -121,43 +121,63 @@
 <script type="text/tmpl" id="element_template_form">
      
   <%% if (!entity) { %>
-    <form name="element" id="order_management_form">
-      <% if multiple_rental_locations %>
-      <div class="container_12">
-        <div class="grid_12">
-          <div class="all-space bottom-margin" style="border:1px solid #EEE">
-            <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.rental_location_title %></div>
-            <div class="formrow">
-              <div class="entity-field">
-                <span class="less_contrast_text"><%= t.order_management.form.rental_location %></span>
-                <span class="" style="margin-left: 8.5em">
-                   <select name="rental_location_code" id="rental_location"></select>
-                </span>
+
+          <div class="row">
+          <div class="col-sm-12 col-md-10 col-md-offset-1">
+            <div class="block block-content-full">
+              <div class="block-header bg-gray-lighter">
+                <h3 class="block-title">Nuevo pedido</h3>
+              </div>
+              <div class="block-content block-content-narrow">
+                <form name="element" id="order_management_form" class="form-horizontal">
+                  <% if multiple_rental_locations %>
+                  <div class="form-group">
+                    <label class="col-xs-12"><%= t.order_management.form.rental_location %></label>
+                    <div class="col-sm-9">
+                      <select name="rental_location_code" id="rental_location" class="form-control"></select>
+                    </div>
+                  </div>
+                  <% end %>
+                  <div class="form-group">
+                    <label class="col-xs-12"><%= t.order_management.form.customer_name %></label>
+                    <div class="col-sm-4">
+                      <input type="text" maxlength="40" id="customer_name" name="customer_name" class="form-control"/>
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" maxlength="40" id="customer_surname" name="customer_surname" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-xs-12"><%= t.order_management.form.customer_phone %></label>
+                    <div class="col-sm-4">
+                      <input type="text" maxlength="15" id="customer_phone" name="customer_phone" class="form-control"/>
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" maxlength="15" id="customer_mobile_phone" name="customer_mobile_phone" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-xs-12"><%= t.order_management.form.customer_email %></label>
+                    <div class="col-sm-9">
+                      <input type="text" maxlength="40" id="customer_email" name="customer_email" class="form-control"/>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-xs-12"><%= t.order_management.form.comments_new %></label>
+                    <div class="col-sm-9">
+                      <textarea name="comments" rows="6" class="fieldcontrol"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-9">
+                        <input type="button" class="btn btn-sm btn-primary create-entity-button action-button entity-management-button" value="<%=t.entitymanagement.create%>"/>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <% end %>
-
-      <div class="container_12">
-        <%= partial :order_management_customer %>
-        <div class="grid_6">
-          <div class="left-margin all-space bottom-margin" style="border:1px solid #EEE; padding-bottom: 25px">
-            <div class="more_contrast_text" style="text-decoration:underline"><%= t.order_management.form.comments_new %></div>
-            <div class="formrow">
-              <textarea name="comments" rows="6" class="fieldcontrol"></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bottom-navigation-bar navigation-bar">
-          <div class="navigation-bar-crud-buttons">
-              <input type="submit" class="create-entity-button action-button entity-management-button" value="<%=t.entitymanagement.create%>"/>
-          </div>
-      </div>
-    </form>
 
   <%% } else { %>
 

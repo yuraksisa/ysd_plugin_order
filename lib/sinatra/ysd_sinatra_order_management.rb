@@ -19,7 +19,7 @@ module Sinatra
           @confirmed_orders = ::Yito::Model::Order::Order.count_confirmed_orders(@year)
           @count_start = ::Yito::Model::Order::Order.count_start(@today)
 
-          locals = {:order_page_size => 12}
+          locals = {:order_page_size => 20}
           locals.store(:multiple_rental_locations, SystemConfiguration::Variable.get_value('booking.multiple_rental_locations', 'false').to_bool)
           load_em_page :order_management, nil, false, :locals => locals
 

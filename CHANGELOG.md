@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.47] - 2018-08-31
+### Updated
+- Order management: 20 elements pagination
+- Order management: New order design
+- Store order_item item_description_customer_translation
+
 ## [0.2.46] - 2018-06-20
 ### Updated
 - Order management modals errors : edit line + new line
