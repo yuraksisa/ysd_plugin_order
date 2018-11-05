@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name    = "ysd_plugin_order"
-  s.version = "0.2.47"
+  s.version = "0.2.48"
   s.authors = ["Yurak Sisa Dream"]
   s.date    = "2014-10-06"
   s.email   = ["yurak.sisa.dream@gmail.com"]
@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "ysd_core_plugins"
   s.add_runtime_dependency "ysd_core_themes"
   s.add_runtime_dependency "ysd_yito_core"
-  s.add_runtime_dependency "ysd_yito_js"
 
   s.add_runtime_dependency "ysd_md_order"
   s.add_runtime_dependency "ysd_plugin_auth"
